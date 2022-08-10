@@ -21,6 +21,7 @@ setup(
         'eventlet',
         'authlib',
         'requests',
-        'sqlalchemy'
+        'sqlalchemy',
+        'click'
     ]
 )
