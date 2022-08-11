@@ -2,10 +2,10 @@
 # _date: 2022/4/12 17:12
 
 from application import create_app, db
-from .business.project import Project
-from .property.user import User
-from .property.classification import Classification
-from .permissions.role import Role
+from application.models.business.project import Project
+from application.models.property.user import User
+from application.models.property.classification import Classification
+from application.models.permissions.role import Role
 
 
 if __name__ == '__main__':
@@ -29,7 +29,7 @@ if __name__ == '__main__':
         role = Role('超级管理员', 'admin')
         db.session.add(role)
         db.session.commit()
-        user = User('王涛', 'wangtao@yueyuecx.onaliyun.com', '5dff02a6879414cc73233fef6e7910816850c530', '13520421043',
+        user = User('Coke', 'coke@qq.com', '7c4a8d09ca3762af61e59520943dc26494f8941b', '13520421043',
                     role=role.id)
         db.session.add(user)
         db.session.commit()

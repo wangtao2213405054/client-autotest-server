@@ -17,11 +17,10 @@ def user_login():
 
     email = body.get('username')
     password = body.get('password')
-    print('333', models.User.query, 1123, type(models.User.query))
-    # for key, value in User.__dict__.items():
-    #     print(key, value)
+
     if not all([email, password]):
         return rander('DATA_ERR')
+
     user_info = models.User.query.filter_by(email=email).first()
 
     if not user_info or user_info.password != password:

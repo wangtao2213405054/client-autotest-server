@@ -42,8 +42,6 @@ def create_app(config: str):
     """
     # print(config.__dict__, '123321')
     app = Flask(__name__)
-    if config is None:
-        config = 'local'
 
     # 根据工厂模式获取配置文件映射
     config_class = Config_Map.get(config)
