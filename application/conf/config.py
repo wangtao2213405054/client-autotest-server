@@ -46,7 +46,7 @@ class LocalConfig(Config):
     LOGGING = logging.DEBUG
 
     # 显示 SQL 信息
-    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_ECHO = False
 
     # Mysql 数据库
     SQLALCHEMY_DATABASE_URI = 'mysql://root:123456789@127.0.0.1:3306/TestPlatform'
