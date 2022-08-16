@@ -9,7 +9,7 @@ from application import create_app, db
 class Folder(BaseModel, db.Model):
     """ api模块列表 """
 
-    __tablename__ = 'test_interface_folder'
+    __tablename__ = 'test_client_folder'
 
     id = Column(db.Integer, primary_key=True)  # 主键
     project_id = Column(db.Integer, nullable=False)  # 所属项目

@@ -25,6 +25,7 @@ def edit_project_info():
     name = body.get('name')
     describe = body.get('describe')
     avatar = body.get('avatar')
+    mold = body.get('mold')
     avatar_list = [
         'https://wpimg.wallstcn.com/57ed425a-c71e-4201-9428-68760c0537c4.jpg',
         'https://wpimg.wallstcn.com/9e2a5d0a-bd5b-457f-ac8e-86554616c87b.jpg',
@@ -48,7 +49,8 @@ def edit_project_info():
             'describe': describe,
             'avatar': avatar,
             'create_user': g.user_name,
-            'create_id': g.user_id
+            'create_id': g.user_id,
+            'mold': mold
         }
         try:
             project_info.update(update_dict)
@@ -60,7 +62,7 @@ def edit_project_info():
 
         return rander('OK')
 
-    project_info = models.Project(name, describe, avatar, g.user_name, g.user_id)
+    project_info = models.Project(name, describe, avatar, mold, g.user_name, g.user_id)
     try:
         db.session.add(project_info)
         db.session.commit()

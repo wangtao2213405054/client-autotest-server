@@ -9,7 +9,7 @@ from sqlalchemy import Column
 class Menu(BaseModel, db.Model):
     """ 权限菜单表 """
 
-    __tablename__ = 'test_interface_permissions_menu'
+    __tablename__ = 'test_client_permissions_menu'
 
     id = Column(db.Integer, primary_key=True)  # 主键 自增
     name = Column(db.String(32), nullable=False)  # 节点名称

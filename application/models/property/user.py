@@ -11,7 +11,7 @@ import json
 class User(BaseModel, db.Model):
     """ 用户表 """
 
-    __tablename__ = 'test_interface_user'
+    __tablename__ = 'test_client_user'
 
     id = Column(db.Integer, primary_key=True)  # 主键 自增
     name = Column(db.String(32), nullable=False)  # 名称

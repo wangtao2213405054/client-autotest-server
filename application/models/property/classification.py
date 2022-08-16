@@ -9,7 +9,7 @@ from sqlalchemy import Column
 class Classification(BaseModel, db.Model):
     """ 公司关系表 """
 
-    __tablename__ = 'test_interface_classification'
+    __tablename__ = 'test_client_classification'
 
     id = Column(db.Integer, primary_key=True)  # 主键 自增
     name = Column(db.String(32), nullable=False)  # 节点名称
