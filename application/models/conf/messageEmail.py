@@ -1,8 +1,8 @@
 # _author: Coke
 # _date: 2022/8/15 14:01
 
-from application.models.base import BaseModel
-from application import db, create_app
+from application.models.base import BaseModel, db
+from application import create_app
 
 import json
 

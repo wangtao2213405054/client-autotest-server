@@ -1,10 +1,10 @@
 import json
 
 from application.api import api
-from application.utils import rander, create_token, login_required
+from application import utils
 from flask import request, g
 from application import models
-from sqlalchemy.orm.query import Query
+# from sqlalchemy.orm.query import Query
 
 
 @api.route('/user/login', methods=['POST', 'GET'])
@@ -13,27 +13,27 @@ def user_login():
     body = request.get_json()
 
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     email = body.get('username')
     password = body.get('password')
 
     if not all([email, password]):
-        return rander('DATA_ERR')
+        return utils.rander('DATA_ERR')
 
     user_info = models.User.query.filter_by(email=email).first()
 
     if not user_info or user_info.password != password:
-        return rander('DATA_ERR', '用户名或密码错误')
+        return utils.rander('DATA_ERR', '用户名或密码错误')
 
-    token = create_token(user_id=user_info.id, user_name=user_info.name)
+    token = utils.create_token(user_id=user_info.id, user_name=user_info.name)
     user_info = user_info.to_dict()
     user_info['token'] = token
-    return rander('OK', data=user_info)
+    return utils.rander('OK', data=user_info)
 
 
 @api.route('/user/info', methods=['GET', 'POST'])
-@login_required
+@utils.login_required
 def get_user_info():
     """ 获取个人信息 """
     user_info = models.User.query.filter_by(id=g.user_id).first()
@@ -48,4 +48,4 @@ def get_user_info():
 
     user_info = user_info.to_dict()
     user_info['roles'] = roles
-    return rander('OK', data=user_info)
+    return utils.rander('OK', data=user_info)

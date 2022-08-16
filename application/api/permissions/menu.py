@@ -4,21 +4,21 @@
 from application.api import api
 from application import db, models
 from flask import request
-from application.utils import rander, login_required, permissions_required
+from application import utils
 
 import logging
 
 
 @api.route('/permissions/menu/edit', methods=['POST', 'PUT'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def edit_permissions_menu_info():
     """ 新增/修改权限菜单 """
 
     body = request.get_json()
 
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     menu_id = body.get('id')
     node_id = body.get('nodeId')
@@ -28,7 +28,7 @@ def edit_permissions_menu_info():
     belong_type = body.get('belongType')
 
     if not all([name, identifier]):
-        return rander('DATA_ERR')
+        return utils.rander('DATA_ERR')
 
     if not node_id:
         node_id = 0
@@ -36,18 +36,18 @@ def edit_permissions_menu_info():
     # 过滤标识符是否重复
     menu_info = models.Menu.query.filter_by(identifier=identifier).first()
     if menu_info and menu_info.id != menu_id:
-        return rander('DATA_ERR', '此标识符已存在')
+        return utils.rander('DATA_ERR', '此标识符已存在')
 
     # 查看名称是否重复
     menu_info = models.Menu.query.filter_by(node_id=node_id).all()
     for item in menu_info:
         if name == item.name and menu_info.id != menu_id:
-            return rander('DATA_ERR', '名称不能重复')
+            return utils.rander('DATA_ERR', '名称不能重复')
 
     if menu_id:
         menu_info = models.Menu.query.filter_by(id=menu_id)
         if not menu_info.first():
-            return rander('DATA_ERR', '此信息已不存在')
+            return utils.rander('DATA_ERR', '此信息已不存在')
 
         update_data = {
             'name': name,
@@ -62,14 +62,14 @@ def edit_permissions_menu_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return rander('DATABASE_ERR')
+            return utils.rander('DATABASE_ERR')
 
-        return rander('OK')
+        return utils.rander('OK')
 
     menu_info = models.Menu.query.filter_by(id=node_id).first()
 
     if node_id and not menu_info:
-        return rander('DATA_ERR', '无此父级节点')
+        return utils.rander('DATA_ERR', '无此父级节点')
 
     try:
         menu_new = models.Menu(
@@ -84,9 +84,9 @@ def edit_permissions_menu_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return rander('DATABASE_ERR')
+        return utils.rander('DATABASE_ERR')
 
-    return rander('OK')
+    return utils.rander('OK')
 
 
 def get_menu_tree(node_id, query_name='', query_identifier=''):
@@ -112,8 +112,8 @@ def get_menu_tree(node_id, query_name='', query_identifier=''):
 
 
 @api.route('/permissions/menu/list', methods=['GET', 'POST'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def get_permissions_menu_list():
     """ 获取权限菜单列表 """
 
@@ -124,7 +124,7 @@ def get_permissions_menu_list():
 
     name = body.get('name')
     identifier = body.get('identifier')
-    return rander('OK', data=get_menu_tree(0, name, identifier))
+    return utils.rander('OK', data=get_menu_tree(0, name, identifier))
 
 
 def delete_menu_tree(node_id):
@@ -145,20 +145,20 @@ def delete_menu_tree(node_id):
 
 
 @api.route('/permissions/menu/delete', methods=['POST', 'DELETE'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def delete_permissions_menu_info():
     """ 删除权限菜单信息 """
 
     body = request.get_json()
 
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     menu_id = body.get('id')
 
     if not menu_id:
-        return rander('DATA_ERR')
+        return utils.rander('DATA_ERR')
 
     delete_list = delete_menu_tree(menu_id)
     for item in delete_list:
@@ -169,6 +169,6 @@ def delete_permissions_menu_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return rander('DATABASE_ERR')
+        return utils.rander('DATABASE_ERR')
 
-    return rander('OK')
+    return utils.rander('OK')

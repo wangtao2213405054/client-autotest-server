@@ -4,9 +4,7 @@
 from application.api import api
 from application import db, models
 from flask import request
-from application.utils.response import rander, paginate_structure
-from application.utils.token import login_required
-from application.utils.permissions import get_user_role_info, permissions_required
+from application import utils
 
 import re
 import logging
@@ -14,14 +12,14 @@ import json
 
 
 @api.route('/account/user/edit', methods=['POST', 'PUT'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def edit_user_info():
     """ 新增/修改 用户信息 """
 
     body = request.get_json()
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     user_id = body.get('id')
     name = body.get('name')
@@ -34,39 +32,39 @@ def edit_user_info():
     role = body.get('role')
 
     if not all([name, email, mobile, department]):
-        return rander('DATA_ERR')
+        return utils.rander('DATA_ERR')
 
     if not isinstance(department, list):
-        return rander('DATA_ERR')
+        return utils.rander('DATA_ERR')
 
     node = department[-1]
     department = json.dumps(department)
 
     # 判断账号是否为邮箱
     if not re.search('@', email) or len(email) > 64:
-        return rander('DATA_ERR', '邮箱格式不正确')
+        return utils.rander('DATA_ERR', '邮箱格式不正确')
 
     # 验证手机号格式
     if not re.match(r"1[23456789]\d{9}", mobile):
-        return rander('MOBILE_ERR')
+        return utils.rander('MOBILE_ERR')
 
     # 验证邮箱是否重复
     user_info = models.User.query.filter_by(email=email).first()
     if user_info and user_info.id != user_id:
-        return rander('DATA_ERR', '此邮箱已存在')
+        return utils.rander('DATA_ERR', '此邮箱已存在')
 
     # 验证手机号是否重复
     user_info = models.User.query.filter_by(mobile=mobile).first()
     if user_info and user_info.id != user_id:
-        return rander('DATA_ERR', '此手机号已存在')
+        return utils.rander('DATA_ERR', '此手机号已存在')
 
     # 验证角色信息
     role_info = models.Role.query.get(role)
     if not role_info:
-        return rander('DATA_ERR', '角色信息不存在')
-    current_role = get_user_role_info()
+        return utils.rander('DATA_ERR', '角色信息不存在')
+    current_role = utils.get_user_role_info()
     if role_info.identifier == 'admin' and current_role.identifier != 'admin':
-        return rander('ROLE_ERR', '角色权限不足')
+        return utils.rander('ROLE_ERR', '角色权限不足')
 
     # 修改
     if user_id:
@@ -86,9 +84,9 @@ def edit_user_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return rander('DATABASE_ERR')
+            return utils.rander('DATABASE_ERR')
 
-        return rander('OK')
+        return utils.rander('OK')
 
     # 新增
     new_user = models.User(
@@ -108,21 +106,21 @@ def edit_user_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return rander('DATABASE_ERR')
+        return utils.rander('DATABASE_ERR')
 
-    return rander('OK')
+    return utils.rander('OK')
 
 
 @api.route('/account/user/list', methods=['GET', 'POST'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def get_user_list():
     """ 获取用户列表 """
 
     body = request.get_json()
 
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     classification_id = body.get('id')
     page = body.get('page')
@@ -132,7 +130,7 @@ def get_user_list():
     state = body.get('state')
 
     if not all([page, page_size]):
-        return rander('DATA_ERR')
+        return utils.rander('DATA_ERR')
 
     # 获取级别信息
     son_id_list = [classification_id]
@@ -162,24 +160,24 @@ def get_user_list():
     for item in user_list.items:
         user_dict_list.append(item.to_dict())
 
-    return rander('OK', data=paginate_structure(user_dict_list, total, page, page_size))
+    return utils.rander('OK', data=utils.paginate_structure(user_dict_list, total, page, page_size))
 
 
 @api.route('/account/user/delete', methods=['POST', 'DELETE'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def delete_user_info():
     """ 删除用户接口 """
 
     body = request.get_json()
 
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     user_id = body.get('id')
 
     if not user_id and not isinstance(user_id, list):
-        return rander('DATA_ERR')
+        return utils.rander('DATA_ERR')
 
     try:
         for item in user_id:
@@ -188,29 +186,29 @@ def delete_user_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return rander('DATABASE_ERR')
+        return utils.rander('DATABASE_ERR')
 
-    return rander('OK')
+    return utils.rander('OK')
 
 
 @api.route('/account/user/ids', methods=['GET', 'POST'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def get_user_list_by_ids():
     """ 通过id list 获取对应的用户信息 """
 
     body = request.get_json()
 
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     id_list = body.get('idList')
 
     if not isinstance(id_list, list):
-        return rander('DATA_ERR')
+        return utils.rander('DATA_ERR')
 
     user_dict_list = []
     for item in id_list:
         user_dict_list.append(models.User.query.get(item).to_dict())
 
-    return rander('OK', data=user_dict_list)
+    return utils.rander('OK', data=user_dict_list)
