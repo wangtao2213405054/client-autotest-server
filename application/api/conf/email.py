@@ -4,12 +4,15 @@
 from application.api import api
 from application import utils, db, models
 from flask import request
+from .common import message_switch
 
 import logging
 import json
 
 
 @api.route('/message/email/info', methods=['GET', 'POST'])
+@utils.login_required
+@utils.permissions_required
 def get_message_email_info():
     """
     获取 email 配置信息
@@ -44,6 +47,8 @@ def get_message_email_info():
 
 
 @api.route('/message/email/edit', methods=['POST', 'PUT'])
+@utils.login_required
+@utils.permissions_required
 def edit_message_email_info():
     """
     新增/修改 email 信息
@@ -116,6 +121,8 @@ def edit_message_email_info():
 
 
 @api.route('/message/email/switch', methods=['POST', 'PUT'])
+@utils.login_required
+@utils.permissions_required
 def update_message_email_switch():
     """
     更新 email 开关状态
@@ -136,15 +143,9 @@ def update_message_email_switch():
     update_dict = dict(
         state=state
     )
-    try:
-        email = models.MessageEmail.query.filter_by(id=email_id)
-        if not email.first():
-            return utils.rander('DATA_ERR', '此邮件不存在')
-        email.update(update_dict)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        logging.error(e)
-        return utils.rander('DATABASE_ERR')
-
-    return utils.rander('OK')
+    return message_switch(
+        email_id,
+        update_dict,
+        '此邮箱不存在',
+        models.MessageEmail
+    )

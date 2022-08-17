@@ -24,7 +24,7 @@ def blueprint():
     from .property import authentication, classification, management
     from .permissions import menu, role
     from .business import project, folder
-    from .conf import email, dingTalk, lark
+    from .conf import email, robot, lark
 
 
 blueprint()
