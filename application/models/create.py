@@ -29,7 +29,18 @@ if __name__ == '__main__':
         role = Role('超级管理员', 'admin')
         db.session.add(role)
         db.session.commit()
-        user = User('Coke', 'coke@qq.com', '7c4a8d09ca3762af61e59520943dc26494f8941b', '13520421043',
+        user = User('Coke', 'coke@qq.com', '7c4a8d09ca3762af61e59520943dc26494f8941b', '12345678910',
                     role=role.id)
         db.session.add(user)
+        db.session.commit()
+
+        project = Project(
+            '微信',
+            '这是一个基于 Appium 框架开发的 UI 自动化程序 ...',
+            'https://wpimg.wallstcn.com/57ed425a-c71e-4201-9428-68760c0537c4.jpg',
+            mold='appium',
+            create_user='Coke',
+            create_id=user.id
+        )
+        db.session.add(project)
         db.session.commit()
