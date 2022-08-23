@@ -1,10 +1,9 @@
 # _author: Coke
 # _date: 2022/5/11 15:16
 
-from application import models, db
+from application import models, db,utils
 from application.api import api
 from flask import request
-from application import utils
 
 import logging
 import json
@@ -102,19 +101,20 @@ def get_permissions_role_list():
         models.Role.identifier.like(f'%{identifier if identifier else ""}%')
     ]
 
-    print(request.url_rule, str(request.url_rule),  'thisurl')
-
     # 当用户非admin角色时列表不再返回admin角色信息
     role_info = utils.get_user_role_info()
     if role_info.identifier != 'admin':
         query_list.append(models.Role.identifier != 'admin')
 
-    role = models.Role.query.filter(*query_list).order_by(models.Role.id.desc())
-    role_list = role.paginate(page, page_size, False)
-    role_total = role.count()
+    role_list, role_total = utils.paginate(
+        models.Role,
+        page,
+        page_size,
+        filter_list=query_list
+    )
 
     role_dict_list = []
-    for item in role_list.items:
+    for item in role_list:
         role_dict_list.append(item.to_dict())
 
     return utils.rander('OK', data=utils.paginate_structure(role_dict_list, role_total, page, page_size))

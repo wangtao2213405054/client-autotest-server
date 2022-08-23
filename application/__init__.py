@@ -71,13 +71,15 @@ def create_app(config: str):
 
     # 创建日志记录器 指定Log路径 指定日志大小 指定保留几个日志文件 读取配置文件
     file_log_handler = RotatingFileHandler(config_class.LOG_PATH, maxBytes=config_class.LOG_BYTES,
-                                           backupCount=config_class.LOG_COUNT)
+                                           backupCount=config_class.LOG_COUNT, encoding='utf-8')
     # 为刚创建的日志记录器设置日志记录格式
     formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
     file_log_handler.setFormatter(formatter)
 
     # 设置输出流样式及等级
     handler = logging.StreamHandler(stream=sys.stdout)
+    handler.setFormatter(formatter)
+
     logging.basicConfig(level=config_class.LOGGING, handlers=[handler])
 
     # 添加全局日志工具对象

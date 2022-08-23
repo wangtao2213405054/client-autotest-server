@@ -2,9 +2,8 @@
 # _date: 2022/5/1 20:16
 
 from application.api import api
-from application import db, models
+from application import db, models, utils
 from flask import request
-from application import utils
 
 import re
 import logging
@@ -38,7 +37,6 @@ def edit_user_info():
         return utils.rander('DATA_ERR')
 
     node = department[-1]
-    department = json.dumps(department)
 
     # 判断账号是否为邮箱
     if not re.search('@', email) or len(email) > 64:
@@ -74,7 +72,7 @@ def edit_user_info():
             'mobile': mobile,
             'avatar_url': avatar_url,
             'node': node,
-            'department': department,
+            'department': json.dumps(department, ensure_ascii=False),
             'role': role,
             'state': state
         }
@@ -152,12 +150,15 @@ def get_user_list():
         query_info.append(state)
 
     # 如果 classification_id 为真则为指定查询, 否则返回全部用户
-    user = models.User.query.filter(*query_info)
-    user_list = user.order_by(models.User.id.desc()).paginate(page, page_size, False)
-    total = user.count()
+    user_list, total = utils.paginate(
+        models.User,
+        page,
+        page_size,
+        filter_list=query_info
+    )
 
     user_dict_list = []
-    for item in user_list.items:
+    for item in user_list:
         user_dict_list.append(item.to_dict())
 
     return utils.rander('OK', data=utils.paginate_structure(user_dict_list, total, page, page_size))

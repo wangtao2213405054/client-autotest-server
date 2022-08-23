@@ -2,9 +2,8 @@
 # _date: 2022/5/9 17:41
 
 from application.api import api
-from application import db, models
+from application import db, models,utils
 from flask import request
-from application import utils
 
 import logging
 

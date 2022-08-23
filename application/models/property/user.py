@@ -44,7 +44,7 @@ class User(BaseModel, db.Model):
         self.state = state
         self.node = node
         self.role = role
-        self.department = department
+        self.department = json.dumps(department,ensure_ascii=False)
 
     def to_dict(self):
         """ 将对象转换为字典数据 """

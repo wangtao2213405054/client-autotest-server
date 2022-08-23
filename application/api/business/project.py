@@ -2,24 +2,23 @@
 # _date: 2022/5/3 12:51
 
 from flask import request, g
-from application.utils import rander, paginate_structure, login_required, permissions_required
 from application.api import api
-from application import models, db
+from application import models, db, utils
 
 import logging
 import random
 
 
 @api.route('/business/project/edit', methods=['POST', 'PUT'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def edit_project_info():
     """ 新增/编辑项目信息 """
 
     body = request.get_json()
 
     if not body:
-        rander('BODY_ERR')
+        utils.rander('BODY_ERR')
 
     project_id = body.get('id')
     name = body.get('name')
@@ -33,7 +32,7 @@ def edit_project_info():
     ]
 
     if not all([name, describe]):
-        rander('DATA_ERR')
+        utils.rander('DATA_ERR')
 
     if not avatar:
         avatar = random.choice(avatar_list)
@@ -42,7 +41,7 @@ def edit_project_info():
         project_info = models.Project.query.filter_by(id=project_id)
 
         if not project_info.first():
-            return rander('DATA_ERR', '此项目已不存在')
+            return utils.rander('DATA_ERR', '此项目已不存在')
 
         update_dict = {
             'name': name,
@@ -58,9 +57,9 @@ def edit_project_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return rander('DATABASE_ERR')
+            return utils.rander('DATABASE_ERR')
 
-        return rander('OK')
+        return utils.rander('OK')
 
     project_info = models.Project(name, describe, avatar, mold, g.user_name, g.user_id)
     try:
@@ -69,21 +68,21 @@ def edit_project_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return rander('DATABASE_ERR')
+        return utils.rander('DATABASE_ERR')
 
-    return rander('OK')
+    return utils.rander('OK')
 
 
 @api.route('/business/project/list', methods=['GET', 'POST'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def get_project_list():
     """ 获取项目列表 """
 
     body = request.get_json()
 
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     name = body.get('name')
     page = body.get('page')
@@ -93,9 +92,12 @@ def get_project_list():
         models.Project.name.like(f'%{name if name else ""}%')
     ]
 
-    project = models.Project.query.filter(*query_list).order_by(models.Project.id.desc())
-    project_list = project.paginate(page, page_size, False).items
-    project_count = project.count()
+    project_list, project_count = utils.paginate(
+        models.Project,
+        page,
+        page_size,
+        filter_list=query_list,
+    )
 
     project_dict_list = []
     for items in project_list:
@@ -103,26 +105,26 @@ def get_project_list():
         item['label'] = f'{items.create_user} 更新与 {items.update_time}'
         project_dict_list.append(item)
 
-    return rander('OK', data=paginate_structure(project_dict_list, project_count, page, page_size))
+    return utils.rander('OK', data=utils.paginate_structure(project_dict_list, project_count, page, page_size))
 
 
 @api.route('/business/project/delete', methods=['POST', 'DELETE'])
-@login_required
-@permissions_required
+@utils.login_required
+@utils.permissions_required
 def delete_project_info():
     """ 删除项目信息 """
 
     body = request.get_json()
 
     if not body:
-        return rander('BODY_ERR')
+        return utils.rander('BODY_ERR')
 
     project_id = body.get('id')
 
     project = models.Project.query.filter_by(id=project_id)
 
     if not project.first():
-        return rander('DATA_ERR', '此项目已不存在')
+        return utils.rander('DATA_ERR', '此项目已不存在')
 
     try:
         project.delete()
@@ -130,6 +132,6 @@ def delete_project_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return rander('DATABASE_ERR')
+        return utils.rander('DATABASE_ERR')
 
-    return rander('OK')
+    return utils.rander('OK')

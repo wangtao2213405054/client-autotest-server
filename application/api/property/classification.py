@@ -3,8 +3,7 @@
 
 from flask import request
 from application.api import api
-from application import db, models
-from application import utils
+from application import db, models, utils
 
 import logging
 

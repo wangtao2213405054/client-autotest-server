@@ -1,9 +1,9 @@
-import json
 
 from application.api import api
-from application import utils
 from flask import request, g
-from application import models
+from application import models, utils
+
+import json
 # from sqlalchemy.orm.query import Query
 
 
