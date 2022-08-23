@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/5/11 15:16
 
-from application import models, db,utils
+from application import models, db, utils
 from application.api import api
 from flask import request
 
