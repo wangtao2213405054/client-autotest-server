@@ -141,6 +141,9 @@ def delete_permissions_role_info():
     if not role_info.first():
         return utils.rander('DATA_ERR', '此角色信息不存在')
 
+    if role_info.first().identifier == 'admin':
+        return utils.rander('DATA_ERR', '此角色不可删除')
+
     try:
         role_info.delete()
         db.session.commit()
