@@ -11,6 +11,8 @@ import json
 
 
 @api.route('/conf/element/list', methods=['GET', 'POST'])
+@utils.login_required
+@utils.permissions_required
 def get_element_list():
     """
     获取元素列表
@@ -47,6 +49,8 @@ def get_element_list():
 
 
 @api.route('/conf/element/edit', methods=['POST', 'PUT'])
+@utils.login_required
+@utils.permissions_required
 def edit_element_info():
     """
     新增/修改元素信息
@@ -107,6 +111,8 @@ def edit_element_info():
 
 
 @api.route('conf/element/delete', methods=['POST', 'DELETE'])
+@utils.login_required
+@utils.permissions_required
 def delete_element_info():
     """
     删除元素信息
