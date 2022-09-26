@@ -39,7 +39,7 @@ def get_folder_list():
     folder = models.Folder.query.filter_by(**query).all()
     folder_dict_list = []
     for items in folder:
-        children = items.to_dict()
+        children = items.to_dict
         children['leaf'] = False if models.Folder.query.filter_by(node_id=items.id).first() else True
         folder_dict_list.append(children)
 
@@ -87,7 +87,7 @@ def edit_folder_info():
             logging.error(e)
             db.session.rollback()
             return utils.rander('DATABASE_ERR')
-        items = module_info.first().to_dict()
+        items = module_info.first().to_dict
         items['leaf'] = True
         return utils.rander('OK', data=items)
 
@@ -117,7 +117,7 @@ def edit_folder_info():
         logging.error(e)
         db.session.rollback()
         return utils.rander('DATABASE_ERR')
-    items = new_module.to_dict()
+    items = new_module.to_dict
     items['leaf'] = True
     return utils.rander('OK', data=items)
 

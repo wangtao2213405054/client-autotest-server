@@ -27,6 +27,7 @@ class Project(BaseModel, db.Model):
         self.create_user = create_user
         self.create_id = create_id
 
+    @property
     def to_dict(self):
         return {
             'id': self.id,

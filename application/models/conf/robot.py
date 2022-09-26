@@ -29,6 +29,7 @@ class MessageRobot(BaseModel, db.Model):
         self.at_mobile = json.dumps(at_mobile, ensure_ascii=False)
         self.status = status
 
+    @property
     def to_dict(self):
         return dict(
             id=self.id,

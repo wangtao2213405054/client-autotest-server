@@ -43,7 +43,7 @@ def get_message_robot_info():
         )
         return utils.rander('OK', data=default)
 
-    return utils.rander('OK', data=robot.to_dict())
+    return utils.rander('OK', data=robot.to_dict)
 
 
 @api.route('/message/robot/edit', methods=['POST', 'PUT'])

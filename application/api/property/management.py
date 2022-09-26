@@ -159,7 +159,7 @@ def get_user_list():
 
     user_dict_list = []
     for item in user_list:
-        user_dict_list.append(item.to_dict())
+        user_dict_list.append(item.to_dict)
 
     return utils.rander('OK', data=utils.paginate_structure(user_dict_list, total, page, page_size))
 
@@ -210,6 +210,6 @@ def get_user_list_by_ids():
 
     user_dict_list = []
     for item in id_list:
-        user_dict_list.append(models.User.query.get(item).to_dict())
+        user_dict_list.append(models.User.query.get(item).to_dict)
 
     return utils.rander('OK', data=user_dict_list)

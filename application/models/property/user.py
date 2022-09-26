@@ -46,6 +46,7 @@ class User(BaseModel, db.Model):
         self.role = role
         self.department = json.dumps(department,ensure_ascii=False)
 
+    @property
     def to_dict(self):
         """ 将对象转换为字典数据 """
         user_dict = {

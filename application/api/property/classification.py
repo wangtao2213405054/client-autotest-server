@@ -90,7 +90,7 @@ def get_classification_list():
     # 循环所有一级tree
     for item in classification_list:
 
-        father = item.to_dict()
+        father = item.to_dict
         father['children'] = []
 
         # 获取所有当前一级tree下的子信息
@@ -98,7 +98,7 @@ def get_classification_list():
 
         # 将二级tree添加至一级tree的children中
         for value in classification_son:
-            father['children'].append(value.to_dict())
+            father['children'].append(value.to_dict)
 
         classification_dict_list.append(father)
 

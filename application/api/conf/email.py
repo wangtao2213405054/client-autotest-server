@@ -43,7 +43,7 @@ def get_message_email_info():
         )
         return utils.rander('OK', data=default)
 
-    return utils.rander('OK', data=email.to_dict())
+    return utils.rander('OK', data=email.to_dict)
 
 
 @api.route('/message/email/edit', methods=['POST', 'PUT'])

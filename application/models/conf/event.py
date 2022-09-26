@@ -30,6 +30,7 @@ class Event(BaseModel, db.Model):
         self.desc = desc
         self.params = json.dumps(params, ensure_ascii=False)
 
+    @property
     def to_dict(self):
         return dict(
             id=self.id,

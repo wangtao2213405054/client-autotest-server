@@ -101,7 +101,7 @@ def get_project_list():
 
     project_dict_list = []
     for items in project_list:
-        item = items.to_dict()
+        item = items.to_dict
         item['label'] = f'{items.create_user} 更新与 {items.update_time}'
         project_dict_list.append(item)
 

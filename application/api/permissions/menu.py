@@ -102,7 +102,7 @@ def get_menu_tree(node_id, query_name='', query_identifier=''):
     menu_list = models.Menu.query.filter(*query_dict).all()
 
     for items in menu_list:
-        father = items.to_dict()
+        father = items.to_dict
         father['children'] = get_menu_tree(items.id)
 
         menu_dict_list.append(father)

@@ -140,6 +140,6 @@ def get_event_list():
 
     event_dict_list = []
     for item in event:
-        event_dict_list.append(item.to_dict())
+        event_dict_list.append(item.to_dict)
 
     return utils.rander('OK', data=utils.paginate_structure(event_dict_list, total, page, size))

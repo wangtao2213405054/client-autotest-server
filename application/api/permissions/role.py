@@ -115,7 +115,7 @@ def get_permissions_role_list():
 
     role_dict_list = []
     for item in role_list:
-        role_dict_list.append(item.to_dict())
+        role_dict_list.append(item.to_dict)
 
     return utils.rander('OK', data=utils.paginate_structure(role_dict_list, role_total, page, page_size))
 

@@ -32,6 +32,7 @@ class MessageEmail(BaseModel, db.Model):
         self.receivers = json.dumps(receivers, ensure_ascii=False)
         self.state = state
 
+    @property
     def to_dict(self):
         return dict(
             id=self.id,

@@ -25,6 +25,7 @@ class Element(BaseModel, db.Model):
         self.desc = desc
         self.platform = json.dumps(platform, ensure_ascii=False)
 
+    @property
     def to_dict(self):
         return dict(
             id=self.id,

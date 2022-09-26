@@ -23,6 +23,7 @@ class Folder(BaseModel, db.Model):
         self.node_id = node_id,
         self.identifier = identifier
 
+    @property
     def to_dict(self):
         return {
             'id': self.id,

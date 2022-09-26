@@ -19,6 +19,7 @@ class Classification(BaseModel, db.Model):
         self.name = name
         self.node_id = node_id
 
+    @property
     def to_dict(self):
         return {
             'id': self.id,

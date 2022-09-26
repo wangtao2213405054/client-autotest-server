@@ -43,7 +43,7 @@ def get_element_list():
     )
     element_dict_list = []
     for items in data:
-        element_dict_list.append(items.to_dict())
+        element_dict_list.append(items.to_dict)
 
     return utils.rander('OK', data=utils.paginate_structure(element_dict_list, total, page, size))
 
