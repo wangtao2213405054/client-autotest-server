@@ -9,11 +9,14 @@ ws = Blueprint('socket_api', __name__)
 
 # 内存变量
 online_server = []
+session_maps = {}  # session 映射
 
 
 def blueprint():
     # 导入蓝图视图
-    from .hook import connect, disconnect
+    from application.ws import connect
+    from .system import system
+    from .room import join, leave
 
 
 blueprint()

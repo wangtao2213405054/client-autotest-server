@@ -11,14 +11,19 @@ import logging
 import functools
 
 
-def create_token(**kwargs):
-    """ 生成 token """
+def create_token(unbridled=False, **kwargs):
+    """
+    生成 token
+    :param unbridled: True 为 无时间限制
+    :param kwargs: token 携带的用户信息
+    :return:
+    """
 
-    kwargs['exp'] = time.time() + TOKEN_TIME_LIMIT
+    kwargs['exp'] = (time.time() + TOKEN_TIME_LIMIT) if not unbridled else None
     header = {
         'alg': 'HS256'
     }
-    token = jwt.encode(header, kwargs, TOKEN_SIGN_KEY)
+    token = jwt.encode(header, kwargs, 'SL*JK%!@#*&(SAX!@LK((#$')
 
     return token.decode()
 
@@ -33,7 +38,7 @@ def analytic_token(token):
         return {'results': False, 'info': {'error': 'TOKEN_ERR'}}
 
     failure_time = payload.get('exp')
-    if not failure_time or failure_time < time.time():
+    if failure_time is not None and failure_time < time.time():
         return {'results': False, 'info': {'error': 'TOKEN_EXPIRED_ERR'}}
 
     return {'results': True, 'info': payload}
@@ -68,4 +73,4 @@ def login_required(view_func):
 
 
 if __name__ == '__main__':
-    print(create_token())
+    print(create_token(True, user_name='Mac', user_id=2, device='Mac14'))
