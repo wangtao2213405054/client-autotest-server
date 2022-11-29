@@ -99,13 +99,10 @@ def get_project_list():
         filter_list=query_list,
     )
 
-    project_dict_list = []
     for items in project_list:
-        item = items.to_dict
-        item['label'] = f'{items.create_user} 更新与 {items.update_time}'
-        project_dict_list.append(item)
+        items['label'] = f'{items["createUser"]} 更新与 {items["updateTime"]}'
 
-    return utils.rander('OK', data=utils.paginate_structure(project_dict_list, project_count, page, page_size))
+    return utils.rander('OK', data=utils.paginate_structure(project_list, project_count, page, page_size))
 
 
 @api.route('/business/project/delete', methods=['POST', 'DELETE'])

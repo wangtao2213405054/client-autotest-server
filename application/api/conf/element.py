@@ -41,11 +41,8 @@ def get_element_list():
         size,
         filter_list=query_list
     )
-    element_dict_list = []
-    for items in data:
-        element_dict_list.append(items.to_dict)
 
-    return utils.rander('OK', data=utils.paginate_structure(element_dict_list, total, page, size))
+    return utils.rander('OK', data=utils.paginate_structure(data, total, page, size))
 
 
 @api.route('/conf/element/edit', methods=['POST', 'PUT'])

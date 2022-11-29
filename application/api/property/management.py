@@ -146,8 +146,9 @@ def get_user_list():
         models.User.name.like(f'%{name if name else ""}%'),
         models.User.mobile.like(f'%{mobile if mobile else ""}%')
     ]
+
     if isinstance(state, bool):
-        query_info.append(state)
+        query_info.append(models.User.state == state)
 
     # 如果 classification_id 为真则为指定查询, 否则返回全部用户
     user_list, total = utils.paginate(
@@ -157,11 +158,7 @@ def get_user_list():
         filter_list=query_info
     )
 
-    user_dict_list = []
-    for item in user_list:
-        user_dict_list.append(item.to_dict)
-
-    return utils.rander('OK', data=utils.paginate_structure(user_dict_list, total, page, page_size))
+    return utils.rander('OK', data=utils.paginate_structure(user_list, total, page, page_size))
 
 
 @api.route('/account/user/delete', methods=['POST', 'DELETE'])

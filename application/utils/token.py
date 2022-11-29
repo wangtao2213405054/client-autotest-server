@@ -2,8 +2,7 @@
 # _date: 2022/4/12 16:03
 
 from authlib.jose import jwt
-from application import TOKEN_SIGN_KEY, TOKEN_TIME_LIMIT
-from application.utils.response import rander
+from application import TOKEN_SIGN_KEY, TOKEN_TIME_LIMIT, utils
 from flask import request, g
 
 import time
@@ -23,7 +22,7 @@ def create_token(unbridled=False, **kwargs):
     header = {
         'alg': 'HS256'
     }
-    token = jwt.encode(header, kwargs, 'SL*JK%!@#*&(SAX!@LK((#$')
+    token = jwt.encode(header, kwargs, TOKEN_SIGN_KEY)
 
     return token.decode()
 
@@ -52,17 +51,17 @@ def login_required(view_func):
         # get token
         token_jwt = request.headers.get('token')
         if not token_jwt:
-            return rander('TOKEN_ERR')
+            return utils.rander('TOKEN_ERR')
 
         # analytic token
         payload = analytic_token(token_jwt)
         if not payload['results']:
-            return rander(payload['info']['error'])
+            return utils.rander(payload['info']['error'])
 
         # get property id give global g
         user_id, user_name = payload['info'].get('user_id'), payload['info'].get('user_name')
         if not user_id:
-            return rander('TOKEN_ERR')
+            return utils.rander('TOKEN_ERR')
         g.user_id = user_id
         g.user_name = user_name
 

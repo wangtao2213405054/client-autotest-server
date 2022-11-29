@@ -138,8 +138,4 @@ def get_event_list():
         logging.error(e)
         return utils.rander('DATABASE_ERR')
 
-    event_dict_list = []
-    for item in event:
-        event_dict_list.append(item.to_dict)
-
-    return utils.rander('OK', data=utils.paginate_structure(event_dict_list, total, page, size))
+    return utils.rander('OK', data=utils.paginate_structure(event, total, page, size))

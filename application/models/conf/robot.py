@@ -14,12 +14,12 @@ class MessageRobot(BaseModel, db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.Integer, nullable=False)
-    app = db.Column(db.String(32), nullable=False)
-    tokens = db.Column(db.Text, nullable=False)
-    at_all = db.Column(db.String(32), nullable=False)
-    at_mobile = db.Column(db.Text)
-    status = db.Column(db.Boolean, nullable=False)
+    project_id = db.Column(db.Integer, nullable=False)  # 项目ID
+    app = db.Column(db.String(32), nullable=False)  # 钉钉或飞书标签
+    tokens = db.Column(db.Text, nullable=False)  # 机器人令牌
+    at_all = db.Column(db.String(32), nullable=False)  # 是否@所有人
+    at_mobile = db.Column(db.Text)  # @的手机号列表
+    status = db.Column(db.Boolean, nullable=False)  # 当前启用状态
 
     def __init__(self, project_id, app, tokens, at_all, at_mobile, status=False):
         self.project_id = project_id

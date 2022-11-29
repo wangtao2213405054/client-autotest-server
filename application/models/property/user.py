@@ -21,7 +21,7 @@ class User(BaseModel, db.Model):
     avatar_url = Column(db.String(512))  # 头像
     state = Column(db.Boolean, nullable=False)  # 用户在职状态
     node = Column(db.Integer)  # 节点
-    role = Column(db.Integer)  # 角色
+    role = Column(db.Integer, nullable=False)  # 角色
     department = Column(db.String(64))  # 部门
 
     def __init__(

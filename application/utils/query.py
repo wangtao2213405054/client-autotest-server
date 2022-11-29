@@ -23,6 +23,6 @@ def paginate(model, page, size, filter_list: list = None, filter_by: dict = None
     models = model.query.filter(*filter_list).filter_by(**filter_by).order_by(
         model.id.desc() if order_by else None
     )
-    models_list = models.paginate(page, size, False).items
+    models_list = list(map(lambda x: x.to_dict, models.paginate(page, size, False).items))
     total = models.count()
     return models_list, total

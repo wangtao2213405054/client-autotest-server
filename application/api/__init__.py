@@ -13,7 +13,6 @@ api = Blueprint('app_api', __name__)
 @api.errorhandler(500)
 def handle_error(e):
     """ 封装错误日志 """
-    print('2221231232131')
     logging.error(e)
     return '服务器搬家了'
 
@@ -25,6 +24,8 @@ def blueprint():
     from .permissions import menu, role
     from .business import project, folder
     from .conf import email, robot, element, event
+    from .task import allot
+    from .devices import master, worker, capabilities
 
 
 blueprint()

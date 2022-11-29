@@ -22,7 +22,7 @@ class Project(User):
 
         self.baidu = models.Project(
             '百度',
-            '这是一个基于 Appium 框架开发的 UI 自动化程序 ...',
+            '这是一个基于 Selenium 框架开发的 UI 自动化程序 ...',
             'https://wpimg.wallstcn.com/9e2a5d0a-bd5b-457f-ac8e-86554616c87b.jpg',
             'selenium',
             'admin',

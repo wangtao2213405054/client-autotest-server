@@ -8,16 +8,16 @@ import json
 
 
 class Element(BaseModel, db.Model):
-    """ 基础消息邮件表 """
+    """ 页面元素表 """
 
     __tablename__ = 'test_client_element'
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), nullable=False)
-    label = db.Column(db.String(64), nullable=False, unique=True)
-    desc = db.Column(db.Text)
-    platform = db.Column(db.Text, nullable=False)
+    name = db.Column(db.String(32), nullable=False)  # 元素名称
+    label = db.Column(db.String(64), nullable=False, unique=True)  # 元素内置映射
+    desc = db.Column(db.Text)  # 详细描述
+    platform = db.Column(db.Text, nullable=False)  # 所属平台
 
     def __init__(self, name, label, desc, platform):
         self.name = name

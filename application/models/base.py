@@ -15,3 +15,6 @@ class BaseModel:
     @property
     @abstractmethod
     def to_dict(self): ...  # 获取模型 dict
+
+    @abstractmethod
+    def __init__(self, **kwargs): ...

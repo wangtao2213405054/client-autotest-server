@@ -9,18 +9,18 @@ import json
 
 
 class Event(BaseModel, db.Model):
-    """ 基础消息邮件表 """
+    """ 操作事件表 """
 
     __tablename__ = 'test_client_event'
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), nullable=False)
-    mapping = db.Column(db.String(64), nullable=False)
-    platform = db.Column(db.String(64), nullable=False)
-    project_id = db.Column(db.Integer, nullable=False)
-    desc = db.Column(db.Text)
-    params = db.Column(LONGTEXT)
+    name = db.Column(db.String(32), nullable=False)  # 事件名称
+    mapping = db.Column(db.String(64), nullable=False)  # python函数映射
+    platform = db.Column(db.String(64), nullable=False)  # 所属平台
+    project_id = db.Column(db.Integer, nullable=False)  # 所属项目
+    desc = db.Column(db.Text)  # 事件描述
+    params = db.Column(LONGTEXT)  # 事件详细步骤参数
 
     def __init__(self, name, mapping, platform, project_id, desc, params):
         self.name = name

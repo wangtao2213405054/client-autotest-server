@@ -13,13 +13,16 @@ import re
 
 def get_user_role_info():
     """ 返回当前访问用户的角色信息对象 """
-    role_id = models.User.query.get(g.user_id).role
-    role_info = models.Role.query.get(role_id)
+    user_info = models.User.query.get(g.user_id)
+    if user_info is None:
+        user_info = models.Master.query.filter_by(key=g.user_id).first()
+    role_info = models.Role.query.get(user_info.role)
     return role_info
 
 
 def permissions_required(view_func):
     """ token 校验装饰器 """
+
     @functools.wraps(view_func)
     def wrapper(*args, **kwargs):
         current_role = get_user_role_info()

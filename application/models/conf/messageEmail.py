@@ -14,13 +14,13 @@ class MessageEmail(BaseModel, db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.Integer, nullable=False)
-    host = db.Column(db.String(64), nullable=False)
-    title = db.Column(db.String(24), nullable=False)
-    sender = db.Column(db.String(128), nullable=False)
-    password = db.Column(db.String(128), nullable=False)
-    receivers = db.Column(db.Text, nullable=False)
-    state = db.Column(db.Boolean, nullable=False)
+    project_id = db.Column(db.Integer, nullable=False)  # 项目ID
+    host = db.Column(db.String(64), nullable=False)  # 主机地址
+    title = db.Column(db.String(24), nullable=False)  # 标题
+    sender = db.Column(db.String(128), nullable=False)  # 发送人
+    password = db.Column(db.String(128), nullable=False)  # 密码
+    receivers = db.Column(db.Text, nullable=False)  # 接收人
+    state = db.Column(db.Boolean, nullable=False)  # 状态
 
     def __init__(self, project_id, host, title, sender, password, receivers, state):
         print(receivers, 'receivers')

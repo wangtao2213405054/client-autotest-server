@@ -9,7 +9,7 @@ ws = Blueprint('socket_api', __name__)
 
 # 内存变量
 online_server = []
-session_maps = {}  # session 映射
+session_maps = {}  # session 映射 userId: session
 
 
 def blueprint():

@@ -3,6 +3,7 @@
 
 from application import socketio
 from application.ws import session_maps
+from flask import request
 
 import random
 
@@ -14,12 +15,12 @@ def get_system_info(data):
 
 @socketio.on('test')
 def thread_test():
-    socketio.start_background_task(target=background_thread)
+    print('应该执行我的')
+    # socketio.start_background_task(target=background_thread)
 
 
 def background_thread():
     while True:
         socketio.sleep(5)
         t = random.randint(1, 100)
-        print('running')
         socketio.emit('test', {'data': t}, room=session_maps.get(1))

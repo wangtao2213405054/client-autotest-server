@@ -9,7 +9,7 @@ import json
 
 @api.route('/user/login', methods=['POST', 'GET'])
 def user_login():
-
+    """ 登陆 """
     body = request.get_json()
 
     if not body:
