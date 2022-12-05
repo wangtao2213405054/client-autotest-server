@@ -4,6 +4,8 @@
 from application import socketio
 from flask_socketio import join_room, leave_room, rooms
 
+import logging
+
 """
 bug record: 一定要确保加入房间和退出房间是真实存在的，如果不存在则会出现问题
 """
@@ -13,6 +15,8 @@ bug record: 一定要确保加入房间和退出房间是真实存在的，如�
 def join_rooms(body):
     """ 加入指定房间 """
     room = body.get('roomId')
+
+    logging.debug(body)
     if room and room not in rooms():
         join_room(room)
 
@@ -21,5 +25,7 @@ def join_rooms(body):
 def leave_rooms(body):
     """ 退出指定房间 """
     room = body.get('roomId')
+
+    logging.debug(body)
     if room and room in rooms():
         leave_room(room)
