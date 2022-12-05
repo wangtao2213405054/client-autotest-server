@@ -45,6 +45,7 @@ class Master(BaseModel, db.Model):
             'token': self.token,
             'maxContext': self.max_context,
             'desc': self.desc,
+            'key': self.key,
             'role': self.role,
             'status': self.status,
             'projectId': self.project_id,

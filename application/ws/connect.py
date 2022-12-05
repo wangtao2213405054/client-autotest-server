@@ -53,4 +53,7 @@ def test_disconnect():
     if user_id in online_server:
         online_server.remove(user_id)
 
+    if user_id in session_maps:
+        del session_maps[user_id]
+
     logging.info(f'{username} offline')

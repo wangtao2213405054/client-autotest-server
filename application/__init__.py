@@ -27,7 +27,7 @@ TOKEN_TIME_LIMIT = None
 accessKey = None
 
 # Socket 连接
-socketio = SocketIO()
+socketio = SocketIO(cors_allowed_origins='*')
 
 # url 前缀
 API_URL_PREFIX = ''

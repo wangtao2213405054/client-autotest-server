@@ -4,6 +4,8 @@
 from application import utils, db, models
 from application.api import api
 from flask import request, g
+from flask_socketio import join_room, leave_room
+from application.ws import session_maps, online_server
 
 import logging
 import uuid
@@ -125,6 +127,10 @@ def get_master_list():
         filter_list=query_info
     )
 
+    # 获取设备在线状态
+    for item in master_list:
+        item['online'] = item['key'] in online_server
+
     return utils.rander('OK', data=utils.paginate_structure(master_list, total, page, size))
 
 
@@ -202,3 +208,31 @@ def get_master_info():
         return utils.rander('DATA_ERR', '此信息不存在')
 
     return utils.rander('OK', data=master_info.to_dict)
+
+
+@api.route('/devices/master/socket', methods=['GET', 'POST'])
+@utils.login_required
+@utils.permissions_required
+def join_master_room():
+    """ 通过控制机ID加入房间 """
+
+    body = request.get_json()
+
+    if not body:
+        return utils.rander('BODY_ERR')
+
+    master_id = body.get('id')
+
+    master_info = models.Master.query.filter_by(id=master_id).first()
+
+    if not master_info:
+        return utils.rander('DATA_ERR', '设备不存在')
+
+    user_id = master_info.key
+    if user_id not in online_server or not session_maps.get(user_id):
+        return utils.rander('DATA_ERR', '设备不在线')
+
+    if not session_maps.get(g.user_id) or g.user_id not in online_server:
+        return utils.rander('DATA_ERR', 'Socket 链接断开, 请刷新页面后尝试')
+
+    return utils.rander('OK', data=f'systemRoom{session_maps.get(user_id)}')
