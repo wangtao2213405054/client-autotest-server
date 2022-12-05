@@ -26,6 +26,7 @@ def blueprint():
     from .conf import email, robot, element, event
     from .task import allot
     from .devices import master, worker, capabilities
+    from .message import message
 
 
 blueprint()

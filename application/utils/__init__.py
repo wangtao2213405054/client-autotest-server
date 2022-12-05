@@ -6,6 +6,7 @@ from .permissions import get_user_role_info, permissions_required
 from .response import rander, paginate_structure
 from .error import *
 from .query import paginate
+from .message import message, notify
 
 
 __all__ = [
@@ -16,5 +17,7 @@ __all__ = [
     'get_user_role_info',
     'permissions_required',
     'rander',
-    'paginate_structure'
+    'paginate_structure',
+    'message',
+    'notify'
 ]

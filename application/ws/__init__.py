@@ -16,7 +16,7 @@ def blueprint():
     # 导入蓝图视图
     from application.ws import connect
     from .system import system
-    from .room import join, leave
+    from .room import join_rooms, leave_rooms
 
 
 blueprint()
