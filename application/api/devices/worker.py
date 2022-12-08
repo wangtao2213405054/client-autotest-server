@@ -58,7 +58,7 @@ def edit_worker_info():
     if not master_info:
         return utils.rander('DATA_ERR', '控制器已不存在')
 
-    if master_info.context >= master_info.max_context:
+    if master != master_info.id and master_info.context >= master_info.max_context:
         return utils.rander('DATA_ERR', '控制器已达最大绑定进程数')
 
     if worker_id:

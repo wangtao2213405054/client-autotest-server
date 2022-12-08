@@ -251,6 +251,6 @@ def join_master_room():
         return utils.rander('DATA_ERR', '设备不在线')
 
     if not ws.session_maps.get(g.user_id) or g.user_id not in ws.online_server:
-        return utils.rander('DATA_ERR', 'Socket 链接断开, 请刷新页面后尝试')
+        return utils.rander('SOCKET_ERR', 'Socket 链接断开, 请刷新页面后尝试')
 
     return utils.rander('OK', data=f'systemRoom{ws.session_maps.get(user_id)}')
