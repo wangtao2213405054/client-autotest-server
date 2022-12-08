@@ -23,7 +23,6 @@ class MessageEmail(BaseModel, db.Model):
     state = db.Column(db.Boolean, nullable=False)  # 状态
 
     def __init__(self, project_id, host, title, sender, password, receivers, state):
-        print(receivers, 'receivers')
         self.project_id = project_id
         self.host = host
         self.title = title

@@ -1,7 +1,8 @@
 # _author: Coke
 # _date: 2022/12/5 13:35
 
-from application import socketio
+from application import socketio, ws
+from socketio.exceptions import TimeoutError
 
 
 def common(_type='info', duration=2):
@@ -91,3 +92,15 @@ def notify(title, _message, _type='info', duration=2, sid=None, **kwargs):
     )
 
     socketio.emit('notify', _message, room=sid)
+
+
+def socket_call(master_key, event, data=None, timeout=5):
+    """ 发送一个socket 消息并等待回调成功 """
+    if master_key in ws.online_server:
+        session = ws.session_maps.get(master_key)
+        try:
+            socketio.call(event, data if data else {}, room=session, timeout=timeout)
+        except TimeoutError:
+            return
+
+    return True

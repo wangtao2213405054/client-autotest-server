@@ -2,7 +2,7 @@
 # _date: 2022/8/23 14:00
 
 
-def paginate(model, page, size, filter_list: list = None, filter_by: dict = None, order_by=True):
+def paginate(model, page, size, filter_list: list = None, filter_by: dict = None, order_by=True, **kwargs):
     """
     获取数据分页
     :param model: 数据对象
@@ -14,6 +14,8 @@ def paginate(model, page, size, filter_list: list = None, filter_by: dict = None
     :return:
     """
 
+    source = kwargs.pop('source', True)
+
     if filter_list is None:
         filter_list = []
 
@@ -23,6 +25,6 @@ def paginate(model, page, size, filter_list: list = None, filter_by: dict = None
     models = model.query.filter(*filter_list).filter_by(**filter_by).order_by(
         model.id.desc() if order_by else None
     )
-    models_list = list(map(lambda x: x.to_dict, models.paginate(page, size, False).items))
+    models_list = list(map(lambda x: x.to_dict if source else x, models.paginate(page, size, False).items))
     total = models.count()
     return models_list, total

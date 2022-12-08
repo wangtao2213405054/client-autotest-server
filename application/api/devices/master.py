@@ -1,11 +1,9 @@
 # _author: Coke
 # _date: 2022/11/28 11:35
 
-from application import utils, db, models
+from application import utils, db, models, ws
 from application.api import api
 from flask import request, g
-from flask_socketio import join_room, leave_room
-from application.ws import session_maps, online_server
 
 import logging
 import uuid
@@ -43,10 +41,10 @@ def edit_master_info():
     if project_id and not models.Project.query.get(project_id):
         return utils.rander('DATA_ERR', '项目信息不存在')
 
-    print(project_id, 'this is test ~')
     if master_id:
         master_info = models.Master.query.filter_by(id=master_id)
-        if not master_info.first():
+        master = master_info.first()
+        if not master:
             return utils.rander('DATA_ERR', '此信息已不存在')
 
         update = {
@@ -64,6 +62,10 @@ def edit_master_info():
             logging.error(e)
             db.session.rollback()
             return utils.rander('DATABASE_ERR')
+        else:
+            result = utils.socket_call(master.key, 'masterDeviceEdit', master.to_dict)
+            if not result:
+                return utils.rander('SOCKET_ERR')
 
         return utils.rander('OK')
 
@@ -124,14 +126,18 @@ def get_master_list():
         models.Master,
         page,
         size,
-        filter_list=query_info
+        filter_list=query_info,
+        source=False
     )
 
     # 获取设备在线状态
+    master_dict_list = []
     for item in master_list:
-        item['online'] = item['key'] in online_server
+        items = item.to_dict
+        items['online'] = item.key in ws.online_server
+        master_dict_list.append(items)
 
-    return utils.rander('OK', data=utils.paginate_structure(master_list, total, page, size))
+    return utils.rander('OK', data=utils.paginate_structure(master_dict_list, total, page, size))
 
 
 @api.route('/devices/master/delete', methods=['POST', 'DELETE'])
@@ -151,12 +157,19 @@ def delete_master_info():
         return utils.rander('DATA_ERR')
 
     try:
-        models.Master.query.filter_by(id=master_id).delete()
-        db.session.commit()
+        master = models.Master.query.filter_by(id=master_id)
+        master_info = master.first()
+        master.delete()
     except Exception as e:
         logging.error(e)
         db.session.rollback()
         return utils.rander('DATABASE_ERR')
+    else:
+        result = utils.socket_call(master_info.key, 'masterDeviceDelete')
+        if not result:
+            return utils.rander('SOCKET_ERR')
+
+        db.session.commit()
 
     return utils.rander('OK')
 
@@ -175,12 +188,17 @@ def edit_master_status():
     master_id = body.get('id')
     status = body.get('status')
 
-    if not master_id or not isinstance(status, bool):
+    if not all([master_id, isinstance(status, bool)]):
         return utils.rander('DATA_ERR')
 
     master_info = models.Master.query.filter_by(id=master_id)
-    if not master_info.first():
+    master = master_info.first()
+    if not master:
         return utils.rander('DATA_ERR', '此设备已不存在')
+
+    result = utils.socket_call(master.key, 'masterTaskSwitch', {'switch': status})
+    if not result:
+        return utils.rander('SOCKET_ERR')
 
     update = {
         'status': status
@@ -205,7 +223,7 @@ def get_master_info():
     master_info = models.Master.query.filter_by(key=g.user_id).first()
 
     if not master_info:
-        return utils.rander('DATA_ERR', '此信息不存在')
+        return utils.rander('DATA_ERR', '此设备不存在')
 
     return utils.rander('OK', data=master_info.to_dict)
 
@@ -229,10 +247,10 @@ def join_master_room():
         return utils.rander('DATA_ERR', '设备不存在')
 
     user_id = master_info.key
-    if user_id not in online_server or not session_maps.get(user_id):
+    if user_id not in ws.online_server or not ws.session_maps.get(user_id):
         return utils.rander('DATA_ERR', '设备不在线')
 
-    if not session_maps.get(g.user_id) or g.user_id not in online_server:
+    if not ws.session_maps.get(g.user_id) or g.user_id not in ws.online_server:
         return utils.rander('DATA_ERR', 'Socket 链接断开, 请刷新页面后尝试')
 
-    return utils.rander('OK', data=f'systemRoom{session_maps.get(user_id)}')
+    return utils.rander('OK', data=f'systemRoom{ws.session_maps.get(user_id)}')

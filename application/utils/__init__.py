@@ -6,7 +6,8 @@ from .permissions import get_user_role_info, permissions_required
 from .response import rander, paginate_structure
 from .error import *
 from .query import paginate
-from .message import message, notify
+from .message import *
+from .rule import *
 
 
 __all__ = [

@@ -40,7 +40,6 @@ def create_app(config: str):
     :param config: 配置模式名称 daily or public
     :return: 返回 flask 对象
     """
-    # print(config.__dict__, '123321')
     app = Flask(__name__)
 
     # 根据工厂模式获取配置文件映射

@@ -7,6 +7,7 @@ from application import create_app, db
 from sqlalchemy.dialects.mysql import LONGTEXT
 
 import json
+import uuid
 
 
 class Master(BaseModel, db.Model):
@@ -45,7 +46,6 @@ class Master(BaseModel, db.Model):
             'token': self.token,
             'maxContext': self.max_context,
             'desc': self.desc,
-            'key': self.key,
             'role': self.role,
             'status': self.status,
             'projectId': self.project_id,
@@ -62,32 +62,48 @@ class Worker(BaseModel, db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = Column(db.Integer, primary_key=True)  # 主键
+    key = Column(db.String(64), nullable=False, unique=True)  # 设备唯一标识符
     name = Column(db.String(32), nullable=False)  # 设备名称
     desc = db.Column(db.TEXT)  # 设备描述信息
     platform = db.Column(db.String(32), nullable=False)  # 所属平台
     mapping = db.Column(db.TEXT, nullable=False)  # map 映射
-    status = db.Column(db.Integer, nullable=False)  # 设备状态 0空闲 1任务中 2异常 3 停止
+    parsing = db.Column(db.TEXT, nullable=False)  # 解析后的映射
+    status = db.Column(db.Integer, nullable=False)  # 设备状态 0空闲 1任务中 2异常 3 停止 4 离线
     cause = db.Column(db.TEXT)  # 导致异常或失败的原因, 最近一次
+    switch = db.Column(db.Boolean, nullable=False)  # 是否执行任务
     actual = db.Column(db.Integer, nullable=False)  # 成功执行任务的次数
-    subjection = db.Column(db.Integer, nullable=False)  # 隶属于控制器的ID
+    master = db.Column(db.Integer, nullable=False)  # 隶属于控制器的ID
     blocker = db.Column(db.Integer, nullable=False)  # 阻断器，当连续失败次数达到后将此设备变为异常
 
-    def __init__(self, name, key, desc, platform, mapping):
+    def __init__(self, name, desc, platform, mapping, parsing, master, blocker, switch):
         self.name = name
-        self.key = key
+        self.key = uuid.uuid1().hex
         self.desc = desc
         self.platform = platform
-        self.mapping = mapping
+        self.mapping = json.dumps(mapping, ensure_ascii=False)
+        self.parsing = json.dumps(parsing, ensure_ascii=False)
+        self.status = 0
+        self.actual = 0
+        self.switch = switch
+        self.master = master
+        self.blocker = blocker
 
     @property
     def to_dict(self):
         return {
             'id': self.id,
             'name': self.name,
-            'token': self.token,
-            'maxNumber': self.max_number,
             'key': self.key,
             'desc': self.desc,
+            'platformName': self.platform,
+            'mapping': json.loads(self.mapping),
+            'parsing': json.loads(self.parsing),
+            'status': self.status,
+            'cause': self.cause,
+            'actual': self.actual,
+            'master': self.master,
+            'blocker': self.blocker,
+            'switch': self.switch,
             'createTime': self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             'updateTime': self.update_time.strftime("%Y-%m-%d %H:%M:%S")
         }
@@ -124,7 +140,7 @@ class Capabilities(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app("local")
     with app.app_context():
-        Capabilities.__table__.create(db.session.bind)
-        # Master.__table__.drop(db.session.bind)
+        # Capabilities.__table__.create(db.session.bind)
+        Worker.__table__.drop(db.session.bind)
         # Master.__table__.create(db.session.bind)
-        # Worker.__table__.create(db.session.bind)
+        Worker.__table__.create(db.session.bind)

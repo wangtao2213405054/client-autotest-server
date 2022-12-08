@@ -15,7 +15,9 @@ CODE = {
     'USER_ERR': {'code': 4105, 'message': '账号密码错误'},
     'MOBILE_ERR': {'code': 4106, 'message': '手机号错误'},
     'PASSWORD_ERR': {'code': 4107, 'message': '两次密码不匹配'},
-    'ROLE_ERR': {'code': 4100, 'message': '暂无权限, 请联系管理员'}
+    'ROLE_ERR': {'code': 4100, 'message': '暂无权限, 请联系管理员'},
+    'SOCKET_ERR': {'code': 4201, 'message': '设备通讯失败，请稍后再试'},
+    'SOCKET_TIMEOUT': {'code': 4202, 'message': '设备通讯超时'}
 }
 
 
