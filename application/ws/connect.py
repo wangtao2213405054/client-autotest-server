@@ -37,6 +37,10 @@ def connect():
 
     logging.info(f'{username} online')
 
+    if isinstance(user_id, str):
+        master = utils.get_master_info(user_id)
+        socketio.emit('masterOnline', {'id': master.id, 'online': True})
+
 
 @socketio.on('disconnect')
 def test_disconnect():
@@ -57,3 +61,7 @@ def test_disconnect():
         del session_maps[user_id]
 
     logging.info(f'{username} offline')
+
+    if isinstance(user_id, str):
+        master = utils.get_master_info(user_id)
+        socketio.emit('masterOnline', {'id': master.id, 'online': False})

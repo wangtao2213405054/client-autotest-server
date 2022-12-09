@@ -3,7 +3,7 @@
 
 
 from application.api import api
-from application import utils, models, db, ws
+from application import utils, models, db, ws, socketio
 from flask import request
 
 import logging
@@ -238,5 +238,48 @@ def edit_worker_switch_status():
         db.session.rollback()
         logging.error(e)
         return utils.rander('DATABASE_ERR')
+
+    return utils.rander('OK')
+
+
+@api.route('/devices/worker/status', methods=['POST', 'PUT'])
+@utils.login_required
+@utils.permissions_required
+def edit_worker_status():
+    """ 修改工作机的设备状态 """
+
+    body = request.get_json()
+
+    if not body:
+        return utils.rander('BODY_ERR')
+
+    worker_id = body.get('id')
+    status = body.get('status')  # 0 成功 1任务中 2 异常
+    cause = body.get('cause')
+    cause = cause if cause else None
+    if not all([worker_id, isinstance(status, int)]) or status > 2:
+        return utils.rander('DATA_ERR')
+
+    worker = models.Worker.query.filter_by(id=worker_id)
+
+    if not worker.first():
+        return utils.rander('DATA_ERR', '设备不存在')
+
+    update = {
+        'status': status,
+        'cause': cause,
+    }
+    if status == 0:
+        update['actual'] = worker.first().actual + 1
+
+    try:
+        worker.update(update)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logging.error(e)
+        return utils.rander('DATABASE_ERR')
+
+    socketio.emit('workerStatus', {'id': worker_id, 'status': status, 'cause': cause})
 
     return utils.rander('OK')

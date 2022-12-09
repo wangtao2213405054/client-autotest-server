@@ -43,6 +43,7 @@ class Master(BaseModel, db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'key': self.key,
             'token': self.token,
             'maxContext': self.max_context,
             'desc': self.desc,

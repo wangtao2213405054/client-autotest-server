@@ -4,10 +4,15 @@
 from application import socketio, utils
 from application.api import api
 
+import random
 import time
 
 
-task_list = [{'taskId': index, 'taskName': f'{index}'} for index in range(100)]
+task_list = [{
+    'taskId': index,
+    'taskName': f'{index}',
+    'platform': random.choice(['ios', 'android'])
+} for index in range(100)]
 lock = False
 
 
@@ -23,4 +28,4 @@ def task_dispenser():
         _task = task_list[0]
         del task_list[0]
 
-    return utils.rander('OK', data=_task)
+    return utils.rander('OK', data={'free': True if _task else False, 'task': _task})
