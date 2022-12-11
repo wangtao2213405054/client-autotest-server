@@ -8,6 +8,7 @@ from .error import *
 from .query import *
 from .message import *
 from .rule import *
+from .lock import Lock
 
 
 __all__ = [
@@ -20,5 +21,6 @@ __all__ = [
     'rander',
     'paginate_structure',
     'message',
-    'notify'
+    'notify',
+    'Lock'
 ]
