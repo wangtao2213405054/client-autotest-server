@@ -26,11 +26,16 @@ def paginate(model, page, size, filter_list: list = None, filter_by: dict = None
     if filter_by is None:
         filter_by = {}
 
-    models = model.query.filter(*filter_list).filter_by(**filter_by).order_by(
+    _models = model.query.filter(*filter_list).filter_by(**filter_by).order_by(
         model.id.desc() if order_by else None
     )
-    models_list = list(map(lambda x: x.to_dict if source else x, models.paginate(page, size, False).items))
-    total = models.count()
+
+    # 修复 flask-sqlalchemy 3.0.2 版本传参问题
+    models_list = list(map(
+        lambda x: x.to_dict if source else x,
+        _models.paginate(page=page, per_page=size, error_out=False).items
+    ))
+    total = _models.count()
     return models_list, total
 
 
