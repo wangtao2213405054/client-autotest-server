@@ -28,7 +28,7 @@ def edit_capabilities_info():
     if not mapping:
         return utils.rander('DATA_ERR', '请添加映射信息后提交')
 
-    if not all([name, platform_name]) or not isinstance(mapping, list):
+    if not all([name, platform_name, isinstance(mapping, list)]):
         return utils.rander('DATA_ERR')
 
     if capabilities_id:

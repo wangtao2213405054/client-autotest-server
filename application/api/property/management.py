@@ -174,7 +174,7 @@ def delete_user_info():
 
     user_id = body.get('id')
 
-    if not user_id and not isinstance(user_id, list):
+    if not all([user_id, isinstance(user_id, list)]):
         return utils.rander('DATA_ERR')
 
     try:

@@ -29,7 +29,7 @@ def edit_master_info():
     status = body.get('status')
     project_id = project_id if project_id else None
 
-    if not all([name, max_context, role]) or not isinstance(status, bool):
+    if not all([name, max_context, role, isinstance(status, bool)]):
         return utils.rander('DATA_ERR')
 
     # 验证角色信息

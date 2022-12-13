@@ -86,3 +86,36 @@ def get_task_list():
     )
 
     return utils.rander('OK', data=utils.paginate_structure(task, total, page, size))
+
+
+@api.route('/task/center/status', methods=['POST', 'PUT'])
+@utils.login_required
+@utils.permissions_required
+def update_task_status():
+    """ 更新任务状态 """
+
+    body = request.get_json()
+
+    if not body:
+        return utils.rander('BODY_ERR')
+
+    task_id = body.get('id')
+    status = body.get('status')
+
+    if not all([task_id, status, isinstance(status, int), status < 4]):
+        return utils.rander('DATA_ERR')
+
+    task = models.Task.query.filter_by(id=task_id)
+
+    if not task.first():
+        return utils.rander('DATA_ERR', '此任务已不存在')
+
+    try:
+        task.update({'status': status})
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logging.error(e)
+        return utils.rander('DATABASE_ERR')
+
+    return utils.rander('OK')

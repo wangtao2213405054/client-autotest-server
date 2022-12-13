@@ -257,7 +257,7 @@ def edit_worker_status():
     status = body.get('status')  # 0 成功 1任务中 2 异常
     cause = body.get('cause')
     cause = cause if cause else None
-    if not all([worker_id, isinstance(status, int)]) or status > 2:
+    if not all([worker_id, isinstance(status, int), status < 3]):
         return utils.rander('DATA_ERR')
 
     worker = models.Worker.query.filter_by(id=worker_id)

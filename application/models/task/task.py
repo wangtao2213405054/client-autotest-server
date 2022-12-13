@@ -19,6 +19,7 @@ class Task(BaseModel, db.Model):
     devices = Column(db.Integer)  # 指定的运行设备
     project_id = Column(db.Integer)  # 所属项目
     status = Column(db.Integer)  # 任务状态 0 待执行 1 执行中 2 执行成功 3 执行失败
+    sign = Column(db.Boolean)  # 任务标记, 为真时说明任务已经发放
 
     def __init__(self, name, platform, version, project_id, devices=None):
         self.name = name
@@ -27,6 +28,7 @@ class Task(BaseModel, db.Model):
         self.devices = devices
         self.project_id = project_id
         self.status = 0
+        self.sign = False
 
     @property
     def to_dict(self):
@@ -46,6 +48,5 @@ class Task(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app('local')
     with app.app_context():
-        print(db.session.bind)
-        Task.__table__.drop(db.session.bind)
+        # Task.__table__.drop(db.session.bind)
         Task.__table__.create(db.session.bind)

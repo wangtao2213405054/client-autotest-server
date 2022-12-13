@@ -7,37 +7,8 @@ from flask import request, g
 from sqlalchemy import or_
 
 import logging
-import random
-import time
 
 lock = utils.Lock()
-
-task_list = [{
-    'taskId': index,
-    'taskName': f'{index}',
-    'platform': random.choice(['ios', 'android'])
-} for index in range(100)]
-
-
-@api.route('/task/get', methods=['GET'])
-def task_dispenser():
-    """
-    分配任务给客户端
-    :return:
-    """
-
-    lock.acquire()
-
-    _task = {}
-    if len(task_list):
-        _task = task_list[0]
-        del task_list[0]
-
-    time.sleep(2)
-
-    lock.release()
-
-    return utils.rander('OK', data={'free': True if _task else False, 'task': _task})
 
 
 def _structure(data=None, switch=False):
@@ -84,7 +55,7 @@ def get_task_info():
         _query = [
             models.Task.platform == item.platform,
             or_(models.Task.devices == {}.get(''), models.Task.devices == item.id),
-            models.Task.status == 0
+            models.Task.sign == 0
         ]
         # 如果控制机所属于某个项目则添加过滤条件
         if master.project_id:
@@ -101,7 +72,7 @@ def get_task_info():
 
         # 修改任务状态
         try:
-            models.Task.query.filter_by(id=task.id).update({'status': 1})
+            models.Task.query.filter_by(id=task.id).update({'sign': True})
             db.session.commit()
         except Exception as e:
             db.session.rollback()
@@ -112,7 +83,7 @@ def get_task_info():
     _worker = models.Worker.query.filter_by(master=master.id, switch=True).all()
     _free_query = [
         or_(*[models.Task.platform == item.platform for item in _worker]),  # 当前控制机的所有平台
-        models.Task.status == 0,  # 可执行的任务
+        models.Task.sign == 0,  # 可执行的任务
         # # 未指定设备或指定当前控制机的执行机
         or_(models.Task.devices == {}.get(''), *[models.Task.devices == item.id for item in _worker])
     ]
@@ -123,3 +94,35 @@ def get_task_info():
 
     lock.release()  # 释放锁
     return _structure(_task_dict_list, True if _free else False)
+
+
+@api.route('/task/master/sign', methods=['POST', 'PUT'])
+@utils.login_required
+@utils.permissions_required
+def edit_task_sign():
+    """ 将任务的标记置为False """
+
+    body = request.get_json()
+
+    if not body:
+        return utils.rander('BODY_ERR')
+
+    task_id = body.get('id')
+
+    if not task_id:
+        return utils.rander('DATA_ERR')
+
+    task = models.Task.query.filter_by(id=task_id)
+
+    if not task.first():
+        return utils.rander('DATA_ERR', '此任务已不存在')
+
+    try:
+        task.update({'sign': False})
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logging.error(e)
+        return utils.rander('DATABASE_ERR')
+
+    return utils.rander('OK')
