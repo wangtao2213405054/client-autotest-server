@@ -40,7 +40,7 @@ def edit_permissions_menu_info():
     # 查看名称是否重复
     menu_info = models.Menu.query.filter_by(node_id=node_id).all()
     for item in menu_info:
-        if name == item.name and menu_info.id != menu_id:
+        if name == item.name and item.id != menu_id:
             return utils.rander('DATA_ERR', '名称不能重复')
 
     if menu_id:
