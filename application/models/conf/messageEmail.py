@@ -10,6 +10,7 @@ import json
 class MessageEmail(BaseModel, db.Model):
     """ 基础消息邮件表 """
 
+    __bind_key__ = 'email'
     __tablename__ = 'test_client_message_email'
     __table_args__ = {'extend_existing': True}
 
@@ -50,5 +51,5 @@ class MessageEmail(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app('local')
     with app.app_context():
-        MessageEmail.__table__.drop(db.session.bind)
-        MessageEmail.__table__.create(db.session.bind)
+        db.drop_all(MessageEmail.__bind_key__)
+        db.create_all(MessageEmail.__bind_key__)

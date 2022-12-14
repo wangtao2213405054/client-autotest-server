@@ -9,6 +9,7 @@ from application import create_app, db
 class Folder(BaseModel, db.Model):
     """ api模块列表 """
 
+    __bind_key__ = 'folder'
     __tablename__ = 'test_client_folder'
 
     id = Column(db.Integer, primary_key=True)  # 主键
@@ -39,5 +40,5 @@ class Folder(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app("local")
     with app.app_context():
-        Folder.__table__.drop(db.session.bind)
-        Folder.__table__.create(db.session.bind)
+        db.drop_all(Folder.__bind_key__)
+        db.create_all(Folder.__bind_key__)

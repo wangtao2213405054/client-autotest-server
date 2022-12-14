@@ -10,6 +10,7 @@ import json
 class MessageRobot(BaseModel, db.Model):
     """ 消息配置机器人数据表 """
 
+    __bind_key__ = 'robot'
     __tablename__ = 'test_client_message_robot'
     __table_args__ = {'extend_existing': True}
 
@@ -47,5 +48,5 @@ class MessageRobot(BaseModel, db.Model):
 if __name__ == '__main__':
     _app = create_app('local')
     with _app.app_context():
-        MessageRobot.__table__.drop(db.session.bind)
-        MessageRobot.__table__.create(db.session.bind)
+        db.drop_all(MessageRobot.__bind_key__)
+        db.create_all(MessageRobot.__bind_key__)

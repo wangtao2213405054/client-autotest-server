@@ -9,6 +9,7 @@ from application import create_app, db
 class Task(BaseModel, db.Model):
     """ 任务列表 """
 
+    __bind_key__ = 'task'
     __tablename__ = 'test_client_task'
     __table_args__ = {'extend_existing': True}
 
@@ -20,6 +21,7 @@ class Task(BaseModel, db.Model):
     project_id = Column(db.Integer)  # 所属项目
     status = Column(db.Integer)  # 任务状态 0 待执行 1 执行中 2 执行成功 3 执行失败
     sign = Column(db.Boolean)  # 任务标记, 为真时说明任务已经发放
+    count = Column(db.Integer, nullable=False)  # 测试用例数量
 
     def __init__(self, name, platform, version, project_id, devices=None):
         self.name = name
@@ -29,6 +31,7 @@ class Task(BaseModel, db.Model):
         self.project_id = project_id
         self.status = 0
         self.sign = False
+        self.count = 0
 
     @property
     def to_dict(self):
@@ -40,6 +43,7 @@ class Task(BaseModel, db.Model):
             'devices': self.devices,
             'projectId': self.project_id,
             'status': self.status,
+            'count': self.count,
             'createTime': self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             'updateTime': self.update_time.strftime("%Y-%m-%d %H:%M:%S")
         }
@@ -47,6 +51,11 @@ class Task(BaseModel, db.Model):
 
 if __name__ == '__main__':
     app = create_app('local')
+    # get bing func:
+    # flask-sqlalchemy => 3.0.0 db.engines.get(None)
+    # flask-sqlalchemy < 3.0.0 db.session.bind
     with app.app_context():
-        # Task.__table__.drop(db.session.bind)
-        Task.__table__.create(db.session.bind)
+        # db.drop_all('tast')
+        # db.create_all(Task.__bind_key__)
+        Task.__table__.drop(db.engines.get(None))
+        Task.__table__.create(db.engines.get(None))

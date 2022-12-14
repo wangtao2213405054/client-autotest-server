@@ -11,6 +11,7 @@ import json
 class Event(BaseModel, db.Model):
     """ 操作事件表 """
 
+    __bind_key__ = 'event'
     __tablename__ = 'test_client_event'
     __table_args__ = {'extend_existing': True}
 
@@ -48,5 +49,5 @@ class Event(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app('local')
     with app.app_context():
-        Event.__table__.drop(db.session.bind)
-        Event.__table__.create(db.session.bind)
+        db.drop_all(Event.__bind_key__)
+        db.create_all(Event.__bind_key__)

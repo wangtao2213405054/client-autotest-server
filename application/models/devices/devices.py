@@ -13,7 +13,8 @@ import uuid
 class Master(BaseModel, db.Model):
     """ 控制设备信息表 """
 
-    __tablename__ = 'test_device_master'
+    __bind_key__ = 'master'
+    __tablename__ = 'test_client_device_master'
     __table_args__ = {'extend_existing': True}
 
     id = Column(db.Integer, primary_key=True)  # 主键
@@ -59,7 +60,8 @@ class Master(BaseModel, db.Model):
 class Worker(BaseModel, db.Model):
     """ 执行设备信息表 """
 
-    __tablename__ = 'test_device_worker'
+    __bind_key__ = 'worker'
+    __tablename__ = 'test_client_device_worker'
     __table_args__ = {'extend_existing': True}
 
     id = Column(db.Integer, primary_key=True)  # 主键
@@ -113,7 +115,8 @@ class Worker(BaseModel, db.Model):
 class Capabilities(BaseModel, db.Model):
     """ 执行设备信息表 """
 
-    __tablename__ = 'test_device_capabilities'
+    __bind_key__ = 'capabilities'
+    __tablename__ = 'test_client_device_capabilities'
     __table_args__ = {'extend_existing': True}
 
     id = Column(db.Integer, primary_key=True)  # 主键
@@ -141,7 +144,5 @@ class Capabilities(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app("local")
     with app.app_context():
-        # Capabilities.__table__.create(db.session.bind)
-        Worker.__table__.drop(db.session.bind)
-        # Master.__table__.create(db.session.bind)
-        Worker.__table__.create(db.session.bind)
+        db.drop_all(Capabilities.__bind_key__)
+        db.create_all(Capabilities.__bind_key__)

@@ -11,6 +11,7 @@ import json
 class Role(BaseModel, db.Model):
     """ 角色表 """
 
+    __bind_key__ = 'role'
     __tablename__ = 'test_client_permissions_role'
 
     id = Column(db.Integer, primary_key=True)  # 主键 自增

@@ -3,8 +3,6 @@
 
 from application import create_app, socketio
 
-import importlib
-
 build = 'local'
 
 

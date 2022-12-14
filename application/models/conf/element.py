@@ -10,6 +10,7 @@ import json
 class Element(BaseModel, db.Model):
     """ 页面元素表 """
 
+    __bind_key__ = 'element'
     __tablename__ = 'test_client_element'
     __table_args__ = {'extend_existing': True}
 
@@ -41,5 +42,5 @@ class Element(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app('local')
     with app.app_context():
-        Element.__table__.drop(db.session.bind)
-        Element.__table__.create(db.session.bind)
+        db.drop_all(Element.__bind_key__)
+        db.create_all(Element.__bind_key__)

@@ -12,16 +12,16 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'flask-sqlalchemy',
-        'flask',
+        'flask-sqlalchemy >= 3.0.0',
+        'flask >= 2.2.2',
         'redis',
         'flask-wtf',
         'pymysql',
-        'flask_socketio',
+        'flask_socketio >= 5.3.2',
         'eventlet',
         'authlib',
         'requests',
-        'sqlalchemy',
+        'sqlalchemy >= 1.4.45',
         'click'
     ]
 )

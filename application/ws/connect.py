@@ -39,7 +39,8 @@ def connect():
 
     if isinstance(user_id, str):
         master = utils.get_master_info(user_id)
-        socketio.emit('masterOnline', {'id': master.id, 'online': True})
+        if master:
+            socketio.emit('masterOnline', {'id': master.id, 'online': True})
 
 
 @socketio.on('disconnect')
@@ -64,4 +65,5 @@ def test_disconnect():
 
     if isinstance(user_id, str):
         master = utils.get_master_info(user_id)
-        socketio.emit('masterOnline', {'id': master.id, 'online': False})
+        if master:
+            socketio.emit('masterOnline', {'id': master.id, 'online': False})

@@ -24,7 +24,7 @@ def blueprint():
     from .permissions import menu, role
     from .business import project, folder
     from .conf import email, robot, element, event
-    from .task import allot, center
+    from .task import allot, center, report
     from .devices import master, worker, capabilities
     from .message import message
 

@@ -3,6 +3,7 @@
 
 import logging
 import os
+import re
 
 
 class Config:
@@ -37,6 +38,8 @@ class Config:
 
     API_URL_PREFIX = '/api/v1/client'
     SOCKET_URL_PREFIX = '/ws/v1/client'
+    # 引擎映射
+    SQLALCHEMY_BINDS = dict()
 
 
 class LocalConfig(Config):
@@ -81,3 +84,29 @@ Config_Map = {
     "public": ProductConfig,
     "local": LocalConfig
 }
+
+
+def get_model_class(path, maps):
+    """ 将 models 模块下的所有模型添加到 SQLALCHEMY_BINDS 映射中 """
+    for item in os.listdir(path):
+        _path = os.path.join(path, item)
+        if os.path.isfile(_path):
+            if '.py' in item and 'pyc' not in item and '__init__' not in item:
+                with open(_path, 'r', encoding='utf-8') as file:
+                    data = file.read()
+
+                _compile = re.compile(r"__bind_key__ = '\w+")
+                _bind_key = _compile.findall(data)
+                for _class in _bind_key:
+                    _bind = re.sub("__bind_key__ = '", '', _class)
+                    maps.SQLALCHEMY_BINDS[_bind] = maps.SQLALCHEMY_DATABASE_URI
+
+        else:
+            get_model_class(os.path.join(path, item), maps)
+
+
+for key, value in Config_Map.items():
+    get_model_class(
+        os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'models')),
+        value
+    )

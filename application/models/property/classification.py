@@ -9,6 +9,7 @@ from sqlalchemy import Column
 class Classification(BaseModel, db.Model):
     """ 公司关系表 """
 
+    __bind_key__ = 'classification'
     __tablename__ = 'test_client_classification'
 
     id = Column(db.Integer, primary_key=True)  # 主键 自增

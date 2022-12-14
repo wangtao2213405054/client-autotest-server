@@ -11,6 +11,7 @@ import json
 class User(BaseModel, db.Model):
     """ 用户表 """
 
+    __bind_key__ = 'user'
     __tablename__ = 'test_client_user'
 
     id = Column(db.Integer, primary_key=True)  # 主键 自增

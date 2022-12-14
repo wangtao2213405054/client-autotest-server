@@ -9,6 +9,7 @@ from sqlalchemy import Column
 class Project(BaseModel, db.Model):
     """ 项目表 """
 
+    __bind_key__ = 'project'
     __tablename__ = 'test_client_project'
 
     id = Column(db.Integer, primary_key=True)  # 主键
@@ -45,5 +46,5 @@ class Project(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app("local")
     with app.app_context():
-        Project.__table__.drop(db.session.bind)  # 删除表
-        Project.__table__.create(db.session.bind)  # 创建表
+        db.drop_all(Project.__bind_key__)
+        db.create_all(Project.__bind_key__)
