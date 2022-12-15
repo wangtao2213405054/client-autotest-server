@@ -27,12 +27,16 @@ def get_element_list():
     platform = body.get('platform')
     page = body.get('page')
     size = body.get('size')
+    name = body.get('name')
+    label = body.get('label')
 
     if not all([page, size]):
         return utils.rander('DATA_ERR')
 
     query_list = [
-        models.Element.platform.like(f'%{platform if platform else ""}%')
+        models.Element.platform.like(f'%{platform if platform else ""}%'),
+        models.Element.name.like(f'%{name if name else ""}%'),
+        models.Element.label.like(f'%{label if label else ""}%')
     ]
 
     data, total = utils.paginate(

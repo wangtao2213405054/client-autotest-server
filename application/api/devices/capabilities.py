@@ -80,14 +80,23 @@ def get_capabilities_list():
 
     page = body.get('page')
     size = body.get('pageSize')
+    name = body.get('name')
+    platform_name = body.get('platformName')
 
     if not all([page, size]):
         return utils.rander('DATA_ERR')
 
+    _query = [
+        models.Capabilities.name.like(f'%{name if name else ""}%')
+    ]
+    if platform_name:
+        _query.append(models.Capabilities.platform_name == platform_name)
+
     capabilities_list, total = utils.paginate(
         models.Capabilities,
         page,
-        size
+        size,
+        filter_list=_query
     )
 
     return utils.rander('OK', data=utils.paginate_structure(capabilities_list, total, page, size))

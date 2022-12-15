@@ -119,20 +119,28 @@ def get_event_list():
     project_id = body.get('projectId')
     page = body.get('page')
     size = body.get('size')
+    name = body.get('name')
+    mapping = body.get('mapping')
 
     if not all([project_id, platform]):
         return utils.rander('DATA_ERR')
+
+    _query = [
+        or_(
+            models.Event.platform == 'all',
+            models.Event.platform == platform,
+            and_(models.Event.platform == 'exclusive', models.Event.project_id == project_id)
+        ),
+        models.Event.name.like(f'%{name if name else ""}%'),
+        models.Event.mapping.like(f'%{mapping if mapping else ""}%')
+    ]
 
     try:
         event, total = utils.paginate(
             models.Event,
             page,
             size,
-            [or_(
-                models.Event.platform == 'all',
-                models.Event.platform == platform,
-                and_(models.Event.platform == 'exclusive', models.Event.project_id == project_id)
-            )]
+            _query
         )
     except Exception as e:
         logging.error(e)
