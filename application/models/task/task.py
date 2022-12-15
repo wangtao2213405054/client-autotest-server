@@ -55,7 +55,7 @@ if __name__ == '__main__':
     # flask-sqlalchemy => 3.0.0 db.engines.get(None)
     # flask-sqlalchemy < 3.0.0 db.session.bind
     with app.app_context():
-        # db.drop_all('tast')
+        # db.drop_all('task')
         # db.create_all(Task.__bind_key__)
         Task.__table__.drop(db.engines.get(None))
         Task.__table__.create(db.engines.get(None))
