@@ -6,6 +6,7 @@ from application import utils, db, models
 from flask import request
 
 import logging
+import json
 
 
 @api.route('/business/set/edit', methods=['POST', 'PUT'])
@@ -45,8 +46,8 @@ def edit_set_info():
             name=name,
             special=special,
             desc=desc,
-            custom_set=custom_set,
-            case_list=case_list
+            custom_set=json.dumps(custom_set, ensure_ascii=False),
+            case_list=json.dumps(case_list, ensure_ascii=False)
         )
         try:
             _set.update(update)
