@@ -19,22 +19,16 @@ def get_folder_list():
         return utils.rander('BODY_ERR')
 
     folder_id = body.get('id')
-    identifier = body.get('identifier')
     project_id = body.get('projectId')
+    folder_id = folder_id if folder_id else 0
 
     if not project_id:
         return utils.rander('DATA_ERR')
-
-    if not folder_id:
-        folder_id = 0
 
     query = {
         'node_id': folder_id,
         'project_id': project_id
     }
-    # 可以根据文件类型来获取tree list
-    if identifier:
-        query['identifier'] = identifier
 
     folder = models.Folder.query.filter_by(**query).all()
     folder_dict_list = []
@@ -61,12 +55,10 @@ def edit_folder_info():
     name = body.get('name')
     module_id = body.get('id')
     project_id = body.get('projectId')
+    node_id = node_id if node_id else 0
 
     if not all([name, project_id]):
         return utils.rander('DATA_ERR', '名称不可为空')
-
-    if not node_id:
-        node_id = 0
 
     # 验证是否数据重复
     modules = models.Folder.query.filter_by(name=name, node_id=node_id).first()
@@ -145,10 +137,8 @@ def delete_folder_info():
 
     # 查询此关系分类的子集并删除
     try:
-        modules_son = models.Folder.query.filter_by(node_id=module_id).all()
+        models.Folder.query.filter_by(node_id=module_id).delete()
         module_info.delete()
-        for item in modules_son:
-            models.Folder.query.filter_by(id=item.id).delete()
         db.session.commit()
     except Exception as e:
         logging.error(e)
