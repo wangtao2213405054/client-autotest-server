@@ -17,7 +17,7 @@ def new_task_report():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     task_id = body.get('id')
     name = body.get('name')
@@ -25,11 +25,11 @@ def new_task_report():
     status = body.get('status')
 
     if not all([task_id, name, isinstance(status, int)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     task = models.Task.query.filter_by(id=task_id).first()
     if not task:
-        return utils.rander('DATA_ERR', '任务不存在')
+        return utils.rander(utils.DATA_ERR, '任务不存在')
 
     report = models.Report(
         name, desc, task_id, status
@@ -40,10 +40,10 @@ def new_task_report():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
     socketio.emit('taskReportInfo', report.to_dict, to=f'taskReport{task_id}')
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/task/report/start', methods=['POST', 'PUT'])
@@ -55,18 +55,18 @@ def start_task_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     task_id = body.get('id')
     count = body.get('count')
 
     if not all([task_id, count]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     task = models.Task.query.filter_by(id=task_id)
     task_info = task.first()
     if not task_info:
-        return utils.rander('DATA_ERR', '任务不存在')
+        return utils.rander(utils.DATA_ERR, '任务不存在')
 
     try:
         task.update({'status': 1, 'count': count})
@@ -74,10 +74,10 @@ def start_task_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
     socketio.emit('taskStatus', {'taskId': task_info.id, 'status': task_info.status})
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/task/report/end', methods=['POST', 'PUT'])
@@ -89,18 +89,18 @@ def end_report_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     task_id = body.get('id')
     status = body.get('status')
 
     if not all([task_id, status]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     task = models.Task.query.filter_by(id=task_id)
     task_info = task.first()
     if not task_info:
-        return utils.rander('DATA_ERR', '任务不存在')
+        return utils.rander(utils.DATA_ERR, '任务不存在')
 
     try:
         task.update({'status': status})
@@ -108,10 +108,10 @@ def end_report_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
     socketio.emit('taskStatus', {'taskId': task_info.id, 'status': task_info.status})
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/task/report/list', methods=['GET', 'POST'])
@@ -123,14 +123,14 @@ def get_report_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     task_id = body.get('taskId')
     page = body.get('page')
     size = body.get('pageSize')
 
     if not all([task_id, page, size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     _query = [
         models.Report.task_id == task_id
@@ -143,4 +143,4 @@ def get_report_list():
         filter_list=_query
     )
 
-    return utils.rander('OK', data=utils.paginate_structure(report, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(report, total, page, size))

@@ -18,12 +18,12 @@ def message_switch(key, update, message, model):
     try:
         models = model.query.filter_by(id=key)
         if not models.first():
-            return utils.rander('DATA_ERR', message)
+            return utils.rander(utils.DATA_ERR, message)
         models.update(update)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

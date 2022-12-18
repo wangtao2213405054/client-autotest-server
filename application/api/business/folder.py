@@ -16,14 +16,14 @@ def get_folder_list():
 
     body = request.get_json()
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     folder_id = body.get('id')
     project_id = body.get('projectId')
     folder_id = folder_id if folder_id else 0
 
     if not project_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     query = {
         'node_id': folder_id,
@@ -35,9 +35,10 @@ def get_folder_list():
     for items in folder:
         children = items.to_dict
         children['leaf'] = False if models.Folder.query.filter_by(node_id=items.id).first() else True
+        children['exist'] = False if models.Case.query.filter_by(module=items.id, special=True).first() else True
         folder_dict_list.append(children)
 
-    return utils.rander('OK', data=folder_dict_list)
+    return utils.rander(utils.OK, data=folder_dict_list)
 
 
 @api.route('/business/folder/edit', methods=['POST', 'PUT'])
@@ -49,7 +50,7 @@ def edit_folder_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     node_id = body.get('nodeId')
     name = body.get('name')
@@ -58,18 +59,18 @@ def edit_folder_info():
     node_id = node_id if node_id else 0
 
     if not all([name, project_id]):
-        return utils.rander('DATA_ERR', '名称不可为空')
+        return utils.rander(utils.DATA_ERR, '名称不可为空')
 
     # 验证是否数据重复
     modules = models.Folder.query.filter_by(name=name, node_id=node_id).first()
     if modules and module_id != modules.id:
-        return utils.rander('DATA_ERR', '名称不可重复')
+        return utils.rander(utils.DATA_ERR, '名称不可重复')
 
     # 修改
     if module_id:
         module_info = models.Folder.query.filter_by(id=module_id)
         if not module_info.first():
-            return utils.rander('DATA_ERR', '此模块不存在')
+            return utils.rander(utils.DATA_ERR, '此模块不存在')
 
         try:
             module_info.update({'name': name})
@@ -78,20 +79,20 @@ def edit_folder_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
         items = module_info.first().to_dict
         items['leaf'] = True
-        return utils.rander('OK', data=items)
+        return utils.rander(utils.OK, data=items)
 
     module_info = models.Folder.query.filter_by(id=node_id).first()
 
     # 校验关系分类是否存在
     if node_id and not module_info:
-        return utils.rander('DATA_ERR', '无此父级关系分类')
+        return utils.rander(utils.DATA_ERR, '无此父级关系分类')
 
     # 创建关系分类深度校验
     if module_info and module_info.node_id != 0:
-        return utils.rander('DATA_ERR', '最多只允许创建二级关系分类')
+        return utils.rander(utils.DATA_ERR, '最多只允许创建二级关系分类')
 
     # 数据创建
     new_module = models.Folder(
@@ -108,10 +109,10 @@ def edit_folder_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
     items = new_module.to_dict
     items['leaf'] = True
-    return utils.rander('OK', data=items)
+    return utils.rander(utils.OK, data=items)
 
 
 @api.route('/business/folder/delete', methods=['POST', 'DELETE'])
@@ -123,17 +124,17 @@ def delete_folder_info():
     body = request.get_json()
 
     if not body:
-        utils.rander('BODY_ERR')
+        utils.rander(utils.BODY_ERR)
 
     module_id = body.get('id')
 
     if not module_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     module_info = models.Folder.query.filter_by(id=module_id)
 
     if not module_info.first():
-        return utils.rander('DATA_ERR', '此关系分类不存在')
+        return utils.rander(utils.DATA_ERR, '此关系分类不存在')
 
     # 查询此关系分类的子集并删除
     try:
@@ -143,6 +144,6 @@ def delete_folder_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

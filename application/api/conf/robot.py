@@ -21,13 +21,13 @@ def get_message_robot_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     app = body.get('app')
     project_id = body.get('projectId')
 
     if not all([app, project_id]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     robot = models.MessageRobot.query.filter_by(project_id=project_id, app=app).first()
 
@@ -41,9 +41,9 @@ def get_message_robot_info():
             atMobile=[],
             status=False
         )
-        return utils.rander('OK', data=default)
+        return utils.rander(utils.OK, data=default)
 
-    return utils.rander('OK', data=robot.to_dict)
+    return utils.rander(utils.OK, data=robot.to_dict)
 
 
 @api.route('/message/robot/edit', methods=['POST', 'PUT'])
@@ -57,7 +57,7 @@ def edit_message_robot_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     robot_id = body.get('id')
     project_id = body.get('projectId')
@@ -66,11 +66,10 @@ def edit_message_robot_info():
     at_all = body.get('atAll')
     at_mobile = body.get('atMobile')
     status = body.get('status')
+    status = False if status is None else status
 
     if not all([at_all, tokens, app]):
-        return utils.rander('DATA_ERR')
-    if status is None:
-        status = False
+        return utils.rander(utils.DATA_ERR)
 
     if robot_id:
         update_dict = dict(
@@ -81,7 +80,7 @@ def edit_message_robot_info():
         )
         robot = models.MessageRobot.query.filter_by(id=robot_id)
         if not robot.first():
-            return utils.rander('DATA_ERR', '此机器人已不存在')
+            return utils.rander(utils.DATA_ERR, '此机器人已不存在')
 
         try:
             robot.update(update_dict)
@@ -89,12 +88,12 @@ def edit_message_robot_info():
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     if not project_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     try:
         add_robot = models.MessageRobot(
@@ -110,9 +109,9 @@ def edit_message_robot_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/message/robot/switch', methods=['POST', 'PUT'])
@@ -127,13 +126,13 @@ def edit_message_robot_switch():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     robot_id = body.get('id')
     status = body.get('status')
 
-    if not robot_id or not isinstance(status, bool):
-        return utils.rander('DATA_ERR')
+    if not all([robot_id, isinstance(status, bool)]):
+        return utils.rander(utils.DATA_ERR)
 
     update_dict = dict(
         status=status

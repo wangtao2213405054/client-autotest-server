@@ -28,7 +28,7 @@ class Message(unittest.TestCase):
             title='测试邮件',
             sender='Coke',
             password='123456',
-            receivers=['coke@qq.com'],
+            receivers=['Coke@qq.com'],
             state=False
         )
         data = requests.request('POST', self.url + '/message/email/edit', json=body)

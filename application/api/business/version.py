@@ -17,7 +17,7 @@ def edit_version_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     project_id = body.get('projectId')
     version_id = body.get('id')
@@ -26,17 +26,17 @@ def edit_version_info():
     desc = body.get('desc')
 
     if not all([project_id, name, identify, isinstance(identify, int)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     project = models.Project.query.filter_by(id=project_id).first()
 
     if not project:
-        return utils.rander('DATA_ERR', '项目不存在')
+        return utils.rander(utils.DATA_ERR, '项目不存在')
 
     if version_id:
         version = models.Version.query.filter_by(id=version_id)
         if not version.first():
-            return utils.rander('DATA_ERR', '版本信息不存在')
+            return utils.rander(utils.DATA_ERR, '版本信息不存在')
 
         update = {
             'name': name,
@@ -49,9 +49,9 @@ def edit_version_info():
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     version = models.Version(
         name,
@@ -65,9 +65,9 @@ def edit_version_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/business/version/list', methods=['GET', 'POST'])
@@ -79,7 +79,7 @@ def get_version_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     project_id = body.get('projectId')
     name = body.get('name')
@@ -87,7 +87,7 @@ def get_version_list():
     size = body.get('pageSize')
 
     if not all([project_id, page, size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     _query = [
         models.Version.project_id == project_id,
@@ -101,7 +101,7 @@ def get_version_list():
         filter_list=_query
     )
 
-    return utils.rander('OK', data=utils.paginate_structure(version, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(version, total, page, size))
 
 
 @api.route('/business/version/delete', methods=['POST', 'DELETE'])
@@ -113,16 +113,16 @@ def delete_version_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     version_id = body.get('id')
 
     if not version_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     version = models.Version.query.filter_by(id=version_id)
     if not version.first():
-        return utils.rander('DATA_ERR', '版本不存在')
+        return utils.rander(utils.DATA_ERR, '版本不存在')
 
     try:
         version.delete()
@@ -130,6 +130,6 @@ def delete_version_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

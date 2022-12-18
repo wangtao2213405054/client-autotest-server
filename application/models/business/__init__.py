@@ -5,11 +5,13 @@ from .project import Project
 from .folder import Folder
 from .version import Version
 from .set import Set
+from .case import Case
 
 
 __all__ = [
     'Project',
     'Folder',
     'Version',
-    'Set'
+    'Set',
+    'Case'
 ]

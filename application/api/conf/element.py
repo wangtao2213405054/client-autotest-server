@@ -22,7 +22,7 @@ def get_element_list():
     body = request.get_json(silent=True)
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     platform = body.get('platform')
     page = body.get('page')
@@ -31,7 +31,7 @@ def get_element_list():
     label = body.get('label')
 
     if not all([page, size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     query_list = [
         models.Element.platform.like(f'%{platform if platform else ""}%'),
@@ -46,7 +46,7 @@ def get_element_list():
         filter_list=query_list
     )
 
-    return utils.rander('OK', data=utils.paginate_structure(data, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(data, total, page, size))
 
 
 @api.route('/conf/element/edit', methods=['POST', 'PUT'])
@@ -61,7 +61,7 @@ def edit_element_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     element_id = body.get('id')
     name = body.get('name')
@@ -70,7 +70,7 @@ def edit_element_info():
     platform = body.get('platform')
 
     if not all([name, label, platform]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     if element_id:
         update_dict = dict(
@@ -83,16 +83,16 @@ def edit_element_info():
             element = models.Element.query.filter_by(id=element_id)
 
             if not element.first():
-                return utils.rander('DATA_ERR', '此元素已不存在')
+                return utils.rander(utils.DATA_ERR, '此元素已不存在')
 
             element.update(update_dict)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR', '123')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     element = models.Element(
         name,
@@ -106,9 +106,9 @@ def edit_element_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('conf/element/delete', methods=['POST', 'DELETE'])
@@ -123,22 +123,22 @@ def delete_element_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     element_id = body.get('id')
 
     if not element_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     try:
         element = models.Element.query.filter_by(id=element_id)
         if not element.first():
-            return utils.rander('DATA_ERR', '此元素已不存在')
+            return utils.rander(utils.DATA_ERR, '此元素已不存在')
         element.delete()
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

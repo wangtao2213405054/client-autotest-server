@@ -18,7 +18,7 @@ def edit_set_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     project_id = body.get('projectId')
     set_id = body.get('id')
@@ -30,17 +30,17 @@ def edit_set_info():
     case_list = [item[2] for item in custom_set]
 
     if not all([project_id, name, isinstance(special, bool), isinstance(custom_set, list)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     project = models.Project.query.filter_by(id=project_id).first()
 
     if not project:
-        return utils.rander('DATA_ERR', '项目不存在')
+        return utils.rander(utils.DATA_ERR, '项目不存在')
 
     if set_id:
         _set = models.Set.query.filter_by(id=set_id)
         if not _set.first():
-            return utils.rander('DATA_ERR', '集合不存在')
+            return utils.rander(utils.DATA_ERR, '集合不存在')
 
         update = dict(
             name=name,
@@ -55,9 +55,9 @@ def edit_set_info():
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     _set = models.Set(
         name,
@@ -73,9 +73,9 @@ def edit_set_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/business/set/list', methods=['GET', 'POST'])
@@ -87,7 +87,7 @@ def get_set_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     project_id = body.get('projectId')
     page = body.get('page')
@@ -96,7 +96,7 @@ def get_set_list():
     special = body.get('special')
 
     if not all([page, size, project_id]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     _query = [
         models.Set.project_id == project_id,
@@ -112,7 +112,7 @@ def get_set_list():
         filter_list=_query
     )
 
-    return utils.rander('OK', data=utils.paginate_structure(_set, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(_set, total, page, size))
 
 
 @api.route('/business/set/delete', methods=['POST', 'DELETE'])
@@ -124,17 +124,17 @@ def delete_set_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     set_id = body.get('id')
 
     if not set_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     _set = models.Set.query.filter_by(id=set_id)
 
     if not _set.first():
-        return utils.rander('DATA_ERR', '集合不存在')
+        return utils.rander(utils.DATA_ERR, '集合不存在')
 
     try:
         _set.delete()
@@ -142,6 +142,6 @@ def delete_set_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

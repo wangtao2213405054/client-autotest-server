@@ -33,7 +33,7 @@ def edit_worker_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     worker_id = body.get('id')
     name = body.get('name')
@@ -45,21 +45,21 @@ def edit_worker_info():
     switch = body.get('switch')
 
     if not all([name, platform, mapping, master, blocker, isinstance(switch, bool), isinstance(mapping, list)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     parsing = utils.rule_list_to_dict(mapping, 'param', 'value', 'type')
     parsing['platformName'] = platform
 
     if not parsing:
-        return utils.rander('DATA_ERR', '映射解析错误')
+        return utils.rander(utils.DATA_ERR, '映射解析错误')
 
     master_info = models.Master.query.filter_by(id=master).first()
 
     if not master_info:
-        return utils.rander('DATA_ERR', '控制器已不存在')
+        return utils.rander(utils.DATA_ERR, '控制器已不存在')
 
     if master != master_info.id and master_info.context >= master_info.max_context:
-        return utils.rander('DATA_ERR', '控制器已达最大绑定进程数')
+        return utils.rander(utils.DATA_ERR, '控制器已达最大绑定进程数')
 
     if worker_id:
         update = {
@@ -76,7 +76,7 @@ def edit_worker_info():
         worker_info = models.Worker.query.filter_by(id=worker_id)
         worker = worker_info.first()
         if not worker:
-            return utils.rander('DATA_ERR', '此设备已不存在')
+            return utils.rander(utils.DATA_ERR, '此设备已不存在')
 
         try:
             update_context(worker.master, False)
@@ -86,7 +86,7 @@ def edit_worker_info():
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
     else:
         worker = models.Worker(name, desc, platform, mapping, parsing, master, blocker, switch)
@@ -98,13 +98,13 @@ def edit_worker_info():
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
     result = utils.socket_call(master_info.key, 'workerDeviceEdit', worker.to_dict)
     if not result:
-        return utils.rander('SOCKET_ERR')
+        return utils.rander(utils.SOCKET_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/devices/worker/list', methods=['GET', 'POST'])
@@ -116,7 +116,7 @@ def get_worker_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     page = body.get('page')
     size = body.get('pageSize')
@@ -125,7 +125,7 @@ def get_worker_list():
     status = body.get('status')
 
     if not all([page, size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     # 数据过滤
     query_info = [
@@ -152,7 +152,7 @@ def get_worker_list():
             item.status = 4
         worker_dict_list.append(item.to_dict)
 
-    return utils.rander('OK', data=utils.paginate_structure(worker_dict_list, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(worker_dict_list, total, page, size))
 
 
 @api.route('/devices/worker/delete', methods=['POST', 'DELETE'])
@@ -164,18 +164,18 @@ def delete_worker_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     worker_id = body.get('id')
     master_id = body.get('master')
 
     if not all([worker_id, master_id]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     worker = models.Worker.query.filter_by(id=worker_id)
     worker_info = worker.first()
     if not worker_info:
-        return utils.rander('DATA_ERR', '设备不存在')
+        return utils.rander(utils.DATA_ERR, '设备不存在')
 
     try:
         worker.delete()
@@ -183,16 +183,16 @@ def delete_worker_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
     else:
         master_info = models.Master.query.filter_by(id=worker_info.master).first()
         result = utils.socket_call(master_info.key, 'workerDeviceDelete', {'id': worker_info.id})
         if not result:
-            return utils.rander('SOCKET_ERR')
+            return utils.rander(utils.SOCKET_ERR)
 
         db.session.commit()
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/devices/worker/switch', methods=['POST', 'PUT'])
@@ -204,20 +204,20 @@ def edit_worker_switch_status():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     worker_id = body.get('id')
     switch = body.get('switch')
     kill = body.get('kill')
 
     if not all([worker_id, isinstance(switch, bool)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     worker = models.Worker.query.filter_by(id=worker_id)
     worker_info = worker.first()
 
     if not worker_info:
-        return utils.rander('DATA_ERR', '设备不存在')
+        return utils.rander(utils.DATA_ERR, '设备不存在')
 
     master = models.Master.query.filter_by(id=worker_info.master)
     master_info = master.first()
@@ -229,7 +229,7 @@ def edit_worker_switch_status():
     )
 
     if not result:
-        return utils.rander('SOCKET_ERR')
+        return utils.rander(utils.SOCKET_ERR)
 
     try:
         worker.update({'switch': switch, 'status': 0 if switch else 3})
@@ -237,9 +237,9 @@ def edit_worker_switch_status():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/devices/worker/status', methods=['POST', 'PUT'])
@@ -251,19 +251,19 @@ def edit_worker_status():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     worker_id = body.get('id')
     status = body.get('status')  # 0 成功 1任务中 2 异常
     cause = body.get('cause')
     cause = cause if cause else None
     if not all([worker_id, isinstance(status, int), status < 3]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     worker = models.Worker.query.filter_by(id=worker_id)
 
     if not worker.first():
-        return utils.rander('DATA_ERR', '设备不存在')
+        return utils.rander(utils.DATA_ERR, '设备不存在')
 
     update = {
         'status': status,
@@ -278,8 +278,8 @@ def edit_worker_status():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
     socketio.emit('workerStatus', {'id': worker_id, 'status': status, 'cause': cause})
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

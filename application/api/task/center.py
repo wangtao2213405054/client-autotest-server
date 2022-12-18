@@ -17,7 +17,7 @@ def new_task_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     name = body.get('name')
     platform = body.get('platform')
@@ -26,10 +26,10 @@ def new_task_info():
     version = body.get('version')
 
     if not all([name, platform, project_id, version]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     if devices and not all([isinstance(devices, list), len(devices) == 2]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     task = models.Task(
         name,
@@ -46,9 +46,9 @@ def new_task_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/task/center/list', methods=['GET', 'POST'])
@@ -60,7 +60,7 @@ def get_task_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     page = body.get('page')
     size = body.get('pageSize')
@@ -68,7 +68,7 @@ def get_task_list():
     name = body.get('name')
 
     if not all([page, size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     _query = {}
 
@@ -85,7 +85,7 @@ def get_task_list():
         filter_by=_query
     )
 
-    return utils.rander('OK', data=utils.paginate_structure(task, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(task, total, page, size))
 
 
 @api.route('/task/center/status', methods=['POST', 'PUT'])
@@ -97,18 +97,18 @@ def update_task_status():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     task_id = body.get('id')
     status = body.get('status')
 
     if not all([task_id, status, isinstance(status, int), status < 4]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     task = models.Task.query.filter_by(id=task_id)
 
     if not task.first():
-        return utils.rander('DATA_ERR', '此任务已不存在')
+        return utils.rander(utils.DATA_ERR, '此任务已不存在')
 
     try:
         task.update({'status': status})
@@ -116,6 +116,6 @@ def update_task_status():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

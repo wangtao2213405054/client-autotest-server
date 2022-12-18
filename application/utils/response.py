@@ -20,6 +20,19 @@ CODE = {
     'SOCKET_TIMEOUT': {'code': 4202, 'message': '设备通讯超时'}
 }
 
+OK = 'OK'
+TOKEN_ERR = 'TOKEN_ERR'
+TOKEN_EXPIRED_ERR = 'TOKEN_EXPIRED_ERR'
+DATABASE_ERR = 'DATABASE_ERR'
+BODY_ERR = 'BODY_ERR'
+DATA_ERR = 'DATA_ERR'
+USER_ERR = 'USER_ERR'
+MOBILE_ERR = 'MOBILE_ERR'
+PASSWORD_ERR = 'PASSWORD_ERR'
+ROLE_ERR = 'ROLE_ERR'
+SOCKET_ERR = 'SOCKET_ERR'
+SOCKET_TIMEOUT = 'SOCKET_TIMEOUT'
+
 
 def rander(code, msg=None, data=None):
     """ 返回json 信息 """
@@ -47,4 +60,4 @@ def paginate_structure(data, total, page, page_size):
 
 
 if __name__ == '__main__':
-    print(rander('token_err'))
+    print(rander(TOKEN_ERR))

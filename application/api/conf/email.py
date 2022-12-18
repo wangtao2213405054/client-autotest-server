@@ -22,12 +22,12 @@ def get_message_email_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     project_id = body.get('projectId')
 
     if not project_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     email = models.MessageEmail.query.filter_by(project_id=project_id).first()
 
@@ -41,9 +41,9 @@ def get_message_email_info():
             receivers=[],
             state=False
         )
-        return utils.rander('OK', data=default)
+        return utils.rander(utils.OK, data=default)
 
-    return utils.rander('OK', data=email.to_dict)
+    return utils.rander(utils.OK, data=email.to_dict)
 
 
 @api.route('/message/email/edit', methods=['POST', 'PUT'])
@@ -57,7 +57,7 @@ def edit_message_email_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     email_id = body.get('id')
     project_id = body.get('projectId')
@@ -68,11 +68,8 @@ def edit_message_email_info():
     receivers = body.get('receivers')
     state = body.get('state')
 
-    if not all([host, title, sender, password, receivers]):
-        return utils.rander('DATA_ERR')
-
-    if not isinstance(state, bool):
-        return utils.rander('DATA_ERR')
+    if not all([host, title, sender, password, receivers, isinstance(state, bool)]):
+        return utils.rander(utils.DATA_ERR)
 
     if email_id:
         update_dict = dict(
@@ -85,7 +82,7 @@ def edit_message_email_info():
         )
         email = models.MessageEmail.query.filter_by(id=email_id)
         if not email.first():
-            return utils.rander('DATA_ERR', '此邮箱已不存在')
+            return utils.rander(utils.DATA_ERR, '此邮箱已不存在')
 
         try:
             email.update(update_dict)
@@ -93,12 +90,12 @@ def edit_message_email_info():
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     if not project_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     try:
         add_email = models.MessageEmail(
@@ -115,9 +112,9 @@ def edit_message_email_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/message/email/switch', methods=['POST', 'PUT'])
@@ -132,13 +129,13 @@ def update_message_email_switch():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     state = body.get('state')
     email_id = body.get('id')
 
     if not email_id or not isinstance(state, bool):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     update_dict = dict(
         state=state

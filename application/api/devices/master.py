@@ -18,7 +18,7 @@ def edit_master_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     master_id = body.get('id')
     name = body.get('name')
@@ -30,22 +30,22 @@ def edit_master_info():
     project_id = project_id if project_id else None
 
     if not all([name, max_context, role, isinstance(status, bool)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     # 验证角色信息
     role_info = models.Role.query.get(role)
     if not role_info:
-        return utils.rander('DATA_ERR', '角色信息不存在')
+        return utils.rander(utils.DATA_ERR, '角色信息不存在')
 
     # 验证项目
     if project_id and not models.Project.query.get(project_id):
-        return utils.rander('DATA_ERR', '项目信息不存在')
+        return utils.rander(utils.DATA_ERR, '项目信息不存在')
 
     if master_id:
         master_info = models.Master.query.filter_by(id=master_id)
         master = master_info.first()
         if not master:
-            return utils.rander('DATA_ERR', '此信息已不存在')
+            return utils.rander(utils.DATA_ERR, '此信息已不存在')
 
         update = {
             'name': name,
@@ -61,13 +61,13 @@ def edit_master_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
         else:
             result = utils.socket_call(master.key, 'masterDeviceEdit', master.to_dict)
             if not result:
-                return utils.rander('SOCKET_ERR')
+                return utils.rander(utils.SOCKET_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     udid = uuid.uuid1().hex
     token = utils.create_token(True, user_name=name, user_id=udid)
@@ -87,9 +87,9 @@ def edit_master_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK', data=token)
+    return utils.rander(utils.OK, data=token)
 
 
 @api.route('/devices/master/list', methods=['GET', 'POST'])
@@ -101,7 +101,7 @@ def get_master_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     page = body.get('page')
     size = body.get('pageSize')
@@ -110,7 +110,7 @@ def get_master_list():
     status = body.get('status')
 
     if not all([page, size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     # 数据过滤
     query_info = [
@@ -137,7 +137,7 @@ def get_master_list():
         items['online'] = item.key in ws.online_server
         master_dict_list.append(items)
 
-    return utils.rander('OK', data=utils.paginate_structure(master_dict_list, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(master_dict_list, total, page, size))
 
 
 @api.route('/devices/master/delete', methods=['POST', 'DELETE'])
@@ -149,12 +149,12 @@ def delete_master_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     master_id = body.get('id')
 
     if not master_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     try:
         master = models.Master.query.filter_by(id=master_id)
@@ -163,15 +163,15 @@ def delete_master_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
     else:
         result = utils.socket_call(master_info.key, 'masterDeviceDelete')
         if not result:
-            return utils.rander('SOCKET_ERR')
+            return utils.rander(utils.SOCKET_ERR)
 
         db.session.commit()
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/devices/master/status', methods=['POST', 'PUT'])
@@ -183,22 +183,22 @@ def edit_master_status():
     body: dict = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     master_id = body.get('id')
     status = body.get('status')
 
     if not all([master_id, isinstance(status, bool)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     master_info = models.Master.query.filter_by(id=master_id)
     master = master_info.first()
     if not master:
-        return utils.rander('DATA_ERR', '此设备已不存在')
+        return utils.rander(utils.DATA_ERR, '此设备已不存在')
 
     result = utils.socket_call(master.key, 'masterTaskSwitch', {'switch': status})
     if not result:
-        return utils.rander('SOCKET_ERR')
+        return utils.rander(utils.SOCKET_ERR)
 
     update = {
         'status': status
@@ -209,9 +209,9 @@ def edit_master_status():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/devices/master/info', methods=['GET', 'POST'])
@@ -223,9 +223,9 @@ def get_master_info():
     master_info = models.Master.query.filter_by(key=g.user_id).first()
 
     if not master_info:
-        return utils.rander('DATA_ERR', '此设备不存在')
+        return utils.rander(utils.DATA_ERR, '此设备不存在')
 
-    return utils.rander('OK', data=master_info.to_dict)
+    return utils.rander(utils.OK, data=master_info.to_dict)
 
 
 @api.route('/devices/master/socket', methods=['GET', 'POST'])
@@ -237,20 +237,20 @@ def join_master_room():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     master_id = body.get('id')
 
     master_info = models.Master.query.filter_by(id=master_id).first()
 
     if not master_info:
-        return utils.rander('DATA_ERR', '设备不存在')
+        return utils.rander(utils.DATA_ERR, '设备不存在')
 
     user_id = master_info.key
     if user_id not in ws.online_server or not ws.session_maps.get(user_id):
-        return utils.rander('DATA_ERR', '设备不在线')
+        return utils.rander(utils.DATA_ERR, '设备不在线')
 
     if not ws.session_maps.get(g.user_id) or g.user_id not in ws.online_server:
-        return utils.rander('SOCKET_ERR', 'Socket 链接断开, 请刷新页面后尝试')
+        return utils.rander(utils.SOCKET_ERR, 'Socket 链接断开, 请刷新页面后尝试')
 
-    return utils.rander('OK', data=f'systemRoom{ws.session_maps.get(user_id)}')
+    return utils.rander(utils.OK, data=f'systemRoom{ws.session_maps.get(user_id)}')

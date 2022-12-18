@@ -18,7 +18,7 @@ def edit_event_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     event_id = body.get('id')
     name = body.get('name')
@@ -29,7 +29,7 @@ def edit_event_info():
     project_id = body.get('projectId')
 
     if not all([project_id, platform, mapping, desc, name]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     if event_id:
         update_dict = dict(
@@ -43,16 +43,16 @@ def edit_event_info():
         try:
             event = models.Event.query.filter_by(id=event_id)
             if not event.first():
-                return utils.rander('DATA_ERR', '此事件不存在')
+                return utils.rander(utils.DATA_ERR, '此事件不存在')
 
             event.update(update_dict)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     event = models.Event(
         name=name,
@@ -68,9 +68,9 @@ def edit_event_info():
     except Exception as e:
         db.session.rollback()
         logging.info(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/conf/event/delete', methods=['POST', 'DELETE'])
@@ -82,26 +82,26 @@ def delete_event_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     event_id = body.get('id')
 
     if not event_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     try:
         event = models.Event.query.filter_by(id=event_id)
         if not event.first():
-            return utils.rander('DATA_ERR', '此事件不存在')
+            return utils.rander(utils.DATA_ERR, '此事件不存在')
 
         event.delete()
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('conf/event/list', methods=['GET', 'POST'])
@@ -113,7 +113,7 @@ def get_event_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     platform = body.get('platform')
     project_id = body.get('projectId')
@@ -123,7 +123,7 @@ def get_event_list():
     mapping = body.get('mapping')
 
     if not all([project_id, platform]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     _query = [
         or_(
@@ -144,6 +144,6 @@ def get_event_list():
         )
     except Exception as e:
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK', data=utils.paginate_structure(event, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(event, total, page, size))

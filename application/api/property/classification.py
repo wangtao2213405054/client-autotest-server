@@ -17,14 +17,14 @@ def edit_classification():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     node_id = body.get('nodeId', 0)
     name = body.get('name')
     classification_id = body.get('id')
 
     if not name:
-        return utils.rander('DATA_ERR', '名称不可为空')
+        return utils.rander(utils.DATA_ERR, '名称不可为空')
 
     if not node_id:
         node_id = 0
@@ -32,13 +32,13 @@ def edit_classification():
     # 验证是否数据重复
     classification = models.Classification.query.filter_by(name=name, node_id=node_id).first()
     if classification and classification_id != classification.id:
-        return utils.rander('DATA_ERR', '名称不可重复')
+        return utils.rander(utils.DATA_ERR, '名称不可重复')
 
     # 修改
     if classification_id:
         classification_info = models.Classification.query.filter_by(id=classification_id)
         if not classification_info.first():
-            return utils.rander('DATA_ERR', '此关系分类不存在')
+            return utils.rander(utils.DATA_ERR, '此关系分类不存在')
 
         try:
             classification_info.update({'name': name})
@@ -46,18 +46,18 @@ def edit_classification():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return utils.rander('DATABASE_ERR')
-        return utils.rander('OK')
+            return utils.rander(utils.DATABASE_ERR)
+        return utils.rander(utils.OK)
 
     classification_info = models.Classification.query.filter_by(id=node_id).first()
 
     # 校验关系分类是否存在
     if node_id and not classification_info:
-        return utils.rander('DATA_ERR', '无此父级关系分类')
+        return utils.rander(utils.DATA_ERR, '无此父级关系分类')
 
     # 创建关系分类深度校验
     if classification_info and classification_info.node_id != 0:
-        return utils.rander('DATA_ERR', '最多只允许创建二级关系分类')
+        return utils.rander(utils.DATA_ERR, '最多只允许创建二级关系分类')
 
     # 数据创建
     new_classification = models.Classification(
@@ -72,9 +72,9 @@ def edit_classification():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/account/classification/list', methods=['GET', 'POST'])
@@ -102,7 +102,7 @@ def get_classification_list():
 
         classification_dict_list.append(father)
 
-    return utils.rander('OK', data=classification_dict_list)
+    return utils.rander(utils.OK, data=classification_dict_list)
 
 
 @api.route('/account/classification/delete', methods=['POST', 'DELETE'])
@@ -114,28 +114,26 @@ def delete_classification_info():
     body = request.get_json()
 
     if not body:
-        utils.rander('BODY_ERR')
+        utils.rander(utils.BODY_ERR)
 
     classification_id = body.get('id')
 
     if not classification_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     classification_info = models.Classification.query.filter_by(id=classification_id)
 
     if not classification_info.first():
-        return utils.rander('DATA_ERR', '此关系分类不存在')
+        return utils.rander(utils.DATA_ERR, '此关系分类不存在')
 
     # 查询此关系分类的子集并删除
     try:
-        classification_son = models.Classification.query.filter_by(node_id=classification_id).all()
+        models.Classification.query.filter_by(node_id=classification_id).delete()
         classification_info.delete()
-        for item in classification_son:
-            models.Classification.query.filter_by(id=item.id).delete()
         db.session.commit()
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

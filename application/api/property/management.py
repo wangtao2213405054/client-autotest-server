@@ -18,7 +18,7 @@ def edit_user_info():
 
     body = request.get_json()
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     user_id = body.get('id')
     name = body.get('name')
@@ -30,39 +30,36 @@ def edit_user_info():
     department = body.get('department')
     role = body.get('role')
 
-    if not all([name, email, mobile, department]):
-        return utils.rander('DATA_ERR')
-
-    if not isinstance(department, list):
-        return utils.rander('DATA_ERR')
+    if not all([name, email, mobile, department, isinstance(department, list)]):
+        return utils.rander(utils.DATA_ERR)
 
     node = department[-1]
 
     # 判断账号是否为邮箱
     if not re.search('@', email) or len(email) > 64:
-        return utils.rander('DATA_ERR', '邮箱格式不正确')
+        return utils.rander(utils.DATA_ERR, '邮箱格式不正确')
 
     # 验证手机号格式
     if not re.match(r"1[23456789]\d{9}", mobile):
-        return utils.rander('MOBILE_ERR')
+        return utils.rander(utils.MOBILE_ERR)
 
     # 验证邮箱是否重复
     user_info = models.User.query.filter_by(email=email).first()
     if user_info and user_info.id != user_id:
-        return utils.rander('DATA_ERR', '此邮箱已存在')
+        return utils.rander(utils.DATA_ERR, '此邮箱已存在')
 
     # 验证手机号是否重复
     user_info = models.User.query.filter_by(mobile=mobile).first()
     if user_info and user_info.id != user_id:
-        return utils.rander('DATA_ERR', '此手机号已存在')
+        return utils.rander(utils.DATA_ERR, '此手机号已存在')
 
     # 验证角色信息
     role_info = models.Role.query.get(role)
     if not role_info:
-        return utils.rander('DATA_ERR', '角色信息不存在')
+        return utils.rander(utils.DATA_ERR, '角色信息不存在')
     current_role = utils.get_user_role_info()
     if role_info.identifier == 'admin' and current_role.identifier != 'admin':
-        return utils.rander('ROLE_ERR', '角色权限不足')
+        return utils.rander(utils.ROLE_ERR, '角色权限不足')
 
     # 修改
     if user_id:
@@ -82,9 +79,9 @@ def edit_user_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     # 新增
     new_user = models.User(
@@ -104,9 +101,9 @@ def edit_user_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/account/user/list', methods=['GET', 'POST'])
@@ -118,7 +115,7 @@ def get_user_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     classification_id = body.get('id')
     page = body.get('page')
@@ -128,7 +125,7 @@ def get_user_list():
     state = body.get('state')
 
     if not all([page, page_size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     # 获取级别信息
     son_id_list = [classification_id]
@@ -158,7 +155,7 @@ def get_user_list():
         filter_list=query_info
     )
 
-    return utils.rander('OK', data=utils.paginate_structure(user_list, total, page, page_size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(user_list, total, page, page_size))
 
 
 @api.route('/account/user/delete', methods=['POST', 'DELETE'])
@@ -170,12 +167,12 @@ def delete_user_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     user_id = body.get('id')
 
     if not all([user_id, isinstance(user_id, list)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     try:
         for item in user_id:
@@ -184,9 +181,9 @@ def delete_user_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/account/user/ids', methods=['GET', 'POST'])
@@ -198,15 +195,15 @@ def get_user_list_by_ids():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     id_list = body.get('idList')
 
     if not isinstance(id_list, list):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     user_dict_list = []
     for item in id_list:
         user_dict_list.append(models.User.query.get(item).to_dict)
 
-    return utils.rander('OK', data=user_dict_list)
+    return utils.rander(utils.OK, data=user_dict_list)

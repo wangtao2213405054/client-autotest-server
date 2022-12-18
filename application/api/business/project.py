@@ -18,7 +18,7 @@ def edit_project_info():
     body = request.get_json()
 
     if not body:
-        utils.rander('BODY_ERR')
+        utils.rander(utils.BODY_ERR)
 
     project_id = body.get('id')
     name = body.get('name')
@@ -32,7 +32,7 @@ def edit_project_info():
     ]
 
     if not all([name, describe]):
-        utils.rander('DATA_ERR')
+        utils.rander(utils.DATA_ERR)
 
     if not avatar:
         avatar = random.choice(avatar_list)
@@ -41,7 +41,7 @@ def edit_project_info():
         project_info = models.Project.query.filter_by(id=project_id)
 
         if not project_info.first():
-            return utils.rander('DATA_ERR', '此项目已不存在')
+            return utils.rander(utils.DATA_ERR, '此项目已不存在')
 
         update_dict = {
             'name': name,
@@ -57,9 +57,9 @@ def edit_project_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     project_info = models.Project(name, describe, avatar, mold, g.user_name, g.user_id)
     try:
@@ -68,9 +68,9 @@ def edit_project_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/business/project/list', methods=['GET', 'POST'])
@@ -82,7 +82,7 @@ def get_project_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     name = body.get('name')
     page = body.get('page')
@@ -102,7 +102,7 @@ def get_project_list():
     for items in project_list:
         items['label'] = f'{items["createUser"]} 更新与 {items["updateTime"]}'
 
-    return utils.rander('OK', data=utils.paginate_structure(project_list, project_count, page, page_size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(project_list, project_count, page, page_size))
 
 
 @api.route('/business/project/delete', methods=['POST', 'DELETE'])
@@ -114,14 +114,14 @@ def delete_project_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     project_id = body.get('id')
 
     project = models.Project.query.filter_by(id=project_id)
 
     if not project.first():
-        return utils.rander('DATA_ERR', '此项目已不存在')
+        return utils.rander(utils.DATA_ERR, '此项目已不存在')
 
     try:
         project.delete()
@@ -129,6 +129,6 @@ def delete_project_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

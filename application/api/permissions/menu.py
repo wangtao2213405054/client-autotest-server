@@ -4,6 +4,7 @@
 from application.api import api
 from application import db, models, utils
 from flask import request
+from sqlalchemy import or_
 
 import logging
 
@@ -17,7 +18,7 @@ def edit_permissions_menu_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     menu_id = body.get('id')
     node_id = body.get('nodeId')
@@ -25,28 +26,26 @@ def edit_permissions_menu_info():
     identifier = body.get('identifier')
     menu_type = body.get('menuType')
     belong_type = body.get('belongType')
+    node_id = node_id if node_id else 0
 
     if not all([name, identifier]):
-        return utils.rander('DATA_ERR')
-
-    if not node_id:
-        node_id = 0
+        return utils.rander(utils.DATA_ERR)
 
     # 过滤标识符是否重复
     menu_info = models.Menu.query.filter_by(identifier=identifier).first()
     if menu_info and menu_info.id != menu_id:
-        return utils.rander('DATA_ERR', '此标识符已存在')
+        return utils.rander(utils.DATA_ERR, '此标识符已存在')
 
     # 查看名称是否重复
     menu_info = models.Menu.query.filter_by(node_id=node_id).all()
     for item in menu_info:
         if name == item.name and item.id != menu_id:
-            return utils.rander('DATA_ERR', '名称不能重复')
+            return utils.rander(utils.DATA_ERR, '名称不能重复')
 
     if menu_id:
         menu_info = models.Menu.query.filter_by(id=menu_id)
         if not menu_info.first():
-            return utils.rander('DATA_ERR', '此信息已不存在')
+            return utils.rander(utils.DATA_ERR, '此信息已不存在')
 
         update_data = {
             'name': name,
@@ -61,14 +60,14 @@ def edit_permissions_menu_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     menu_info = models.Menu.query.filter_by(id=node_id).first()
 
     if node_id and not menu_info:
-        return utils.rander('DATA_ERR', '无此父级节点')
+        return utils.rander(utils.DATA_ERR, '无此父级节点')
 
     try:
         menu_new = models.Menu(
@@ -83,9 +82,9 @@ def edit_permissions_menu_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 def get_menu_tree(node_id, query_name='', query_identifier=''):
@@ -123,7 +122,7 @@ def get_permissions_menu_list():
 
     name = body.get('name')
     identifier = body.get('identifier')
-    return utils.rander('OK', data=get_menu_tree(0, name, identifier))
+    return utils.rander(utils.OK, data=get_menu_tree(0, name, identifier))
 
 
 def delete_menu_tree(node_id):
@@ -152,22 +151,21 @@ def delete_permissions_menu_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     menu_id = body.get('id')
 
     if not menu_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     delete_list = delete_menu_tree(menu_id)
-    for item in delete_list:
-        models.Menu.query.filter_by(id=item).delete()
 
     try:
+        models.Menu.query.filter(or_(*[models.Menu.id == item for item in delete_list])).delete()
         db.session.commit()
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

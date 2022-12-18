@@ -13,7 +13,7 @@ lock = utils.Lock()
 
 def _structure(data=None, switch=False):
     """ 任务数据结构 """
-    return utils.rander('OK', data=dict(free=switch, task=data))
+    return utils.rander(utils.OK, data=dict(free=switch, task=data))
 
 
 @api.route('/task/master/get', methods=['GET', 'POST'])
@@ -25,12 +25,12 @@ def get_task_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     free = body.get('free')
 
     if not all([free, isinstance(free, list)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     # 控制机信息
     master = models.Master.query.filter_by(key=g.user_id).first()
@@ -77,7 +77,7 @@ def get_task_info():
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
     # 查询当前控制机是否还有可执行的任务
     _worker = models.Worker.query.filter_by(master=master.id, switch=True).all()
@@ -105,17 +105,17 @@ def edit_task_sign():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     task_id = body.get('id')
 
     if not task_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     task = models.Task.query.filter_by(id=task_id)
 
     if not task.first():
-        return utils.rander('DATA_ERR', '此任务已不存在')
+        return utils.rander(utils.DATA_ERR, '此任务已不存在')
 
     try:
         task.update({'sign': False})
@@ -123,6 +123,6 @@ def edit_task_sign():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

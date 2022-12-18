@@ -18,7 +18,7 @@ def edit_capabilities_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     capabilities_id = body.get('id')
     name = body.get('name')
@@ -26,10 +26,10 @@ def edit_capabilities_info():
     mapping = body.get('mapping')
 
     if not mapping:
-        return utils.rander('DATA_ERR', '请添加映射信息后提交')
+        return utils.rander(utils.DATA_ERR, '请添加映射信息后提交')
 
     if not all([name, platform_name, isinstance(mapping, list)]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     if capabilities_id:
         update = {
@@ -39,7 +39,7 @@ def edit_capabilities_info():
         }
         capabilities_info = models.Capabilities.query.filter_by(id=capabilities_id)
         if not capabilities_info.first():
-            return utils.rander('DATA_ERR', '此功能映射不存在')
+            return utils.rander(utils.DATA_ERR, '此功能映射不存在')
 
         try:
             capabilities_info.update(update)
@@ -47,9 +47,9 @@ def edit_capabilities_info():
         except Exception as e:
             db.session.rollback()
             logging.error(e)
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     capabilities = models.Capabilities(
         name=name,
@@ -62,9 +62,9 @@ def edit_capabilities_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/devices/capabilities/list', methods=['GET', 'POST'])
@@ -76,7 +76,7 @@ def get_capabilities_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     page = body.get('page')
     size = body.get('pageSize')
@@ -84,7 +84,7 @@ def get_capabilities_list():
     platform_name = body.get('platformName')
 
     if not all([page, size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     _query = [
         models.Capabilities.name.like(f'%{name if name else ""}%')
@@ -99,7 +99,7 @@ def get_capabilities_list():
         filter_list=_query
     )
 
-    return utils.rander('OK', data=utils.paginate_structure(capabilities_list, total, page, size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(capabilities_list, total, page, size))
 
 
 @api.route('/devices/capabilities/delete', methods=['POST', 'DELETE'])
@@ -111,16 +111,16 @@ def delete_capabilities_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     capabilities_id = body.get('id')
 
     if not capabilities_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     capabilities_info = models.Capabilities.query.filter_by(id=capabilities_id)
     if not capabilities_info.first():
-        return utils.rander('DATA_ERR', '此功能映射不存在')
+        return utils.rander(utils.DATA_ERR, '此功能映射不存在')
 
     try:
         capabilities_info.delete()
@@ -128,6 +128,6 @@ def delete_capabilities_info():
     except Exception as e:
         db.session.rollback()
         logging.error(e)
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

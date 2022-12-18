@@ -16,4 +16,4 @@ def send_notification_info():
         '测试',
         '嗯，这就是一个测试消息哇',
     )
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

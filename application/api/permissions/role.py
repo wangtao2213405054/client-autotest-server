@@ -18,18 +18,15 @@ def edit_permissions_role_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     role_id = body.get('id')
     name = body.get('name')
     identifier = body.get('identifier')
     permissions_api = body.get('permissionsApi')
 
-    if not all([name, permissions_api, identifier]):
-        return utils.rander('DATA_ERR')
-
-    if not isinstance(permissions_api, list):
-        return utils.rander('DATA_ERR')
+    if not all([name, permissions_api, identifier, isinstance(permissions_api, list)]):
+        return utils.rander(utils.DATA_ERR)
 
     # 处理菜单标识符
     menu_list = []
@@ -42,12 +39,12 @@ def edit_permissions_role_info():
     # 标识符去重验证
     identifier_info = models.Role.query.filter_by(identifier=identifier).first()
     if identifier_info and identifier_info.id != role_id:
-        return utils.rander('DATA_ERR', '标识符不可重复')
+        return utils.rander(utils.DATA_ERR, '标识符不可重复')
 
     if role_id:
         role_info = models.Role.query.filter_by(id=role_id)
         if not role_info.first():
-            return utils.rander('DATA_ERR', '此角色信息不存在')
+            return utils.rander(utils.DATA_ERR, '此角色信息不存在')
 
         update_dict = {
             'name': name,
@@ -61,9 +58,9 @@ def edit_permissions_role_info():
         except Exception as e:
             logging.error(e)
             db.session.rollback()
-            return utils.rander('DATABASE_ERR')
+            return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander('OK')
+        return utils.rander(utils.OK)
 
     new_role = models.Role(name, identifier, permissions_api, menu_list)
     try:
@@ -72,9 +69,9 @@ def edit_permissions_role_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)
 
 
 @api.route('/permissions/role/list', methods=['GET', 'POST'])
@@ -86,7 +83,7 @@ def get_permissions_role_list():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     page = body.get('page')
     page_size = body.get('pageSize')
@@ -94,7 +91,7 @@ def get_permissions_role_list():
     identifier = body.get('identifier')
 
     if not all([page, page_size]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     query_list = [
         models.Role.name.like(f'%{name if name else ""}%'),
@@ -113,7 +110,7 @@ def get_permissions_role_list():
         filter_list=query_list
     )
 
-    return utils.rander('OK', data=utils.paginate_structure(role_list, role_total, page, page_size))
+    return utils.rander(utils.OK, data=utils.paginate_structure(role_list, role_total, page, page_size))
 
 
 @api.route('/permissions/role/delete', methods=['POST', 'DELETE'])
@@ -125,20 +122,20 @@ def delete_permissions_role_info():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     role_id = body.get('id')
 
     if not role_id:
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     role_info = models.Role.query.filter_by(id=role_id)
 
     if not role_info.first():
-        return utils.rander('DATA_ERR', '此角色信息不存在')
+        return utils.rander(utils.DATA_ERR, '此角色信息不存在')
 
     if role_info.first().identifier == 'admin':
-        return utils.rander('DATA_ERR', '此角色不可删除')
+        return utils.rander(utils.DATA_ERR, '此角色不可删除')
 
     try:
         role_info.delete()
@@ -146,6 +143,6 @@ def delete_permissions_role_info():
     except Exception as e:
         logging.error(e)
         db.session.rollback()
-        return utils.rander('DATABASE_ERR')
+        return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander('OK')
+    return utils.rander(utils.OK)

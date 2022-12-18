@@ -2,9 +2,9 @@
 from application.api import api
 from flask import request, g
 from application import models, utils
+# from sqlalchemy.orm.query import Query
 
 import json
-# from sqlalchemy.orm.query import Query
 
 
 @api.route('/user/login', methods=['POST', 'GET'])
@@ -13,23 +13,23 @@ def user_login():
     body = request.get_json()
 
     if not body:
-        return utils.rander('BODY_ERR')
+        return utils.rander(utils.BODY_ERR)
 
     email = body.get('username')
     password = body.get('password')
 
     if not all([email, password]):
-        return utils.rander('DATA_ERR')
+        return utils.rander(utils.DATA_ERR)
 
     user_info = models.User.query.filter_by(email=email).first()
 
     if not user_info or user_info.password != password:
-        return utils.rander('DATA_ERR', '用户名或密码错误')
+        return utils.rander(utils.DATA_ERR, '用户名或密码错误')
 
     token = utils.create_token(user_id=user_info.id, user_name=user_info.name)
     user_info = user_info.to_dict
     user_info['token'] = token
-    return utils.rander('OK', data=user_info)
+    return utils.rander(utils.OK, data=user_info)
 
 
 @api.route('/user/info', methods=['GET', 'POST'])
@@ -48,4 +48,4 @@ def get_user_info():
 
     user_info = user_info.to_dict
     user_info['roles'] = roles
-    return utils.rander('OK', data=user_info)
+    return utils.rander(utils.OK, data=user_info)
