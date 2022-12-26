@@ -20,16 +20,18 @@ class Event(BaseModel, db.Model):
     mapping = db.Column(db.String(64), nullable=False)  # python函数映射
     platform = db.Column(db.String(64), nullable=False)  # 所属平台
     project_id = db.Column(db.Integer, nullable=False)  # 所属项目
+    subset = db.Column(db.Boolean, nullable=False)  # 是否存在子集
     desc = db.Column(db.Text)  # 事件描述
     params = db.Column(LONGTEXT)  # 事件详细步骤参数
 
-    def __init__(self, name, mapping, platform, project_id, desc, params):
+    def __init__(self, name, mapping, platform, project_id, desc, params, subset=False):
         self.name = name
         self.mapping = mapping
         self.platform = platform
         self.project_id = project_id
         self.desc = desc
         self.params = json.dumps(params, ensure_ascii=False)
+        self.subset = subset
 
     @property
     def to_dict(self):
@@ -41,6 +43,7 @@ class Event(BaseModel, db.Model):
             projectId=self.project_id,
             func=json.loads(self.params),
             mapping=self.mapping,
+            subset=self.subset,
             createTime=self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             updateTime=self.update_time.strftime("%Y-%m-%d %H:%M:%S")
         )

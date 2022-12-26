@@ -27,8 +27,9 @@ def edit_event_info():
     params = body.get('func')
     platform = body.get('platform')
     project_id = body.get('projectId')
+    subset = body.get('subset')
 
-    if not all([project_id, platform, mapping, desc, name]):
+    if not all([project_id, platform, mapping, desc, name, isinstance(subset, bool)]):
         return utils.rander(utils.DATA_ERR)
 
     if event_id:
@@ -38,7 +39,8 @@ def edit_event_info():
             mapping=mapping,
             params=json.dumps(params, ensure_ascii=False),
             platform=platform,
-            project_id=project_id
+            project_id=project_id,
+            subset=subset
         )
         try:
             event = models.Event.query.filter_by(id=event_id)
@@ -60,7 +62,8 @@ def edit_event_info():
         platform=platform,
         project_id=project_id,
         desc=desc,
-        params=params
+        params=params,
+        subset=subset
     )
     try:
         db.session.add(event)
