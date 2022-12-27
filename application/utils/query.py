@@ -32,7 +32,7 @@ def paginate(model, page, size, filter_list: list = None, filter_by: dict = None
 
     # 修复 flask-sqlalchemy 3.0.2 版本传参问题
     models_list = list(map(
-        lambda x: x.to_dict if source else x,
+        lambda x: x.result if source else x,
         _models.paginate(page=page, per_page=size, error_out=False).items
     ))
     total = _models.count()

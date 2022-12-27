@@ -24,7 +24,7 @@ class Folder(BaseModel, db.Model):
         self.node_id = node_id
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

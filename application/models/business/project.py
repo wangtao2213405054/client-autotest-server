@@ -29,7 +29,7 @@ class Project(BaseModel, db.Model):
         self.create_id = create_id
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

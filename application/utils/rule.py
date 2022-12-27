@@ -22,14 +22,32 @@ def rule_list_to_dict(data, key, value, types):
         try:
             _dict[item[key]] = obj(item[value]) if obj is not None else None
         except (TypeError, ValueError):
-            return
+            pass
 
     return _dict
 
 
+def resolve(steps):
+    """ 将测试用例解析成驱动端可执行的结构 """
+
+    _resolve = []
+    for case in steps:
+        _resolve_case = dict(
+            id=case.get('id'),
+            mapping=case.get('mapping'),
+            name=case.get('name'),
+            subset=case.get('subset'),
+            desc=case.get('desc'),
+            params=rule_list_to_dict(case.get('func'), 'param', 'default', 'dataType')
+        )
+        _resolve.append(_resolve_case)
+
+    return _resolve
+
+
 if __name__ == '__main__':
     _rule = [
-        {'param': 'udid', 'type': 'string', 'value': 'Test'},
+        {'param': 'udid', 'type': 'Integer', 'value': 'Test'},
         {'param': 'autoAcceptAlerts', 'type': 'Boolean', 'value': 'True'},
     ]
     print(rule_list_to_dict(_rule, 'param', 'value', 'type'))

@@ -57,7 +57,7 @@ class Case(BaseModel, db.Model):
         self.post_position = json.dumps(kwargs.pop('post_position'))
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,
@@ -76,6 +76,7 @@ class Case(BaseModel, db.Model):
             'prePosition': json.loads(self.pre_position),
             'postPosition': json.loads(self.post_position),
             'projectId': self.project_id,
+            'caseSteps': json.loads(self.case_steps),
             'createTime': self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             'updateTime': self.update_time.strftime("%Y-%m-%d %H:%M:%S")
         }

@@ -34,7 +34,7 @@ class Set(BaseModel, db.Model):
         self.case_list = json.dumps(case_list, ensure_ascii=False)
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

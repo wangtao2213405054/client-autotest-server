@@ -26,7 +26,7 @@ class Version(BaseModel, db.Model):
         self.desc = desc
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

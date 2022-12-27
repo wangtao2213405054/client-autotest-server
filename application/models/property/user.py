@@ -48,7 +48,7 @@ class User(BaseModel, db.Model):
         self.department = json.dumps(department,ensure_ascii=False)
 
     @property
-    def to_dict(self):
+    def result(self):
         """ 将对象转换为字典数据 """
         user_dict = {
             'id': self.id,

@@ -33,7 +33,7 @@ class MessageEmail(BaseModel, db.Model):
         self.state = state
 
     @property
-    def to_dict(self):
+    def result(self):
         return dict(
             id=self.id,
             projectId=self.project_id,

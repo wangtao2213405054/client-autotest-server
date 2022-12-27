@@ -66,7 +66,7 @@ def get_task_info():
         if not task:
             continue
 
-        _task_info = task.to_dict
+        _task_info = task.result
         _task_info['power'] = item.id
         _task_dict_list.append(_task_info)
 

@@ -34,7 +34,7 @@ class Task(BaseModel, db.Model):
         self.count = 0
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

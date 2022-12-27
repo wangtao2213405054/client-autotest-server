@@ -63,7 +63,7 @@ def edit_master_info():
             db.session.rollback()
             return utils.rander(utils.DATABASE_ERR)
         else:
-            result = utils.socket_call(master.key, 'masterDeviceEdit', master.to_dict)
+            result = utils.socket_call(master.key, 'masterDeviceEdit', master.result)
             if not result:
                 return utils.rander(utils.SOCKET_ERR)
 
@@ -133,7 +133,7 @@ def get_master_list():
     # 获取设备在线状态
     master_dict_list = []
     for item in master_list:
-        items = item.to_dict
+        items = item.result
         items['online'] = item.key in ws.online_server
         master_dict_list.append(items)
 
@@ -225,7 +225,7 @@ def get_master_info():
     if not master_info:
         return utils.rander(utils.DATA_ERR, '此设备不存在')
 
-    return utils.rander(utils.OK, data=master_info.to_dict)
+    return utils.rander(utils.OK, data=master_info.result)
 
 
 @api.route('/devices/master/socket', methods=['GET', 'POST'])

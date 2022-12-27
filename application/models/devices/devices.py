@@ -40,7 +40,7 @@ class Master(BaseModel, db.Model):
         self.context = context
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,
@@ -92,7 +92,7 @@ class Worker(BaseModel, db.Model):
         self.blocker = blocker
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,
@@ -130,7 +130,7 @@ class Capabilities(BaseModel, db.Model):
         self.mapping = json.dumps(mapping, ensure_ascii=False)
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

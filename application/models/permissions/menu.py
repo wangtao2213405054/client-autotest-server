@@ -27,7 +27,7 @@ class Menu(BaseModel, db.Model):
         self.belong_type = belong_type
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

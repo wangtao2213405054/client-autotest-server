@@ -42,7 +42,7 @@ def new_task_report():
         logging.error(e)
         return utils.rander(utils.DATABASE_ERR)
 
-    socketio.emit('taskReportInfo', report.to_dict, to=f'taskReport{task_id}')
+    socketio.emit('taskReportInfo', report.result, to=f'taskReport{task_id}')
     return utils.rander(utils.OK)
 
 

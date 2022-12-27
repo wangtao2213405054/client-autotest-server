@@ -100,7 +100,7 @@ def edit_worker_info():
             logging.error(e)
             return utils.rander(utils.DATABASE_ERR)
 
-    result = utils.socket_call(master_info.key, 'workerDeviceEdit', worker.to_dict)
+    result = utils.socket_call(master_info.key, 'workerDeviceEdit', worker.result)
     if not result:
         return utils.rander(utils.SOCKET_ERR)
 
@@ -150,7 +150,7 @@ def get_worker_list():
         master_info = models.Master.query.filter_by(id=item.master).first()
         if not master_info or master_info.key not in ws.online_server:
             item.status = 4
-        worker_dict_list.append(item.to_dict)
+        worker_dict_list.append(item.result)
 
     return utils.rander(utils.OK, data=utils.paginate_structure(worker_dict_list, total, page, size))
 

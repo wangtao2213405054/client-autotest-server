@@ -26,7 +26,7 @@ class Report(BaseModel, db.Model):
         self.status = status
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

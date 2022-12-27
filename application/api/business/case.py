@@ -44,7 +44,8 @@ def edit_case_info():
 
     if not all([
         project_id, name, isinstance(special, bool), isinstance(action, bool), set_info, isinstance(set_info, list),
-        platform, isinstance(platform, list), isinstance(priority, int), module_list, isinstance(module_list, list)
+        platform, isinstance(platform, list), isinstance(priority, int), module_list, isinstance(module_list, list),
+        case_steps, isinstance(case_steps, list)
     ]):
         return utils.rander(utils.DATA_ERR)
 
@@ -64,6 +65,12 @@ def edit_case_info():
 
     if end_version and not models.Version.query.filter_by(id=end_version).first():
         return utils.rander(utils.DATA_ERR, '结束版本信息不存在')
+
+    try:
+        utils.resolve(case_steps)
+    except Exception as e:
+        logging.error(e)
+        return utils.rander(utils.DATA_ERR, '用例步骤解析失败')
 
     if case_id:
         case = models.Case.query.filter_by(id=case_id)
@@ -97,7 +104,7 @@ def edit_case_info():
             logging.error(e)
             return utils.rander(utils.DATABASE_ERR)
 
-        return utils.rander(utils.OK, data=case.first().to_dict)
+        return utils.rander(utils.OK, data=case.first().result)
 
     case = models.Case(
         project_id=project_id,
@@ -128,7 +135,7 @@ def edit_case_info():
         logging.error(e)
         return utils.rander(utils.DATABASE_ERR)
 
-    return utils.rander(utils.OK, data=case.to_dict)
+    return utils.rander(utils.OK, data=case.result)
 
 
 @api.route('/business/case/list', methods=['GET', 'POST'])
@@ -182,7 +189,7 @@ def get_case_list():
 
     case_dict_list = []
     for item in case:
-        items = item.to_dict
+        items = item.result
         create_name = query_name(item.create_id)
         update_name = query_name(item.update_id)
         items['createName'] = create_name.name if create_name else ''
@@ -227,3 +234,29 @@ def delete_case_info():
         return utils.rander(utils.DATABASE_ERR)
 
     return utils.rander(utils.OK)
+
+
+@api.route('/business/case/info', methods=['GET', 'POST'])
+@utils.login_required
+@utils.permissions_required
+def get_case_info():
+    """ 通过ID获取用例详情(执行机使用) """
+
+    body = request.get_json()
+
+    if not body:
+        return utils.rander(utils.BODY_ERR)
+
+    case_id = body.get('id')
+
+    case = models.Case.query.filter_by(id=case_id).first()
+
+    if not case:
+        return utils.rander(utils.DATA_ERR, '用例不存在')
+
+    case_info = case.result
+    case_info['caseSteps'] = utils.resolve(case_info['caseSteps'])
+    case_info['startVersionIdentify'] = models.Version.query.filter_by(id=case_info['startVersion']).first().identify
+    case_info['endVersionIdentify'] = models.Version.query.filter_by(id=case_info['startVersion']).first().identify
+
+    return utils.rander(utils.OK, data=case_info)

@@ -27,7 +27,7 @@ class Role(BaseModel, db.Model):
         self.permissions_menu = json.dumps(permissions_menu)
 
     @property
-    def to_dict(self):
+    def result(self):
         return {
             'id': self.id,
             'name': self.name,

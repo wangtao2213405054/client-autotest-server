@@ -34,7 +34,7 @@ class Event(BaseModel, db.Model):
         self.subset = subset
 
     @property
-    def to_dict(self):
+    def result(self):
         return dict(
             id=self.id,
             name=self.name,
