@@ -44,8 +44,7 @@ def edit_case_info():
 
     if not all([
         project_id, name, isinstance(special, bool), isinstance(action, bool), set_info, isinstance(set_info, list),
-        platform, isinstance(platform, list), isinstance(priority, int), module_list, isinstance(module_list, list),
-        len(module_list) == 2
+        platform, isinstance(platform, list), isinstance(priority, int), module_list, isinstance(module_list, list)
     ]):
         return utils.rander(utils.DATA_ERR)
 

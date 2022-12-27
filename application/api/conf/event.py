@@ -121,11 +121,11 @@ def get_event_list():
     platform = body.get('platform')
     project_id = body.get('projectId')
     page = body.get('page')
-    size = body.get('size')
+    size = body.get('pageSize')
     name = body.get('name')
     mapping = body.get('mapping')
 
-    if not all([project_id, platform]):
+    if not all([project_id, platform, page, size]):
         return utils.rander(utils.DATA_ERR)
 
     _query = [
