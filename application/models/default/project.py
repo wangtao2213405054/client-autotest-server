@@ -234,7 +234,8 @@ class Project(User):
                     self.get_map('String', None, 'name', '请输入元素名称', None, '元素名称', 'input'),
                     self.get_map('Integer', 5, 'wait_time', '请输入最大等待时间', None, '等待时间', 'input'),
                     self.get_map('Float', 0.5, 'interval', '请输入检测间隔', None, '检测间隔', 'input')
-                ]
+                ],
+                True
             ),
             models.Event(
                 '置于后台',
