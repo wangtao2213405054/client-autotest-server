@@ -92,3 +92,4 @@ if __name__ == '__main__':
         # db.create_all(Version.__bind_key__)
         Case.__table__.drop(db.engines.get(None))
         Case.__table__.create(db.engines.get(None))
+        db.session.execute(f'ALTER TABLE {Case.__tablename__} AUTO_INCREMENT = 1000000')

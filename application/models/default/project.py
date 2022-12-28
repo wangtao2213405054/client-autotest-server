@@ -36,6 +36,8 @@ class Project(User):
         self.set_element()
 
         self.set_event()
+        # 设置用例表从百万开始
+        db.session.execute(f'ALTER TABLE {models.Case.__tablename__} AUTO_INCREMENT = 1000000')
 
     @classmethod
     def set_element(cls):
