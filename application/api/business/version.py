@@ -43,6 +43,7 @@ def edit_version_info():
             'identify': identify,
             'desc': desc
         }
+
         try:
             version.update(update)
             db.session.commit()
@@ -110,26 +111,4 @@ def get_version_list():
 def delete_version_info():
     """ 删除版本信息 """
 
-    body = request.get_json()
-
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    version_id = body.get('id')
-
-    if not version_id:
-        return utils.rander(utils.DATA_ERR)
-
-    version = models.Version.query.filter_by(id=version_id)
-    if not version.first():
-        return utils.rander(utils.DATA_ERR, '版本不存在')
-
-    try:
-        version.delete()
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        logging.error(e)
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Version, dict(id='id'))

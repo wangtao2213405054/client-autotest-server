@@ -9,6 +9,7 @@ from .query import *
 from .message import *
 from .rule import *
 from .lock import Lock
+from .delete import delete, delete_or
 
 
 __all__ = [
@@ -22,5 +23,7 @@ __all__ = [
     'paginate_structure',
     'message',
     'notify',
-    'Lock'
+    'Lock',
+    'delete',
+    'delete_or'
 ]

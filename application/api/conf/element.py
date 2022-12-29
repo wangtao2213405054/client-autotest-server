@@ -120,25 +120,4 @@ def delete_element_info():
     :return:
     """
 
-    body = request.get_json()
-
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    element_id = body.get('id')
-
-    if not element_id:
-        return utils.rander(utils.DATA_ERR)
-
-    try:
-        element = models.Element.query.filter_by(id=element_id)
-        if not element.first():
-            return utils.rander(utils.DATA_ERR, '此元素已不存在')
-        element.delete()
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        logging.error(e)
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Element, dict(id='id'))

@@ -111,29 +111,4 @@ def get_classification_list():
 def delete_classification_info():
     """ 删除关系分类 """
 
-    body = request.get_json()
-
-    if not body:
-        utils.rander(utils.BODY_ERR)
-
-    classification_id = body.get('id')
-
-    if not classification_id:
-        return utils.rander(utils.DATA_ERR)
-
-    classification_info = models.Classification.query.filter_by(id=classification_id)
-
-    if not classification_info.first():
-        return utils.rander(utils.DATA_ERR, '此关系分类不存在')
-
-    # 查询此关系分类的子集并删除
-    try:
-        models.Classification.query.filter_by(node_id=classification_id).delete()
-        classification_info.delete()
-        db.session.commit()
-    except Exception as e:
-        logging.error(e)
-        db.session.rollback()
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Classification, dict(id='id'), dict(node_id='id'))

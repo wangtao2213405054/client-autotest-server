@@ -108,26 +108,4 @@ def get_capabilities_list():
 def delete_capabilities_info():
     """ 删除功能映射信息 """
 
-    body = request.get_json()
-
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    capabilities_id = body.get('id')
-
-    if not capabilities_id:
-        return utils.rander(utils.DATA_ERR)
-
-    capabilities_info = models.Capabilities.query.filter_by(id=capabilities_id)
-    if not capabilities_info.first():
-        return utils.rander(utils.DATA_ERR, '此功能映射不存在')
-
-    try:
-        capabilities_info.delete()
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        logging.error(e)
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Capabilities, dict(id='id'))

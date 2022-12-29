@@ -45,7 +45,7 @@ class User(BaseModel, db.Model):
         self.state = state
         self.node = node
         self.role = role
-        self.department = json.dumps(department,ensure_ascii=False)
+        self.department = json.dumps(department, ensure_ascii=False)
 
     @property
     def result(self):

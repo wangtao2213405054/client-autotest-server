@@ -82,29 +82,7 @@ def edit_event_info():
 def delete_event_info():
     """ 删除事件信息 """
 
-    body = request.get_json()
-
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    event_id = body.get('id')
-
-    if not event_id:
-        return utils.rander(utils.DATA_ERR)
-
-    try:
-        event = models.Event.query.filter_by(id=event_id)
-        if not event.first():
-            return utils.rander(utils.DATA_ERR, '此事件不存在')
-
-        event.delete()
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        logging.error(e)
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Event, dict(id='id'))
 
 
 @api.route('conf/event/list', methods=['GET', 'POST'])

@@ -119,17 +119,11 @@ def get_permissions_role_list():
 def delete_permissions_role_info():
     """ 删除角色信息 """
 
-    body = request.get_json()
-
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    role_id = body.get('id')
-
-    if not role_id:
+    _id = utils.query_id()
+    if not _id:
         return utils.rander(utils.DATA_ERR)
 
-    role_info = models.Role.query.filter_by(id=role_id)
+    role_info = models.Role.query.filter_by(id=_id)
 
     if not role_info.first():
         return utils.rander(utils.DATA_ERR, '此角色信息不存在')

@@ -121,27 +121,4 @@ def get_set_list():
 def delete_set_info():
     """ 删除集合信息 """
 
-    body = request.get_json()
-
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    set_id = body.get('id')
-
-    if not set_id:
-        return utils.rander(utils.DATA_ERR)
-
-    _set = models.Set.query.filter_by(id=set_id)
-
-    if not _set.first():
-        return utils.rander(utils.DATA_ERR, '集合不存在')
-
-    try:
-        _set.delete()
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        logging.error(e)
-        return utils.rander(utils.DATA_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Set, dict(id='id'))

@@ -27,6 +27,7 @@ def blueprint():
     from .task import allot, center, report
     from .devices import master, worker, capabilities
     from .message import message
+    from .mock import domain, api
 
 
 blueprint()

@@ -43,14 +43,15 @@ def edit_project_info():
         if not project_info.first():
             return utils.rander(utils.DATA_ERR, '此项目已不存在')
 
-        update_dict = {
-            'name': name,
-            'describe': describe,
-            'avatar': avatar,
-            'create_user': g.user_name,
-            'create_id': g.user_id,
-            'mold': mold
-        }
+        update_dict = dict(
+            name=name,
+            describe=describe,
+            avatar=avatar,
+            create_user=g.user_name,
+            create_id=g.user_id,
+            mold=mold
+        )
+
         try:
             project_info.update(update_dict)
             db.session.commit()
@@ -111,24 +112,4 @@ def get_project_list():
 def delete_project_info():
     """ 删除项目信息 """
 
-    body = request.get_json()
-
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    project_id = body.get('id')
-
-    project = models.Project.query.filter_by(id=project_id)
-
-    if not project.first():
-        return utils.rander(utils.DATA_ERR, '此项目已不存在')
-
-    try:
-        project.delete()
-        db.session.commit()
-    except Exception as e:
-        logging.error(e)
-        db.session.rollback()
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Project, dict(id='id'))

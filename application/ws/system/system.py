@@ -2,7 +2,6 @@
 # _date: 2022/9/28 16:39
 
 from application import socketio
-from flask_socketio import join_room, close_room
 from flask import request
 
 

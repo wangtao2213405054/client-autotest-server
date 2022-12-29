@@ -69,13 +69,13 @@ def edit_master_info():
 
         return utils.rander(utils.OK)
 
-    udid = uuid.uuid1().hex
-    token = utils.create_token(True, user_name=name, user_id=udid)
+    did = uuid.uuid1().hex
+    token = utils.create_token(True, user_name=name, user_id=did)
     master = models.Master(
         name=name,
         max_context=max_context,
         desc=desc,
-        key=udid,
+        key=did,
         token=token,
         role=role,
         project_id=project_id,

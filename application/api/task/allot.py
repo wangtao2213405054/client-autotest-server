@@ -102,17 +102,12 @@ def get_task_info():
 def edit_task_sign():
     """ 将任务的标记置为False """
 
-    body = request.get_json()
+    _id = utils.query_id()
 
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    task_id = body.get('id')
-
-    if not task_id:
+    if not _id:
         return utils.rander(utils.DATA_ERR)
 
-    task = models.Task.query.filter_by(id=task_id)
+    task = models.Task.query.filter_by(id=_id)
 
     if not task.first():
         return utils.rander(utils.DATA_ERR, '此任务已不存在')

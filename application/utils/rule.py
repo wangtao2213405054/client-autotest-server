@@ -47,7 +47,7 @@ def resolve(steps):
 
 if __name__ == '__main__':
     _rule = [
-        {'param': 'udid', 'type': 'Integer', 'value': 'Test'},
+        {'param': 'did', 'type': 'Integer', 'value': 'Test'},
         {'param': 'autoAcceptAlerts', 'type': 'Boolean', 'value': 'True'},
     ]
     print(rule_list_to_dict(_rule, 'param', 'value', 'type'))

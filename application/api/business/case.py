@@ -210,30 +210,7 @@ def query_name(_id):
 def delete_case_info():
     """ 删除用例信息 """
 
-    body = request.get_json()
-
-    if not body:
-        return utils.rander(utils.BODY_ERR)
-
-    case_id = body.get('id')
-
-    if not case_id:
-        return utils.rander(utils.DATA_ERR)
-
-    case = models.Case.query.filter_by(id=case_id)
-
-    if not case.first():
-        return utils.rander(utils.DATA_ERR, '用例不存在')
-
-    try:
-        case.delete()
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        logging.error(e)
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Case, dict(id='id'))
 
 
 @api.route('/business/case/info', methods=['GET', 'POST'])

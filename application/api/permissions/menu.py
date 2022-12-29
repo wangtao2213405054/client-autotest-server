@@ -4,7 +4,6 @@
 from application.api import api
 from application import db, models, utils
 from flask import request
-from sqlalchemy import or_
 
 import logging
 
@@ -160,12 +159,4 @@ def delete_permissions_menu_info():
 
     delete_list = delete_menu_tree(menu_id)
 
-    try:
-        models.Menu.query.filter(or_(*[models.Menu.id == item for item in delete_list])).delete()
-        db.session.commit()
-    except Exception as e:
-        logging.error(e)
-        db.session.rollback()
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete_or(models.Menu, models.Menu.id, delete_list)

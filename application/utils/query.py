@@ -2,6 +2,7 @@
 # _date: 2022/8/23 14:00
 
 from application import models
+from flask import request
 
 import logging
 
@@ -47,3 +48,15 @@ def get_master_info(key):
         return master
     except Exception as e:
         logging.error(e)
+
+
+def query_id():
+    """ 从 request 中获取 id """
+    body = request.get_json()
+
+    if not body:
+        return False
+
+    _id = body.get('id')
+
+    return _id

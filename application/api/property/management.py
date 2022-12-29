@@ -174,16 +174,7 @@ def delete_user_info():
     if not all([user_id, isinstance(user_id, list)]):
         return utils.rander(utils.DATA_ERR)
 
-    try:
-        for item in user_id:
-            models.User.query.filter_by(id=item).delete()
-        db.session.commit()
-    except Exception as e:
-        logging.error(e)
-        db.session.rollback()
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete_or(models.User, models.User.id, user_id)
 
 
 @api.route('/account/user/ids', methods=['GET', 'POST'])

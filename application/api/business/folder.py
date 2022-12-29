@@ -73,7 +73,7 @@ def edit_folder_info():
             return utils.rander(utils.DATA_ERR, '此模块不存在')
 
         try:
-            module_info.update({'name': name})
+            module_info.update(dict(name=name))
             db.session.flush()
             db.session.commit()
         except Exception as e:
@@ -121,29 +121,4 @@ def edit_folder_info():
 def delete_folder_info():
     """ 删除模块信息 """
 
-    body = request.get_json()
-
-    if not body:
-        utils.rander(utils.BODY_ERR)
-
-    module_id = body.get('id')
-
-    if not module_id:
-        return utils.rander(utils.DATA_ERR)
-
-    module_info = models.Folder.query.filter_by(id=module_id)
-
-    if not module_info.first():
-        return utils.rander(utils.DATA_ERR, '此关系分类不存在')
-
-    # 查询此关系分类的子集并删除
-    try:
-        models.Folder.query.filter_by(node_id=module_id).delete()
-        module_info.delete()
-        db.session.commit()
-    except Exception as e:
-        logging.error(e)
-        db.session.rollback()
-        return utils.rander(utils.DATABASE_ERR)
-
-    return utils.rander(utils.OK)
+    return utils.delete(models.Folder, dict(id='id'), dict(node_id='id'))
