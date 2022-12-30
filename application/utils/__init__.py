@@ -10,6 +10,7 @@ from .message import *
 from .rule import *
 from .lock import Lock
 from .delete import delete, delete_or
+from .util import *
 
 
 __all__ = [

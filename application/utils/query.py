@@ -3,6 +3,7 @@
 
 from application import models
 from flask import request
+from sqlalchemy import or_
 
 import logging
 
@@ -60,3 +61,18 @@ def query_id():
     _id = body.get('id')
 
     return _id
+
+
+def query_users(_id: list):
+    """ 通过 id 组获取用户信息 """
+
+    if not _id:
+        return []
+
+    return models.User.query.filter(*[models.User.id == item for item in _id]).all()
+
+
+def query_user(_id: int):
+    """ 通过 id 获取用户信息 """
+
+    return models.User.query.filter_by(id=_id).first()

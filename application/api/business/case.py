@@ -4,6 +4,7 @@
 from application.api import api
 from application import utils, db, models
 from flask import request, g
+from sqlalchemy import or_
 
 import logging
 import json
@@ -214,8 +215,8 @@ def delete_case_info():
 
 
 @api.route('/business/case/info', methods=['GET', 'POST'])
-@utils.login_required
-@utils.permissions_required
+# @utils.login_required
+# @utils.permissions_required
 def get_case_info():
     """ 通过ID获取用例详情(执行机使用) """
 
@@ -233,7 +234,22 @@ def get_case_info():
 
     case_info = case.result
     case_info['caseSteps'] = utils.resolve(case_info['caseSteps'])
-    case_info['startVersionIdentify'] = models.Version.query.filter_by(id=case_info['startVersion']).first().identify
-    case_info['endVersionIdentify'] = models.Version.query.filter_by(id=case_info['startVersion']).first().identify
+    start_version = models.Version.query.filter_by(id=case_info['startVersion']).first()
+    end_version = models.Version.query.filter_by(id=case_info['startVersion']).first()
+    set_info = models.Set.query.filter(or_(*[models.Set.id == item for item in case_info['setInfo']])).all()
+    create_name = utils.query_user(case_info['createId'])
+    update_name = utils.query_user(case_info['updateId'])
+    module_list = models.Folder.query.filter(or_(*[models.Folder.id == item for item in case_info['moduleList']])).all()
+    case_info['startVersionIdentify'] = start_version.identify if start_version else None
+    case_info['endVersionIdentify'] = end_version.identify if end_version else None
+    case_info['startVersionName'] = start_version.name if start_version else None
+    case_info['endVersionName'] = end_version.name if end_version else None
+    case_info['setNameInfo'] = [item.name for item in set_info]
+    case_info['officerNameList'] = [item.name for item in utils.query_users(case_info['officerList'])]
+    case_info['createName'] = create_name.name if create_name else None
+    case_info['updateName'] = update_name.name if update_name else None
+    case_info['prePosition'] = case_info['prePosition'][2] if case_info['prePosition'] else None
+    case_info['postPosition'] = case_info['postPosition'][2] if case_info['postPosition'] else None
+    case_info['moduleNameList'] = [item.name for item in module_list]
 
     return utils.rander(utils.OK, data=case_info)
