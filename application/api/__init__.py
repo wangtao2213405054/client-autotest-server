@@ -28,6 +28,7 @@ def blueprint():
     from .devices import master, worker, capabilities
     from .message import message
     from .mock import domain, api
+    from .upload import file
 
 
 blueprint()

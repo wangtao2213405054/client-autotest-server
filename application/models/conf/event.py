@@ -21,10 +21,11 @@ class Event(BaseModel, db.Model):
     platform = db.Column(db.String(64), nullable=False)  # 所属平台
     project_id = db.Column(db.Integer, nullable=False)  # 所属项目
     subset = db.Column(db.Boolean, nullable=False)  # 是否存在子集
+    screenshot = db.Column(db.Boolean, nullable=False)  # 是否截图
     desc = db.Column(db.Text)  # 事件描述
     params = db.Column(LONGTEXT)  # 事件详细步骤参数
 
-    def __init__(self, name, mapping, platform, project_id, desc, params, subset=False):
+    def __init__(self, name, mapping, platform, project_id, desc, params, subset=False, screenshot=False):
         self.name = name
         self.mapping = mapping
         self.platform = platform
@@ -32,6 +33,7 @@ class Event(BaseModel, db.Model):
         self.desc = desc
         self.params = json.dumps(params, ensure_ascii=False)
         self.subset = subset
+        self.screenshot = screenshot
 
     @property
     def result(self):
@@ -44,6 +46,7 @@ class Event(BaseModel, db.Model):
             func=json.loads(self.params),
             mapping=self.mapping,
             subset=self.subset,
+            screenshot=self.screenshot,
             createTime=self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             updateTime=self.update_time.strftime("%Y-%m-%d %H:%M:%S")
         )

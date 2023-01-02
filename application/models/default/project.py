@@ -194,7 +194,8 @@ class Project(User):
                     self.get_map('String', None, 'value', '请输入元素元素内容', None, '元素内容', 'input'),
                     self.get_map('Integer', 0, 'index', '请选择元素位置', 'ElementIndex', '元素位置', 'select'),
                     self.get_map('String', None, 'name', '请输入元素名称', None, '元素名称', 'input')
-                ]
+                ],
+                screenshot=True
             ),
             models.Event(
                 '清空文本',
@@ -207,7 +208,8 @@ class Project(User):
                     self.get_map('String', None, 'value', '请输入元素元素内容', None, '元素内容', 'input'),
                     self.get_map('Integer', 0, 'index', '请选择元素位置', 'ElementIndex', '元素位置', 'select'),
                     self.get_map('String', None, 'name', '请输入元素名称', None, '元素名称', 'input')
-                ]
+                ],
+                screenshot=True
             ),
             models.Event(
                 '输入文本',
@@ -221,7 +223,8 @@ class Project(User):
                     self.get_map('String', None, 'content', '请输入要写入的内容', None, '输入内容', 'input'),
                     self.get_map('Integer', 0, 'index', '请选择元素位置', 'ElementIndex', '元素位置', 'select'),
                     self.get_map('String', None, 'name', '请输入元素名称', None, '元素名称', 'input')
-                ]
+                ],
+                screenshot=True
             ),
             models.Event(
                 '隐式等待',
@@ -237,7 +240,8 @@ class Project(User):
                     self.get_map('Integer', 5, 'wait_time', '请输入最大等待时间', None, '等待时间', 'input'),
                     self.get_map('Float', 0.5, 'interval', '请输入检测间隔', None, '检测间隔', 'input')
                 ],
-                True
+                True,
+                screenshot=True
             ),
             models.Event(
                 '置于后台',
@@ -276,7 +280,8 @@ class Project(User):
                     self.get_map('Float', None, 'start', '请输入开始滑动位置的比例', None, '开始位置', 'input'),
                     self.get_map('Float', None, 'end', '请输入滑动结束位置的比例', None, '结束位置', 'input'),
                     self.get_map('Float', None, 'duration', '请输入滑动开始到结束之间的时长', None, '滑动时长', 'input'),
-                ]
+                ],
+                screenshot=True
             ),
             models.Event(
                 '元素滑动',
@@ -297,7 +302,8 @@ class Project(User):
                     self.get_map('Float', None, 'start', '请输入开始滑动位置的比例', None, '开始位置', 'input'),
                     self.get_map('Float', None, 'end', '请输入滑动结束位置的比例', None, '结束位置', 'input'),
                     self.get_map('Float', None, 'duration', '请输入滑动开始到结束之间的时长', None, '滑动时长', 'input'),
-                ]
+                ],
+                screenshot=True
             ),
             models.Event(
                 '退出程序',
@@ -384,7 +390,8 @@ class Project(User):
                     self.get_map('String', None, 'value', '请输入元素元素内容', None, '元素内容', 'input'),
                     self.get_map('Integer', 0, 'index', '请选择元素位置', 'ElementIndex', '元素位置', 'select'),
                     self.get_map('String', None, 'name', '请输入元素名称', None, '元素名称', 'input')
-                ]
+                ],
+                screenshot=True
             ),
             models.Event(
                 '双击事件',
@@ -397,7 +404,8 @@ class Project(User):
                     self.get_map('String', None, 'value', '请输入元素元素内容', None, '元素内容', 'input'),
                     self.get_map('Integer', 0, 'index', '请选择元素位置', 'ElementIndex', '元素位置', 'select'),
                     self.get_map('String', None, 'name', '请输入元素名称', None, '元素名称', 'input')
-                ]
+                ],
+                screenshot=True
             ),
             models.Event(
                 '悬停事件',

@@ -38,7 +38,8 @@ def resolve(steps):
             name=case.get('name'),
             subset=case.get('subset'),
             desc=case.get('desc'),
-            params=rule_list_to_dict(case.get('func'), 'param', 'default', 'dataType')
+            params=rule_list_to_dict(case.get('func'), 'param', 'default', 'dataType'),
+            screenshot=case.get('screenshot')
         )
         _resolve.append(_resolve_case)
 

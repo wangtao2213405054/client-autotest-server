@@ -16,6 +16,7 @@ setup(
         'flask >= 2.2.2',
         'redis',
         'flask-wtf',
+        'cos-python-sdk-v5',  # 腾讯云OSS 系统存储桶, 可根据实际项目替换为对应的存储系统
         'pymysql',
         'flask_socketio >= 5.3.2',
         'eventlet',
