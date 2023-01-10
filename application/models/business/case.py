@@ -43,7 +43,7 @@ class Case(BaseModel, db.Model):
         self.action = kwargs.pop('action')
         self.start_version = kwargs.pop('start_version')
         self.end_version = kwargs.pop('end_version')
-        self.set_info = json.dumps(kwargs.pop('set_info'))
+        self.set_info = kwargs.pop('set_info')
         self.platform = json.dumps(kwargs.pop('platform'))
         self.priority = kwargs.pop('priority')
         self.officer_list = json.dumps(kwargs.pop('officer_list'))
@@ -66,7 +66,7 @@ class Case(BaseModel, db.Model):
             'action': self.action,
             'startVersion': self.start_version,
             'endVersion': self.end_version,
-            'setInfo': json.loads(self.set_info),
+            'setInfo': [int(item) for item in self.set_info.split(',')[:-1]],
             'platform': json.loads(self.platform),
             'priority': self.priority,
             'officerList': json.loads(self.officer_list),

@@ -52,6 +52,7 @@ def edit_case_info():
 
     business, module = module_list
     project = models.Project.query.filter_by(id=project_id).first()
+    set_info = f"{','.join([str(item) for item in set_info])},"
 
     if not project:
         return utils.rander(utils.DATA_ERR, '项目信息不存在')
@@ -85,7 +86,7 @@ def edit_case_info():
             action=action,
             start_version=start_version,
             end_version=end_version,
-            set_info=json.dumps(set_info),
+            set_info=set_info,
             platform=json.dumps(platform),
             priority=priority,
             officer_list=json.dumps(officer_list),
