@@ -27,10 +27,16 @@ def edit_set_info():
     desc = body.get('desc')
     custom_set = body.get('customSet')
     custom_set = custom_set if custom_set else []
-    case_list = [item[2] for item in custom_set]
 
     if not all([project_id, name, isinstance(special, bool), isinstance(custom_set, list)]):
         return utils.rander(utils.DATA_ERR)
+
+    if special and not custom_set:
+        return utils.rander(utils.DATA_ERR, '特殊集合请选择测试用例')
+
+    for item in custom_set:
+        if not isinstance(item, list) or len(item) != 3:
+            return utils.rander(utils.DATA_ERR)
 
     project = models.Project.query.filter_by(id=project_id).first()
 
@@ -46,8 +52,7 @@ def edit_set_info():
             name=name,
             special=special,
             desc=desc,
-            custom_set=json.dumps(custom_set, ensure_ascii=False),
-            case_list=json.dumps(case_list, ensure_ascii=False)
+            custom_set=json.dumps(custom_set, ensure_ascii=False)
         )
         try:
             _set.update(update)
@@ -64,8 +69,7 @@ def edit_set_info():
         special,
         project_id,
         desc,
-        custom_set,
-        case_list
+        custom_set
     )
     try:
         db.session.add(_set)

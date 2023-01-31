@@ -23,15 +23,13 @@ class Set(BaseModel, db.Model):
     project_id = Column(db.Integer, nullable=False)  # 所属项目
     desc = Column(db.Text)  # 版本描述
     custom_set = Column(LONGTEXT)  # 测试用例集
-    case_list = Column(LONGTEXT)  # 测试用例id集合
 
-    def __init__(self, name, special, project_id, desc, custom_set, case_list):
+    def __init__(self, name, special, project_id, desc, custom_set):
         self.name = name
         self.special = special
         self.project_id = project_id
         self.desc = desc
         self.custom_set = json.dumps(custom_set, ensure_ascii=False)
-        self.case_list = json.dumps(case_list, ensure_ascii=False)
 
     @property
     def result(self):
@@ -41,7 +39,6 @@ class Set(BaseModel, db.Model):
             'special': self.special,
             'project_id': self.project_id,
             'customSet': json.loads(self.custom_set),
-            'caseList': json.loads(self.case_list),
             'desc': self.desc,
             'createTime': self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             'updateTime': self.update_time.strftime("%Y-%m-%d %H:%M:%S")
@@ -51,5 +48,5 @@ class Set(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app('local')
     with app.app_context():
-        # Set.__table__.drop(db.engines.get(None))
+        Set.__table__.drop(db.engines.get(None))
         Set.__table__.create(db.engines.get(None))

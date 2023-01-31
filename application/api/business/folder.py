@@ -15,12 +15,15 @@ def get_folder_list():
     """ 获取文件夹列表 """
 
     body = request.get_json()
+
     if not body:
         return utils.rander(utils.BODY_ERR)
 
     folder_id = body.get('id')
     project_id = body.get('projectId')
     folder_id = folder_id if folder_id else 0
+    special = body.get('special')
+    special = True if special is None else special
 
     if not project_id:
         return utils.rander(utils.DATA_ERR)
@@ -35,7 +38,7 @@ def get_folder_list():
     for items in folder:
         children = items.result
         children['leaf'] = False if models.Folder.query.filter_by(node_id=items.id).first() else True
-        children['exist'] = False if models.Case.query.filter_by(module=items.id, special=True).first() else True
+        children['exist'] = False if models.Case.query.filter_by(module=items.id, special=special).first() else True
         folder_dict_list.append(children)
 
     return utils.rander(utils.OK, data=folder_dict_list)
