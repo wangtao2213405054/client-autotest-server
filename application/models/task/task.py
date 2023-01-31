@@ -16,17 +16,21 @@ class Task(BaseModel, db.Model):
     id = Column(db.Integer, primary_key=True)  # 主键
     name = Column(db.String(32), nullable=False)  # 任务名称
     platform = Column(db.String(64), nullable=False)  # 所属平台
-    version = Column(db.String(64))  # 运行版本
+    environmental = Column(db.Integer, nullable=False)  # 所属环境
+    url = Column(db.Text, nullable=False)  # 安装包连接或启动连接
+    cases = Column(db.Text, nullable=False)  # 要运行的 Case 列表
     devices = Column(db.Integer)  # 指定的运行设备
     project_id = Column(db.Integer)  # 所属项目
     status = Column(db.Integer)  # 任务状态 0 待执行 1 执行中 2 执行成功 3 执行失败
     sign = Column(db.Boolean)  # 任务标记, 为真时说明任务已经发放
     count = Column(db.Integer, nullable=False)  # 测试用例数量
 
-    def __init__(self, name, platform, version, project_id, devices=None):
+    def __init__(self, name, platform, environmental, url, cases, project_id, devices=None):
         self.name = name
         self.platform = platform.lower()
-        self.version = version
+        self.environmental = environmental
+        self.url = url
+        self.cases = cases
         self.devices = devices
         self.project_id = project_id
         self.status = 0

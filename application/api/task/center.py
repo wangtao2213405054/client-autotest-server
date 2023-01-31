@@ -4,6 +4,7 @@
 from application.api import api
 from application import utils, models, db, socketio
 from flask import request
+from sqlalchemy import or_
 
 import logging
 
@@ -21,20 +22,79 @@ def new_task_info():
 
     name = body.get('name')
     platform = body.get('platform')
-    devices = body.get('devices')
     project_id = body.get('projectId')
-    version = body.get('version')
+    url = body.get('url')
+    environmental = body.get('environmental')
 
-    if not all([name, platform, project_id, version]):
+    version = body.get('version')
+    priority = body.get('priority')
+    _set = body.get('set')
+    devices = body.get('devices')
+
+    if not all([name, platform, project_id, environmental, url]):
+        return utils.rander(utils.DATA_ERR)
+
+    _environmental = models.Domain.query.filter_by(id=environmental).first()
+    if not _environmental:
         return utils.rander(utils.DATA_ERR)
 
     if devices and not all([isinstance(devices, list), len(devices) == 2]):
         return utils.rander(utils.DATA_ERR)
 
+    if _set and not isinstance(_set, list):
+        return utils.rander(utils.DATA_ERR)
+
+    query_case = [
+        models.Case.project_id == project_id,
+        models.Case.special == 0,
+        models.Case.action == 1
+    ]
+
+    if _set:
+        query_case.append(or_(models.Case.set_info.like(f'%{item},%') for item in _set))
+
+    if version:
+        _version = models.Version.query.filter_by(id=version).first()
+        if not _version:
+            return utils.rander(utils.DATA_ERR, '无此版本信息')
+
+        _start_version = models.Version.query.filter(
+            models.Version.project_id == project_id,
+            _version.identify >= models.Version.identify
+        ).all()
+        _start_version = [item.id for item in _start_version]
+
+        _end_version = models.Version.query.filter(
+            models.Version.project_id == project_id,
+            _version.identify < models.Version.identify
+        ).all()
+        _end_version = [item.id for item in _end_version]
+
+        null = None
+        query_case.append(or_(
+            models.Case.start_version.in_(_start_version),
+            models.Case.start_version == null
+        ))
+        query_case.append(or_(
+            models.Case.end_version.in_(_end_version),
+            models.Case.end_version == null
+        ))
+
+    case_info = models.Case.query.filter(*query_case).all()
+
+    if not len(case_info):
+        return utils.rander(utils.DATA_ERR, '筛选条件不存在用例')
+
+    if isinstance(priority, bool):
+        case_info = sorted(case_info, key=lambda x: x['test'], reverse=priority)
+    cases = [item.id for item in case_info]
+
     task = models.Task(
         name,
         platform,
-        version,
+        environmental,
+        url,
+        cases,
         project_id,
         devices[1] if isinstance(devices, list) else None,
     )

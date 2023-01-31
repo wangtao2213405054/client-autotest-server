@@ -66,7 +66,7 @@ class Case(BaseModel, db.Model):
             'action': self.action,
             'startVersion': self.start_version,
             'endVersion': self.end_version,
-            'setInfo': json.loads(self.set_info),
+            'setInfo': list(map(lambda x: int(x), self.set_info.split(',')[:-1])),
             'platform': json.loads(self.platform),
             'priority': self.priority,
             'officerList': json.loads(self.officer_list),
