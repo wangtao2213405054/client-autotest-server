@@ -43,7 +43,7 @@ class Case(BaseModel, db.Model):
         self.action = kwargs.pop('action')
         self.start_version = kwargs.pop('start_version')
         self.end_version = kwargs.pop('end_version')
-        self.set_info = json.dumps(kwargs.pop('set_info'))
+        self.set_info = kwargs.pop('set_info')
         self.platform = json.dumps(kwargs.pop('platform'))
         self.priority = kwargs.pop('priority')
         self.officer_list = json.dumps(kwargs.pop('officer_list'))
