@@ -59,11 +59,11 @@ def login_required(view_func):
             return utils.rander(payload['info']['error'])
 
         # get property id give global g
-        user_id, user_name = payload['info'].get('user_id'), payload['info'].get('user_name')
+        user_id, username = payload['info'].get('user_id'), payload['info'].get('username')
         if not user_id:
             return utils.rander(utils.TOKEN_ERR)
         g.user_id = user_id
-        g.user_name = user_name
+        g.username = username
 
         logging.info('user_id: {}'.format(user_id))
         return view_func(*args, **kwargs)
@@ -72,4 +72,4 @@ def login_required(view_func):
 
 
 if __name__ == '__main__':
-    print(create_token(True, user_name='Mac', user_id=2, device='Mac14'))
+    print(create_token(True, username='Mac', user_id=2, device='Mac14'))

@@ -27,7 +27,7 @@ def connect():
         return False
 
     user_info = payload.get('info')
-    user_id, username = user_info.get('user_id'), user_info.get('user_name')
+    user_id, username = user_info.get('user_id'), user_info.get('username')
 
     if user_id not in online_server:
         online_server.append(user_id)
@@ -53,7 +53,7 @@ def test_disconnect():
     payload = utils.analytic_token(device_token)
 
     user_info = payload.get('info')
-    user_id, username = user_info.get('user_id'), user_info.get('user_name')
+    user_id, username = user_info.get('user_id'), user_info.get('username')
 
     if user_id in online_server:
         online_server.remove(user_id)

@@ -3,7 +3,7 @@
 
 from application.api import api
 from application import utils, models, db, socketio
-from flask import request
+from flask import request, g
 from sqlalchemy import or_
 
 import logging
@@ -86,7 +86,7 @@ def new_task_info():
         return utils.rander(utils.DATA_ERR, '筛选条件不存在用例')
 
     if isinstance(priority, bool):
-        case_info = sorted(case_info, key=lambda x: x['test'], reverse=priority)
+        case_info = sorted(case_info, key=lambda x: x.priority, reverse=priority)
     cases = [item.id for item in case_info]
 
     task = models.Task(
@@ -95,6 +95,7 @@ def new_task_info():
         environmental,
         url,
         cases,
+        g.username,
         project_id,
         devices[1] if isinstance(devices, list) else None,
     )

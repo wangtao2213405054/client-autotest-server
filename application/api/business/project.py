@@ -47,7 +47,7 @@ def edit_project_info():
             name=name,
             describe=describe,
             avatar=avatar,
-            create_user=g.user_name,
+            create_user=g.username,
             create_id=g.user_id,
             mold=mold
         )
@@ -62,7 +62,7 @@ def edit_project_info():
 
         return utils.rander(utils.OK)
 
-    project_info = models.Project(name, describe, avatar, mold, g.user_name, g.user_id)
+    project_info = models.Project(name, describe, avatar, mold, g.username, g.user_id)
     try:
         db.session.add(project_info)
         db.session.commit()

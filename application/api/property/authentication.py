@@ -26,7 +26,7 @@ def user_login():
     if not user_info or user_info.password != password:
         return utils.rander(utils.DATA_ERR, '用户名或密码错误')
 
-    token = utils.create_token(user_id=user_info.id, user_name=user_info.name)
+    token = utils.create_token(user_id=user_info.id, username=user_info.name)
     user_info = user_info.result
     user_info['token'] = token
     return utils.rander(utils.OK, data=user_info)
