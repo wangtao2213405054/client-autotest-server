@@ -127,11 +127,14 @@ def get_task_list():
     size = body.get('pageSize')
     status = body.get('status')
     name = body.get('name')
+    project_id = body.get('projectId')
 
-    if not all([page, size]):
+    if not all([page, size, project_id]):
         return utils.rander(utils.DATA_ERR)
 
-    _query = {}
+    _query = {
+        'project_id': project_id
+    }
 
     if status:
         _query['status'] = status
@@ -167,8 +170,8 @@ def update_task_status():
         return utils.rander(utils.DATA_ERR)
 
     task = models.Task.query.filter_by(id=task_id)
-
-    if not task.first():
+    task_info = task.first()
+    if not task_info:
         return utils.rander(utils.DATA_ERR, '此任务已不存在')
 
     try:
@@ -179,4 +182,5 @@ def update_task_status():
         logging.error(e)
         return utils.rander(utils.DATABASE_ERR)
 
+    socketio.emit('taskStatus', {'taskId': task_info.id, 'status': task_info.status})
     return utils.rander(utils.OK)
