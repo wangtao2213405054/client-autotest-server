@@ -6,6 +6,7 @@ from application import utils, models, db, socketio
 from flask import request
 
 import logging
+import json
 
 
 @api.route('/task/report/new', methods=['POST', 'PUT'])
@@ -27,21 +28,36 @@ def new_task_report():
     if not all([task_id, name, isinstance(status, int)]):
         return utils.rander(utils.DATA_ERR)
 
-    task = models.Task.query.filter_by(id=task_id).first()
-    if not task:
+    task = models.Task.query.filter_by(id=task_id)
+    task_info = task.first()
+    if not task_info:
         return utils.rander(utils.DATA_ERR, '任务不存在')
 
+    task_dict = {}
+    if status == 1:
+        task_dict['pass_case'] = task_info.pass_case + 1
+    else:
+        task_dict['fail_case'] = task_info.fail_case + 1
     report = models.Report(
         name, desc, task_id, status
     )
     try:
         db.session.add(report)
+        task.update(task_dict)
+        db.session.flush()
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         logging.error(e)
         return utils.rander(utils.DATABASE_ERR)
 
+    _run_info = {
+        'id': task_info.id,
+        'pass': task_info.pass_case,
+        'fail': task_info.fail_case,
+        'percentage': round((task_info.pass_case + task_info.fail_case) / len(json.loads(task_info.cases)) * 100, 2)
+    }
+    socketio.emit('taskRunningStatus', _run_info)
     socketio.emit('taskReportInfo', report.result, to=f'taskReport{task_id}')
     return utils.rander(utils.OK)
 

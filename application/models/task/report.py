@@ -17,7 +17,7 @@ class Report(BaseModel, db.Model):
     name = Column(db.String(32), nullable=False)  # 报告名称
     desc = Column(db.Text)  # 报告描述
     task_id = Column(db.Integer, nullable=False)  # 所属任务
-    status = Column(db.Integer, nullable=False)  # 报告状态 0 成功 1 跳过 2 成功 3 失败 4 异常
+    status = Column(db.Integer, nullable=False)  # 报告状态 0 成功 1 成功 2 失败 3 异常
 
     def __init__(self, name, desc, task_id, status):
         self.name = name

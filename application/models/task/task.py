@@ -26,6 +26,8 @@ class Task(BaseModel, db.Model):
     project_id = Column(db.Integer)  # 所属项目
     status = Column(db.Integer)  # 任务状态 0 待执行 1 执行中 2 执行成功 3 执行失败
     sign = Column(db.Boolean)  # 任务标记, 为真时说明任务已经发放
+    pass_case = Column(db.Integer)  # 成功用例数
+    fail_case = Column(db.Integer)  # 失败用例数
 
     def __init__(self, name, platform, environmental, url, cases, username, project_id, devices=None):
         self.name = name
@@ -38,6 +40,8 @@ class Task(BaseModel, db.Model):
         self.project_id = project_id
         self.status = 0
         self.sign = False
+        self.pass_case = 0
+        self.fail_case = 0
 
     @property
     def result(self):
@@ -56,6 +60,9 @@ class Task(BaseModel, db.Model):
             'projectId': self.project_id,
             'status': self.status,
             'count': len(json.loads(self.cases)),
+            'passCase': self.pass_case,
+            'failCase': self.fail_case,
+            'percentage': round((self.pass_case + self.fail_case) / len(json.loads(self.cases)) * 100, 2),
             'createTime': self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             'updateTime': self.update_time.strftime("%Y-%m-%d %H:%M:%S")
         }
