@@ -24,7 +24,7 @@ class Task(BaseModel, db.Model):
     username = Column(db.String(64))  # 创建人
     devices = Column(db.Integer)  # 指定的运行设备
     project_id = Column(db.Integer)  # 所属项目
-    status = Column(db.Integer)  # 任务状态 0 待执行 1 执行中 2 执行成功 3 执行失败
+    status = Column(db.Integer)  # 任务状态 0 待执行 1 执行中 2 执行成功 3 执行失败 4任务暂停
     sign = Column(db.Boolean)  # 任务标记, 为真时说明任务已经发放
     pass_case = Column(db.Integer)  # 成功用例数
     fail_case = Column(db.Integer)  # 失败用例数

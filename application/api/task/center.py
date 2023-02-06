@@ -127,26 +127,33 @@ def get_task_list():
     size = body.get('pageSize')
     status = body.get('status')
     name = body.get('name')
+    platform = body.get('platform')
+    environmental = body.get('environmental')
+    worker = body.get('worker')
     project_id = body.get('projectId')
 
     if not all([page, size, project_id]):
         return utils.rander(utils.DATA_ERR)
 
-    _query = {
-        'project_id': project_id
-    }
+    _query = [models.Task.project_id == project_id, models.Task.name.like(f'%{name if name else ""}%')]
 
-    if status:
-        _query['status'] = status
+    if isinstance(status, int) and status < 5:
+        _query.append(models.Task.status == status)
 
-    if name:
-        _query['name'] = name
+    if platform:
+        _query.append(models.Task.platform == platform)
+
+    if environmental:
+        _query.append(models.Task.environmental == environmental)
+
+    if worker and len(worker) == 2:
+        _query.append(models.Task.devices == worker[-1])
 
     task, total = utils.paginate(
         models.Task,
         page,
         size,
-        filter_by=_query
+        filter_list=_query
     )
 
     return utils.rander(utils.OK, data=utils.paginate_structure(task, total, page, size))
@@ -165,8 +172,9 @@ def update_task_status():
 
     task_id = body.get('id')
     status = body.get('status')
+    device = body.get('device')
 
-    if not all([task_id, status, isinstance(status, int), status < 4]):
+    if not all([task_id, status, isinstance(status, int), status < 5]):
         return utils.rander(utils.DATA_ERR)
 
     task = models.Task.query.filter_by(id=task_id)
@@ -175,12 +183,54 @@ def update_task_status():
         return utils.rander(utils.DATA_ERR, '此任务已不存在')
 
     try:
-        task.update({'status': status})
+        task.update({'status': status, 'devices': device if device else None})
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         logging.error(e)
         return utils.rander(utils.DATABASE_ERR)
 
-    socketio.emit('taskStatus', {'taskId': task_info.id, 'status': task_info.status})
+    devices_name = models.Worker.query.filter_by(id=device).first()
+    devices_name = devices_name.name if devices_name else ''
+    socketio.emit('taskStatus', {'taskId': task_info.id, 'status': task_info.status, 'devicesName': devices_name})
+
+    return utils.rander(utils.OK)
+
+
+@api.route('/task/center/pause', methods=['GET', 'POST'])
+@utils.login_required
+@utils.permissions_required
+def update_task_refresh():
+    """ 更新任务状态为中止或待执行 """
+
+    body = request.get_json()
+
+    if not body:
+        return utils.rander(utils.BODY_ERR)
+
+    task_id = body.get('id')
+
+    if not task_id:
+        return utils.rander(utils.DATA_ERR)
+
+    task = models.Task.query.filter_by(id=task_id)
+    task_info = task.first()
+
+    if not task_info:
+        return utils.rander(utils.DATA_ERR, '任务不存在')
+
+    if task_info.status > 1:
+        return utils.rander(utils.DATA_ERR, '任务状态不正确, 请刷新页面后重试')
+
+    try:
+        if task_info.status == 1:
+            socketio.emit('workerKill', {'id': task_info.devices})  # 发送中止进行的指令
+
+        task.update({'status': 4})
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logging.error(e)
+        return utils.rander(utils.DATABASE_ERR)
+
     return utils.rander(utils.OK)
