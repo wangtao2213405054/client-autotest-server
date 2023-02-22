@@ -2,27 +2,27 @@
 # _date: 2022/12/30 22:09
 
 from application.api import api
-from application import utils
+from application import utils, OSS_DICT
 from flask import request
-from logs.tencent import *
 from qcloud_cos import CosConfig
 from qcloud_cos import CosS3Client
 
-import logging
-import time
-
 
 def tencent_upload(file, save_name):
-    config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key)
+    config = CosConfig(
+        Region=OSS_DICT.get('Region'),
+        SecretId=OSS_DICT.get('SecretId'),
+        SecretKey=OSS_DICT.get('SecretKey')
+    )
     client = CosS3Client(config)
 
     client.put_object(
-        Bucket=bucket,
+        Bucket=OSS_DICT.get('Bucket'),
         Body=file,
         Key=save_name
     )
     url = client.get_object_url(
-        Bucket=bucket,
+        Bucket=OSS_DICT.get('Bucket'),
         Key=save_name
     )
     return url
