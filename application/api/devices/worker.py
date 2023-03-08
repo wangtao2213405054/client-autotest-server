@@ -43,8 +43,9 @@ def edit_worker_info():
     master = body.get('master')
     blocker = body.get('blocker')
     switch = body.get('switch')
+    log = body.get('logging')
 
-    if not all([name, platform, mapping, master, blocker, isinstance(switch, bool), isinstance(mapping, list)]):
+    if not all([name, platform, mapping, master, log, blocker, isinstance(switch, bool), isinstance(mapping, list)]):
         return utils.rander(utils.DATA_ERR)
 
     parsing = utils.rule_list_to_dict(mapping, 'param', 'value', 'type')
@@ -70,7 +71,8 @@ def edit_worker_info():
             'parsing': json.dumps(parsing, ensure_ascii=False),
             'master': master,
             'blocker': blocker,
-            'switch': switch
+            'switch': switch,
+            'log': log
         }
 
         worker_info = models.Worker.query.filter_by(id=worker_id)
@@ -89,7 +91,7 @@ def edit_worker_info():
             return utils.rander(utils.DATABASE_ERR)
 
     else:
-        worker = models.Worker(name, desc, platform, mapping, parsing, master, blocker, switch)
+        worker = models.Worker(name, desc, platform, mapping, parsing, master, blocker, switch, log)
 
         try:
             db.session.add(worker)

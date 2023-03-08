@@ -27,11 +27,13 @@ class Master(BaseModel, db.Model):
     context = Column(db.Integer)  # 已绑定的设备数
     max_context = Column(db.Integer, nullable=False)  # 最大设备绑定数
     project_id = Column(db.Integer)  # 所属项目ID
+    log = Column(db.String(32), nullable=False)  # 日志等级
 
-    def __init__(self, name, token, max_context, key, desc, role, project_id=None, status=True, context=0):
+    def __init__(self, name, token, max_context, key, desc, role, log, project_id=None, status=True, context=0):
         self.name = name
         self.token = token
         self.max_context = max_context
+        self.log = log
         self.key = key
         self.desc = desc
         self.role = role
@@ -49,6 +51,7 @@ class Master(BaseModel, db.Model):
             'maxContext': self.max_context,
             'desc': self.desc,
             'role': self.role,
+            'logging': self.log,
             'status': self.status,
             'projectId': self.project_id,
             'context': self.context,
@@ -77,8 +80,9 @@ class Worker(BaseModel, db.Model):
     actual = db.Column(db.Integer, nullable=False)  # 成功执行任务的次数
     master = db.Column(db.Integer, nullable=False)  # 隶属于控制器的ID
     blocker = db.Column(db.Integer, nullable=False)  # 阻断器，当连续失败次数达到后将此设备变为异常
+    log = Column(db.String(32), nullable=False)  # 日志等级
 
-    def __init__(self, name, desc, platform, mapping, parsing, master, blocker, switch):
+    def __init__(self, name, desc, platform, mapping, parsing, master, blocker, switch, log):
         self.name = name
         self.key = uuid.uuid1().hex
         self.desc = desc
@@ -90,6 +94,7 @@ class Worker(BaseModel, db.Model):
         self.switch = switch
         self.master = master
         self.blocker = blocker
+        self.log = log
 
     @property
     def result(self):
@@ -107,6 +112,7 @@ class Worker(BaseModel, db.Model):
             'master': self.master,
             'blocker': self.blocker,
             'switch': self.switch,
+            'logging': self.log,
             'createTime': self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             'updateTime': self.update_time.strftime("%Y-%m-%d %H:%M:%S")
         }
@@ -144,5 +150,5 @@ class Capabilities(BaseModel, db.Model):
 if __name__ == '__main__':
     app = create_app("local")
     with app.app_context():
-        db.drop_all(Capabilities.__bind_key__)
-        db.create_all(Capabilities.__bind_key__)
+        db.drop_all(Master.__bind_key__)
+        db.create_all(Master.__bind_key__)

@@ -32,6 +32,7 @@ def resolve(steps):
 
     _resolve = []
     for case in steps:
+        children = case.get('children', [])
         _resolve_case = dict(
             id=case.get('id'),
             mapping=case.get('mapping'),
@@ -39,7 +40,8 @@ def resolve(steps):
             subset=case.get('subset'),
             desc=case.get('desc'),
             params=rule_list_to_dict(case.get('func'), 'param', 'default', 'dataType'),
-            screenshot=case.get('screenshot')
+            screenshot=case.get('screenshot'),
+            children=resolve(children)
         )
         _resolve.append(_resolve_case)
 

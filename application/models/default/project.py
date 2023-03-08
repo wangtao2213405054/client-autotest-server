@@ -244,6 +244,31 @@ class Project(User):
                 screenshot=True
             ),
             models.Event(
+                '断言变量',
+                'assert_globals_variable',
+                'all',
+                self.wechat.id,
+                '如果运行内存中的变量符合条件则执行其方法中的子用例',
+                [
+                    self.get_map('String', None, 'key', '请输入内存变量', None, '内存变量', 'input'),
+                    self.get_map('String', None, 'condition', '请选择运算条件', 'Operation', '运算条件', 'select'),
+                    self.get_map('String', None, 'value', '请输入预期值', None, '预期内容', 'input'),
+                    self.get_map('String', None, 'types', '请选择预期内容数据类型', 'DataType', '数据类型', 'select')
+                ]
+            ),
+            models.Event(
+                '添加变量',
+                'update_globals_variable',
+                'all',
+                self.wechat.id,
+                '向内存中添加/修改一个变量的数据',
+                [
+                    self.get_map('String', None, 'key', '请输入内存变量', None, '内存变量', 'input'),
+                    self.get_map('String', None, 'value', '请输入预期值', None, '预期内容', 'input'),
+                    self.get_map('String', None, 'types', '请选择预期内容数据类型', 'DataType', '数据类型', 'select')
+                ]
+            ),
+            models.Event(
                 '置于后台',
                 'background',
                 'appium',

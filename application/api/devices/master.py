@@ -27,9 +27,10 @@ def edit_master_info():
     role = body.get('role')
     project_id = body.get('projectId')
     status = body.get('status')
+    log = body.get('logging')
     project_id = project_id if project_id else None
 
-    if not all([name, max_context, role, isinstance(status, bool)]):
+    if not all([name, max_context, role, log, isinstance(status, bool)]):
         return utils.rander(utils.DATA_ERR)
 
     # 验证角色信息
@@ -53,7 +54,8 @@ def edit_master_info():
             'desc': desc,
             'role': role,
             'project_id': project_id,
-            'status': status
+            'status': status,
+            'log': log
         }
         try:
             master_info.update(update)
@@ -79,7 +81,8 @@ def edit_master_info():
         token=token,
         role=role,
         project_id=project_id,
-        status=status
+        status=status,
+        log=log
     )
     try:
         db.session.add(master)

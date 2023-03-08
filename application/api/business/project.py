@@ -113,3 +113,27 @@ def delete_project_info():
     """ 删除项目信息 """
 
     return utils.delete(models.Project, dict(id='id'))
+
+
+@api.route('/business/project/info', methods=['GET', 'POST'])
+@utils.login_required
+@utils.permissions_required
+def get_project_info():
+    """ 获取项目信息 """
+
+    body = request.get_json()
+
+    if not body:
+        return utils.rander(utils.BODY_ERR)
+
+    project_id = body.get('id')
+
+    if not project_id:
+        return utils.rander(utils.DATA_ERR)
+
+    project_info = models.Project.query.filter_by(id=project_id).first()
+
+    if not project_info:
+        return utils.rander(utils.DATA_ERR, '此项目已不存在')
+
+    return utils.rander(utils.OK, data=project_info.result)
