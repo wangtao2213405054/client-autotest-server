@@ -1,5 +1,6 @@
 # _author: Coke
 # _date: 2022/12/30 22:09
+import logging
 
 from application.api import api
 from application import utils, OSS_DICT
@@ -39,5 +40,9 @@ def upload_file_image():
     if not file:
         return utils.rander(utils.BODY_ERR)
 
-    url = tencent_upload(file, file.filename)
-    return utils.rander(utils.OK, data=dict(url=url))
+    try:
+        url = tencent_upload(file, file.filename)
+        return utils.rander(utils.OK, data=dict(url=url))
+    except Exception as e:
+        logging.error(e)
+        return utils.rander(utils.DATA_ERR, '上传文件失败')

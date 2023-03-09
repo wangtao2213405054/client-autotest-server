@@ -21,11 +21,36 @@ def new_task_report():
         return utils.rander(utils.BODY_ERR)
 
     task_id = body.get('id')
+    case_id = body.get('caseId')
     name = body.get('name')
-    desc = body.get('desc')
+    details = body.get('details')
+    module = body.get('module')
+    set_list = body.get('setList')
+    priority = body.get('priority')
+    output = body.get('output')
+    images = body.get('images')
+    images = images if images else []
     status = body.get('status')
+    error_step = body.get('errorStep')
+    error_info = body.get('errorInfo')
+    error_details = body.get('errorDetails')
+    gif = body.get('gif')
+    start_time = body.get('startTime')
+    stop_time = body.get('stopTime')
+    duration = body.get('duration')
 
-    if not all([task_id, name, isinstance(status, int)]):
+    if not all([
+        task_id,
+        case_id,
+        name,
+        module,
+        set_list,
+        priority,
+        start_time,
+        stop_time,
+        duration,
+        isinstance(status, int)
+    ]):
         return utils.rander(utils.DATA_ERR)
 
     task = models.Task.query.filter_by(id=task_id)
@@ -39,7 +64,23 @@ def new_task_report():
     else:
         task_dict['fail_case'] = task_info.fail_case + 1
     report = models.Report(
-        name, desc, task_id, status
+        name=name,
+        task_id=task_id,
+        status=status,
+        case_id=case_id,
+        details=details,
+        module=module,
+        set_list=set_list,
+        priority=priority,
+        output=output,
+        images=images,
+        error_step=error_step,
+        error_info=error_info,
+        error_details=error_details,
+        gif=gif,
+        start_time=start_time,
+        stop_time=stop_time,
+        duration=duration
     )
     try:
         db.session.add(report)

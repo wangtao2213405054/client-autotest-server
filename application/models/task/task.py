@@ -28,8 +28,24 @@ class Task(BaseModel, db.Model):
     sign = Column(db.Boolean)  # 任务标记, 为真时说明任务已经发放
     pass_case = Column(db.Integer)  # 成功用例数
     fail_case = Column(db.Integer)  # 失败用例数
+    concurrent = Column(db.Boolean)  # 是否启动多进程
+    processes = Column(db.Integer)  # 进程数
+    start_time = Column(db.DateTime)  # 任务开始的时间
+    end_time = Column(db.DateTime)  # 任务结束的时间
 
-    def __init__(self, name, platform, environmental, url, cases, username, project_id, devices=None):
+    def __init__(
+            self,
+            name,
+            platform,
+            environmental,
+            url,
+            cases,
+            username,
+            project_id,
+            devices=None,
+            concurrent=False,
+            processes=2
+    ):
         self.name = name
         self.platform = platform.lower()
         self.environmental = environmental
@@ -42,30 +58,36 @@ class Task(BaseModel, db.Model):
         self.sign = False
         self.pass_case = 0
         self.fail_case = 0
+        self.concurrent = concurrent
+        self.processes = processes
 
     @property
     def result(self):
         devices_name = models.Worker.query.filter_by(id=self.devices).first()
-        return {
-            'id': self.id,
-            'name': self.name,
-            'platform': self.platform,
-            'environmental': self.environmental,
-            'environmentalName': models.Domain.query.filter_by(id=self.environmental).first().name,
-            'url': self.url,
-            'cases': json.loads(self.cases),
-            'devices': self.devices,
-            'devicesName': devices_name.name if devices_name else '',
-            'username': self.username,
-            'projectId': self.project_id,
-            'status': self.status,
-            'count': len(json.loads(self.cases)),
-            'passCase': self.pass_case,
-            'failCase': self.fail_case,
-            'percentage': round((self.pass_case + self.fail_case) / len(json.loads(self.cases)) * 100, 2),
-            'createTime': self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
-            'updateTime': self.update_time.strftime("%Y-%m-%d %H:%M:%S")
-        }
+        return dict(
+            id=self.id,
+            name=self.name,
+            platform=self.platform,
+            environmental=self.environmental,
+            environmentalName=models.Domain.query.filter_by(id=self.environmental).first().name,
+            url=self.url,
+            cases=json.loads(self.cases),
+            devices=self.devices,
+            devicesName=devices_name.name if devices_name else '',
+            username=self.username,
+            projectId=self.project_id,
+            status=self.status,
+            count=len(json.loads(self.cases)),
+            passCase=self.pass_case,
+            failCase=self.fail_case,
+            concurrent=self.concurrent,
+            processes=self.processes,
+            percentage=round((self.pass_case + self.fail_case) / len(json.loads(self.cases)) * 100, 2),
+            startTime=self.start_time.strftime("%Y-%m-%d %H:%M:%S") if self.start_time else None,
+            endTime=self.end_time.strftime("%Y-%m-%d %H:%M:%S") if self.end_time else None,
+            createTime=self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
+            updateTime=self.update_time.strftime("%Y-%m-%d %H:%M:%S")
+        )
 
 
 if __name__ == '__main__':

@@ -5,6 +5,7 @@ from application.api import api
 from application import utils, models, db, socketio
 from flask import request, g
 from sqlalchemy import or_
+from datetime import datetime
 
 import logging
 
@@ -30,6 +31,8 @@ def new_task_info():
     priority = body.get('priority')
     _set = body.get('set')
     devices = body.get('devices')
+    concurrent = body.get('concurrent')
+    processes = body.get('processes')
 
     if not all([name, platform, project_id, environmental, url]):
         return utils.rander(utils.DATA_ERR)
@@ -98,6 +101,8 @@ def new_task_info():
         g.username,
         project_id,
         devices[1] if isinstance(devices, list) else None,
+        concurrent if concurrent else False,
+        processes if processes else 2
     )
 
     try:
@@ -173,6 +178,7 @@ def update_task_status():
     task_id = body.get('id')
     status = body.get('status')
     device = body.get('device')
+    task_time = datetime.now()
 
     if not all([task_id, status, isinstance(status, int), status < 5]):
         return utils.rander(utils.DATA_ERR)
@@ -183,16 +189,23 @@ def update_task_status():
         return utils.rander(utils.DATA_ERR, '此任务已不存在')
 
     try:
-        task.update({'status': status, 'devices': device if device else None})
+        update_info = dict(
+            status=status,
+            devices=device if device else None,
+        )
+        if status == 1:
+            update_info['start_time'] = task_time
+        elif status > 1:
+            update_info['end_time'] = task_time
+
+        task.update(update_info)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         logging.error(e)
         return utils.rander(utils.DATABASE_ERR)
 
-    devices_name = models.Worker.query.filter_by(id=device).first()
-    devices_name = devices_name.name if devices_name else ''
-    socketio.emit('taskStatus', {'taskId': task_info.id, 'status': task_info.status, 'devicesName': devices_name})
+    socketio.emit('taskStatus', task_info.result)
 
     return utils.rander(utils.OK)
 
@@ -234,3 +247,27 @@ def update_task_refresh():
         return utils.rander(utils.DATABASE_ERR)
 
     return utils.rander(utils.OK)
+
+
+@api.route('/task/center/info', methods=['GET', 'POST'])
+@utils.login_required
+@utils.permissions_required
+def get_task_center_info():
+    """ 获取任务信息 """
+
+    body = request.get_json()
+
+    if not body:
+        return utils.rander(utils.BODY_ERR)
+
+    task_id = body.get('id')
+
+    if not task_id:
+        return utils.rander(utils.DATA_ERR, '任务ID不能为空')
+
+    task = models.Task.query.filter_by(id=task_id).first()
+
+    if not task:
+        return utils.rander(utils.DATA_ERR, '此任务不存在')
+
+    return utils.rander(utils.OK, data=task.result)
