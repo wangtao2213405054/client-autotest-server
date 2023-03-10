@@ -237,7 +237,7 @@ class Project(User):
                     self.get_map('String', None, 'value', '请输入元素元素内容', None, '元素内容', 'input'),
                     self.get_map('Integer', 0, 'index', '请选择元素位置', 'ElementIndex', '元素位置', 'select'),
                     self.get_map('String', None, 'name', '请输入元素名称', None, '元素名称', 'input'),
-                    self.get_map('Integer', 5, 'wait_time', '请输入最大等待时间', None, '等待时间', 'input'),
+                    self.get_map('Float', 5, 'wait_time', '请输入最大等待时间', None, '等待时间', 'input'),
                     self.get_map('Float', 0.5, 'interval', '请输入检测间隔', None, '检测间隔', 'input')
                 ],
                 True,
@@ -443,6 +443,24 @@ class Project(User):
                     self.get_map('String', None, 'value', '请输入元素元素内容', None, '元素内容', 'input'),
                     self.get_map('Integer', 0, 'index', '请选择元素位置', 'ElementIndex', '元素位置', 'select'),
                     self.get_map('String', None, 'name', '请输入元素名称', None, '元素名称', 'input')
+                ]
+            ),
+            models.Event(
+                '页面截图',
+                'url_screenshots',
+                'all',
+                self.wechat.id,
+                '会将当前页面进行截图',
+                []
+            ),
+            models.Event(
+                '显示等待',
+                'show_wait',
+                'all',
+                self.wechat.id,
+                '等待具体的时间，单位为秒',
+                [
+                    self.get_map('Integer', None, 'timer', '请输入等待的时间', None, '等待时间', 'input')
                 ]
             )
         ]
