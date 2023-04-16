@@ -30,10 +30,10 @@ class Config:
     # OSS 文件存储 本存储使用的是腾讯云的对象存储OSS服务
     # 上传文件接口在 api/upload/file 文件中, 如需修改其他服务请自行修改
     OSS_DICT = dict(
-        Region='ap-beijing',
-        SecretId='AKIDqSoxrSeSr1g4C4r2rQ7axmTitzufuk5I',
-        SecretKey='42pY1H8l8NXZRBmCLRN9gxynjEVWcscE',
-        Bucket='flash-1254275723'
+        Region='',
+        SecretId='',
+        SecretKey='',
+        Bucket=''
     )
 
     # socket 域名信息
