@@ -1,0 +1,139 @@
+tags:
+  - 控制设备相关接口
+description:
+  获取控制设备列表接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取控制设备列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+      properties:
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 控制机名称, 通过名称筛选控制机
+          default:
+        status:
+           type: boolean
+           description: 控制机状态
+           default:
+        projectId:
+          type: integer
+          description: 项目ID, 可根据此字段查询归属于此项目的设备
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/masterItem'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  masterItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 控制机ID
+        default: 1
+      name:
+        type: string
+        description: 控制机名称
+        default: Mac
+      key:
+        type: string
+        description: 设备唯一标识符
+        default: 78cf30cebf4611ed904eacde48001122
+      token:
+        type: string
+        description: 设备令牌, 用于驱动端启动
+        default: token
+      maxContext:
+        type: integer
+        description: 最大设备绑定数
+        default: 4
+      desc:
+        type: string
+        description: 设备描述信息
+        default:
+      role:
+        type: integer
+        description: 设备权限角色
+        default: 1
+      logging:
+        type: string
+        description: 设备记录日志等级
+        default: INFO
+      status:
+        type: boolean
+        description: 设备状态
+        default: true
+      projectId:
+        type: integer
+        description: 设备归属项目ID
+        default:
+      context:
+        type: integer
+        description: 已绑定的设备数
+        default: 1
+      createTime:
+        type: string
+        format: date-time
+        description: 设备创建时间
+        default: '2023-03-10 21:21:31'
+      updateTime:
+        type: string
+        format: date-time
+        description: 设备更新时间
+        default: '2023-03-10 21:24:56'
+      online:
+        type: boolean
+        description: 设备在线状态
+        default: false

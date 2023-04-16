@@ -1,0 +1,30 @@
+tags:
+  - 控制设备相关接口
+description:
+  修改控制设备状态接口
+summary:
+  修改控制设备状态
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: integer
+          description: 功能映射ID
+          default: 1
+        status:
+          type: boolean
+          description: 控制设备状态
+          default: true
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

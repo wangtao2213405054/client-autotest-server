@@ -2,7 +2,7 @@
 # _date: 2022/4/30 01:42
 
 from flask import request
-from application.api import api
+from application.api import api, swagger
 from application import db, models, utils
 
 import logging
@@ -11,7 +11,8 @@ import logging
 @api.route('/account/classification/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
-def edit_classification():
+@swagger('classificationEdit.yaml')
+def edit_classification_info():
     """ 新增/修改关系分类 """
 
     body = request.get_json()
@@ -19,7 +20,7 @@ def edit_classification():
     if not body:
         return utils.rander(utils.BODY_ERR)
 
-    node_id = body.get('nodeId', 0)
+    node_id = body.get('nodeId')
     name = body.get('name')
     classification_id = body.get('id')
 
@@ -80,6 +81,7 @@ def edit_classification():
 @api.route('/account/classification/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('classificationList.yaml')
 def get_classification_list():
     """ 获取关系分类列表tree """
 
@@ -108,6 +110,7 @@ def get_classification_list():
 @api.route('/account/classification/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('classificationDelete.yaml')
 def delete_classification_info():
     """ 删除关系分类 """
 

@@ -1,0 +1,104 @@
+tags:
+  - 权限角色相关接口
+description:
+  获取权限角色列表接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取权限角色列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+      properties:
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 用户名称, 通过名称筛选角色
+          default:
+        identifier:
+          type: identifier
+          description: 标识符, 通过标识符筛选角色
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/permissionsMenu'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  permissionsRole:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 权限角色ID
+        default: 1
+      name:
+        type: string
+        description: 权限角色名称
+        default: 角色
+      identifier:
+        type: string
+        description: 权限角色标识符
+        default: role
+      permissionsApi:
+        type: array
+        description: 接口权限列表
+        default: []
+        items:
+          type: string
+          description: 权限信息
+      createTime:
+        type: string
+        description: 创建时间
+        default: '2023-03-10 21:14:42'
+      updateTime:
+        type: string
+        description: 更新时间
+        default: '2023-03-10 21:14:42'

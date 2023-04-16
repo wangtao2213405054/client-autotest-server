@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from .conf.config import Config_Map
 from logging.handlers import RotatingFileHandler
+from flasgger import Swagger
 # from flask_wtf.csrf import CSRFProtect
 
 import redis
@@ -96,5 +97,9 @@ def create_app(config: str):
 
     # 注册 Socket
     socketio.init_app(app)
+
+    # swagger
+    if config != 'public':
+        Swagger(app, config=config_class.SWAGGER_CONFIG, template=config_class.SWAGGER_TEMPLATE)
 
     return app

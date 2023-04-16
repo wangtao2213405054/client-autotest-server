@@ -1,18 +1,19 @@
 # _author: Coke
 # _date: 2022/5/1 20:16
 
-from application.api import api
+from application.api import api, swagger
 from application import db, models, utils
 from flask import request
 
-import re
 import logging
 import json
+import re
 
 
 @api.route('/account/user/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('userEdit.yaml')
 def edit_user_info():
     """ 新增/修改 用户信息 """
 
@@ -109,6 +110,7 @@ def edit_user_info():
 @api.route('/account/user/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('userList.yaml')
 def get_user_list():
     """ 获取用户列表 """
 
@@ -161,6 +163,7 @@ def get_user_list():
 @api.route('/account/user/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('userDelete.yaml')
 def delete_user_info():
     """ 删除用户接口 """
 
@@ -180,6 +183,7 @@ def delete_user_info():
 @api.route('/account/user/ids', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('userQueryIds.yaml')
 def get_user_list_by_ids():
     """ 通过id list 获取对应的用户信息 """
 

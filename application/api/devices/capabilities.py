@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/11/29 16:20
 
-from application.api import api
+from application.api import api, swagger
 from application import db, models, utils
 from flask import request
 
@@ -12,6 +12,7 @@ import json
 @api.route('/devices/capabilities/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('capabilitiesEdit.yaml')
 def edit_capabilities_info():
     """ 编辑/新增 功能映射信息 """
 
@@ -70,6 +71,7 @@ def edit_capabilities_info():
 @api.route('/devices/capabilities/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('capabilitiesList.yaml')
 def get_capabilities_list():
     """ 获取功能映射列表 """
 
@@ -105,6 +107,7 @@ def get_capabilities_list():
 @api.route('/devices/capabilities/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('capabilitiesDelete.yaml')
 def delete_capabilities_info():
     """ 删除功能映射信息 """
 

@@ -2,7 +2,7 @@
 # _date: 2022/5/11 15:16
 
 from application import models, db, utils
-from application.api import api
+from application.api import api, swagger
 from flask import request
 
 import logging
@@ -12,6 +12,7 @@ import json
 @api.route('/permissions/role/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('permissionsRoleEdit.yaml')
 def edit_permissions_role_info():
     """ 新增/编辑角色信息 """
 
@@ -77,6 +78,7 @@ def edit_permissions_role_info():
 @api.route('/permissions/role/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('permissionsRoleList.yaml')
 def get_permissions_role_list():
     """ 获取角色列表 """
 
@@ -116,6 +118,7 @@ def get_permissions_role_list():
 @api.route('/permissions/role/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('permissionsRoleDelete.yaml')
 def delete_permissions_role_info():
     """ 删除角色信息 """
 

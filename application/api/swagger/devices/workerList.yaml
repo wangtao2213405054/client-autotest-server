@@ -1,0 +1,163 @@
+tags:
+  - 工作设备相关接口
+description:
+  获取工作设备列表接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取工作设备列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+      properties:
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 工作机名称, 通过名称筛选工作机
+          default:
+        status:
+           type: boolean
+           description: 工作机状态
+           default:
+        master:
+          type: integer
+          description: 控制机ID, 可根据此字段查询归属于此控制机的工作机
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/workerItem'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  workerItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 工作机ID
+        default: 1
+      name:
+        type: string
+        description: 工作机名称
+        default: Chrome
+      key:
+        type: string
+        description: 工作机唯一标识符
+        default: f2d0a89ebf4611ed904eacde48001122
+      desc:
+        type: string
+        description: 工作机描述信息
+        default: null
+      platformName:
+        type: string
+        description: 工作机所属平台
+        default: web
+      mapping:
+        type: array
+        description: 工作机所需参数信息
+        items:
+          type: object
+          properties:
+            param:
+              type: string
+              description: 映射字段
+              default: browser
+            value:
+              type: string
+              description: 映射值
+              default: Chrome
+            type:
+              type: string
+              description: 映射数据类型
+              default: String
+            key:
+              type: integer
+              description: 映射唯一标识符
+              default: 1678454614006
+      parsing:
+        type: object
+        description: 工作机所需参数映射(转换后)
+        default: {}
+      status:
+        type: integer
+        description: 工作机状态
+        default: 4
+      cause:
+        type: string
+        description: 工作机异常信息
+        default:
+      actual:
+        type: integer
+        description: 成功执行任务的次数
+        default: 5
+      master:
+        type: integer
+        description: 所属的控制机ID
+        default: 1
+      blocker:
+        type: integer
+        description: 熔断次数, 当连续失败次数达到后将此设备变为异常
+        default: 3
+      switch:
+        type: boolean
+        description: 是否执行任务
+        default: true
+      logging:
+        type: string
+        description: 日志等级
+        default: INFO
+      createTime:
+        type: string
+        description: 创建时间
+        default: '2023-03-10 21:24:56'
+      updateTime:
+        type: string
+        description: 更新时间
+        default: '2023-03-10 21:42:49'

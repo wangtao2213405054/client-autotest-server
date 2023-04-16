@@ -1,0 +1,42 @@
+tags:
+  - 权限角色相关接口
+description:
+  新增/编辑权限角色接口
+summary:
+  新增/编辑权限角色
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - name
+        - identifier
+        - permissionsApi
+      properties:
+        id:
+          type: integer
+          description: 权限角色ID, 修改时传递
+          default:
+        name:
+          type: string
+          description: 权限角色名称
+          default: '超级管理员'
+        identifier:
+          type: string
+          description: 权限角色标识符
+          default: admin
+        permissionsApi:
+          type: array
+          description: 绑定的权限列表
+          default: []
+          items:
+            type: string
+            description: 权限标识
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

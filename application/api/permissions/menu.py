@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/5/9 17:41
 
-from application.api import api
+from application.api import api, swagger
 from application import db, models, utils
 from flask import request
 
@@ -11,6 +11,7 @@ import logging
 @api.route('/permissions/menu/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('permissionsMenuEdit.yaml')
 def edit_permissions_menu_info():
     """ 新增/修改权限菜单 """
 
@@ -111,6 +112,7 @@ def get_menu_tree(node_id, query_name='', query_identifier=''):
 @api.route('/permissions/menu/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('permissionsMenuList.yaml')
 def get_permissions_menu_list():
     """ 获取权限菜单列表 """
 
@@ -144,6 +146,7 @@ def delete_menu_tree(node_id):
 @api.route('/permissions/menu/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('permissionsMenuDelete.yaml')
 def delete_permissions_menu_info():
     """ 删除权限菜单信息 """
 

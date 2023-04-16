@@ -1,6 +1,8 @@
 # _author: Coke
 # _date: 2022/4/12 11:03
 
+from flasgger import Swagger
+
 import logging
 import os
 import re
@@ -28,10 +30,10 @@ class Config:
     # OSS 文件存储 本存储使用的是腾讯云的对象存储OSS服务
     # 上传文件接口在 api/upload/file 文件中, 如需修改其他服务请自行修改
     OSS_DICT = dict(
-        Region='',
-        SecretId='',
-        SecretKey='',
-        Bucket=''
+        Region='ap-beijing',
+        SecretId='AKIDqSoxrSeSr1g4C4r2rQ7axmTitzufuk5I',
+        SecretKey='42pY1H8l8NXZRBmCLRN9gxynjEVWcscE',
+        Bucket='flash-1254275723'
     )
 
     # socket 域名信息
@@ -51,8 +53,27 @@ class Config:
 
     API_URL_PREFIX = '/api/v1/client'
     SOCKET_URL_PREFIX = '/ws/v1/client'
+
     # 引擎映射
     SQLALCHEMY_BINDS = dict()
+
+    # Swagger
+    SWAGGER = dict(
+        title='客户端自动化平台接口',
+        version='1.0.0',
+        uiversion=3
+    )
+    SWAGGER_CONFIG = Swagger.DEFAULT_CONFIG
+    SWAGGER_CONFIG['swagger_ui_bundle_js'] = '//unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js'
+    SWAGGER_CONFIG['swagger_ui_standalone_preset_js'] = '//unpkg.com/swagger-ui-dist@3/swagger-ui-standalone-preset.js'
+    SWAGGER_CONFIG['jquery_js'] = '//unpkg.com/jquery@2.2.4/dist/jquery.min.js'
+    SWAGGER_CONFIG['swagger_ui_css'] = '//unpkg.com/swagger-ui-dist@3/swagger-ui.css'
+    SWAGGER_TEMPLATE = dict(securityDefinitions=dict(APIKeyHeader={
+        'type': 'apiKey',
+        'name': 'Token',
+        'in': 'header'
+    }))
+    JSON_AS_ASCII = False
 
 
 class LocalConfig(Config):

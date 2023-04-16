@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/12/29 13:55
 
-from application.api import api
+from application.api import api, swagger
 from application import utils, models, db
 from flask import request
 
@@ -12,6 +12,7 @@ import json
 @api.route('/mock/api/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('apiEdit.yaml')
 def edit_api_edit():
     """ 编辑/新增 接口信息 """
 
@@ -86,6 +87,7 @@ def edit_api_edit():
 @api.route('/mock/api/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('apiList.yaml')
 def get_api_list():
     """ 获取接口列表 """
 
@@ -122,6 +124,7 @@ def get_api_list():
 @api.route('/mock/api/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('apiDelete.yaml')
 def delete_api_info():
     """ 删除接口信息 """
 

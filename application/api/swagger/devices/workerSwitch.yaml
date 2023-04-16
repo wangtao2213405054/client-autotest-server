@@ -1,0 +1,34 @@
+tags:
+  - 工作设备相关接口
+description:
+  开启/关闭执行机任务轮训接口
+summary:
+  开启/关闭执行机任务轮训
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+        - switch
+      properties:
+        id:
+          type: integer
+          description: 工作设备ID
+          default: 1
+        switch:
+          type: boolean
+          description: 开启或关闭
+          default: false
+        kill:
+          type: boolean
+          description: 是否停止已经启动的任务进程
+          default: false
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

@@ -1,0 +1,42 @@
+tags:
+  - 控制设备相关接口
+description:
+  获取控制设备Socket房间号接口
+summary:
+  获取控制设备房间号
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: 控制设备ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: string
+          description: 房间号
+          default: systemRoomXX
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145

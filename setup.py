@@ -25,6 +25,7 @@ setup(
         'pypinyin',
         'python-socketio >= 5.7.2',
         'sqlalchemy >= 1.4.45',
-        'click'
+        'click',
+        'flasgger >=0.9.5'
     ]
 )

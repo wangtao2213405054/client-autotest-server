@@ -1,0 +1,46 @@
+tags:
+  - 权限菜单相关接口
+description:
+  新增/修改权限菜单接口
+summary:
+  新增/修改权限菜单
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - name
+        - identifier
+      properties:
+        id:
+          type: integer
+          description: 权限菜单ID, 修改时传递
+          default:
+        nodeId:
+          type: integer
+          description: 节点ID, 新增子节点时传递此节点(需要传递父节点)
+          default:
+        name:
+          type: string
+          description: 权限菜单名称
+          default: '任务列表'
+        identifier:
+          type: string
+          description: 权限标识符, 需要和前端 route 字段匹配
+          default:
+        menuType:
+          type: string
+          description: 菜单类型(menu、case)
+          default: 'menu'
+        belongType:
+          type: string
+          description: 菜单归属(home、project)
+          default: home
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

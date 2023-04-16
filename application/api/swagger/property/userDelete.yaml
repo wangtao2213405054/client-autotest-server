@@ -1,0 +1,25 @@
+tags:
+  - 用户相关接口
+description:
+  删除用户接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  删除用户
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: 用户ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

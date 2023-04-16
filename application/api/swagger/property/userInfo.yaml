@@ -1,0 +1,83 @@
+tags:
+  - 用户相关接口
+description:
+  获取用户个人信息
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取个人信息
+responses:
+  200:
+    description: 响应成功
+    schema:
+      id: userInfo
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          $ref: '#/definitions/userInfoItem'
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  userInfoItem:
+    type: object
+    description: 响应体
+    properties:
+      id:
+        type: integer
+        description: 用户ID
+        default: 1
+      name:
+        type: string
+        description: 用户名称
+        default: admin
+      email:
+        type: string
+        description: 邮箱
+        default: admin@client.com
+      mobile:
+        type: string
+        description: 手机号
+        default: 18888888888
+      avatarUrl:
+        type: string
+        description: 头像地址
+        default:
+      state:
+        type: boolean
+        description: 用户在职状态
+        default: true
+      department:
+        type: array
+        description: 用户所属群组 [公司ID, 部门ID]
+        items:
+          type: integer
+          description: 群组ID
+          default: 1
+      role:
+        type: integer
+        description: 角色ID
+        default: 1
+      createTime:
+        type: string
+        description: 创建时间
+        default: '2023-03-10 21:14:42'
+      updateTime:
+        type: string
+        description: 更新时间
+        default: '2023-03-10 21:14:42'
+      roles:
+        type: array
+        description: 菜单权限列表
+        items:
+          type: string
+          default: admin
+          description: 菜单权限名称

@@ -1,5 +1,5 @@
 
-from application.api import api
+from application.api import api, swagger
 from flask import request, g
 from application import models, utils
 # from sqlalchemy.orm.query import Query
@@ -7,9 +7,10 @@ from application import models, utils
 import json
 
 
-@api.route('/user/login', methods=['POST', 'GET'])
+@api.route('/user/login', methods=['POST'])
+@swagger('userLogin.yaml')
 def user_login():
-    """ 登陆 """
+    """ 登录 """
     body = request.get_json()
 
     if not body:
@@ -34,6 +35,7 @@ def user_login():
 
 @api.route('/user/info', methods=['GET', 'POST'])
 @utils.login_required
+@swagger('userInfo.yaml')
 def get_user_info():
     """ 获取个人信息 """
     user_info = models.User.query.filter_by(id=g.user_id).first()

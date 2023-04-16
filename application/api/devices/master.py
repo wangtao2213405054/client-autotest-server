@@ -2,7 +2,7 @@
 # _date: 2022/11/28 11:35
 
 from application import utils, db, models, ws
-from application.api import api
+from application.api import api, swagger
 from flask import request, g
 
 import logging
@@ -12,6 +12,7 @@ import uuid
 @api.route('/devices/master/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('masterEdit.yaml')
 def edit_master_info():
     """ 新增/修改 控制设备信息 """
 
@@ -98,6 +99,7 @@ def edit_master_info():
 @api.route('/devices/master/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('masterList.yaml')
 def get_master_list():
     """ 获取控制设备列表 """
 
@@ -146,6 +148,7 @@ def get_master_list():
 @api.route('/devices/master/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('masterDelete.yaml')
 def delete_master_info():
     """ 删除执行的设备信息 """
 
@@ -180,6 +183,7 @@ def delete_master_info():
 @api.route('/devices/master/status', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('masterStatus.yaml')
 def edit_master_status():
     """ 修改控制设备当前状态 """
 
@@ -220,6 +224,7 @@ def edit_master_status():
 @api.route('/devices/master/info', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('masterInfo.yaml')
 def get_master_info():
     """ 获取当前设备信息 """
 
@@ -234,8 +239,9 @@ def get_master_info():
 @api.route('/devices/master/socket', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
-def join_master_room():
-    """ 通过控制机ID加入房间 """
+@swagger('masterRoom.yaml')
+def get_master_room():
+    """ 获取控制设备房间号 """
 
     body = request.get_json()
 

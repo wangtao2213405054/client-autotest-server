@@ -1,0 +1,62 @@
+tags:
+  - 用户相关接口
+description:
+  新增/修改用户信息接口
+summary:
+  新增/修改用户信息
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - name
+        - email
+        - mobile
+        - department
+      properties:
+        id:
+          type: integer
+          description: 用户ID, 修改时传递
+          default: 1
+        name:
+          type: string
+          description: 用户名称
+          default: 'Selkirk'
+        email:
+          type: string
+          description: 邮箱
+          default: 'admin@client.com'
+        mobile:
+          type: string
+          description: 手机号
+          default: '18888888888'
+        password:
+          type: string
+          description: 用户密码
+          default: '123456'
+        avatarUrl:
+          type: string
+          description: 头像图片地址
+          default:
+        state:
+          type: boolean
+          description: 在职状态
+          default: true
+        role:
+          type: integer
+          description: 用户绑定的角色ID
+          default:
+        department:
+          type: array
+          items:
+            type: integer
+            description: 关系ID列表[公司ID, 部门ID]
+            default: [1, 2]
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

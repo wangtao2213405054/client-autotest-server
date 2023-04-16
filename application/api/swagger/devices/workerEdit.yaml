@@ -1,0 +1,81 @@
+tags:
+  - 工作设备相关接口
+description:
+  新增/修改 工作设备信息接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  新增/修改工作设备信息
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - name
+        - platformName
+        - mapping
+        - master
+        - blocker
+        - logging
+        - switch
+      properties:
+        id:
+          type: integer
+          description: 工作机ID
+          default:
+        name:
+          type: string
+          description: 工作机名称
+          default: Chrome
+        desc:
+          type: string
+          description: 工作机描述信息
+          default:
+        platformName:
+          type: string
+          description: 工作机所属平台
+          default: web
+        mapping:
+          type: array
+          description: 工作机所需参数信息
+          items:
+            type: object
+            properties:
+              param:
+                type: string
+                description: 映射字段
+                default: browser
+              value:
+                type: string
+                description: 映射值
+                default: Chrome
+              type:
+                type: string
+                description: 映射数据类型
+                default: String
+              key:
+                type: integer
+                description: 映射唯一标识符
+                default: 1678454614006
+        master:
+          type: integer
+          description: 所属的控制机ID
+          default: 1
+        blocker:
+          type: integer
+          description: 熔断次数, 当连续失败次数达到后将此设备变为异常
+          default: 3
+        switch:
+          type: boolean
+          description: 是否执行任务
+          default: true
+        logging:
+          type: string
+          description: 日志等级
+          default: INFO
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

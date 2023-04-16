@@ -1,0 +1,28 @@
+tags:
+  - 用户相关接口
+description:
+  用户登录接口
+summary:
+  登录
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          description: 用户名称(邮箱)
+          default: 'admin@client.com'
+        password:
+          type: string
+          description: 用户密码
+          default: '123456'
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/userInfo'

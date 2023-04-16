@@ -1,0 +1,26 @@
+tags:
+  - 关系分类相关接口
+description:
+  删除关系分类接口
+summary:
+  删除关系分类
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: 关系分类ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'
+

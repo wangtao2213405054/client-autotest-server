@@ -1,0 +1,30 @@
+tags:
+  - 工作设备相关接口
+description:
+  删除工作设备相关接口
+summary:
+  删除工作设备
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+        - master
+      properties:
+        id:
+          type: integer
+          description: 工作设备ID
+          default: 1
+        master:
+          type: integer
+          description: 控制设备ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

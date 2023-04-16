@@ -1,0 +1,25 @@
+tags:
+  - 权限菜单相关接口
+description:
+  删除权限菜单接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  删除权限菜单
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: 权限菜单ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

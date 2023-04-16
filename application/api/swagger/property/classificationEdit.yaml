@@ -1,0 +1,51 @@
+tags:
+  - 关系分类相关接口
+description:
+  新增/修改关系分类接口
+summary:
+  新增/修改关系分类
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: 关系分类名称
+          default: 测试分类
+        id:
+          type: integer
+          description: 关系分类ID
+          default: 1
+        nodeId:
+          type: integer
+          description: 父节点ID, 无节点ID是可不传
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      id: handle
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          description: 响应体
+          default: {}
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+

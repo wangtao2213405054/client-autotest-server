@@ -1,0 +1,39 @@
+tags:
+  - 能力映射相关接口
+description:
+  新增/修改能力映射信息接口
+summary:
+  新增/修改能力映射信息
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - platformName
+        - name
+        - mapping
+      properties:
+        id:
+          type: integer
+          description: 功能映射ID
+          default:
+        name:
+          type: string
+          description: 功能映射名称
+          default:
+        platformName:
+          type: string
+          description: 功能映射所属平台
+          default: web
+        mapping:
+          type: string
+          description: 功能映射详细信息, 请参考 /devices/capabilities/list 接口返回
+          default: []
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

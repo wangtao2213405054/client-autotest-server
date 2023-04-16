@@ -1,0 +1,110 @@
+tags:
+  - 模拟数据相关接口
+description:
+  获取接口列表
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取接口列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+        - projectId
+      properties:
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 1
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 接口名称, 通过名称筛选接口
+          default:
+        path:
+          type: string
+          description: 接口路径, 通过接口路径筛选接口
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/apiList'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  apiList:
+    type: object
+    properties:
+      id:
+        type: integer
+        default: 1
+        description: 模拟接口ID
+      project_id:
+        type: integer
+        default: 1
+        description: 所属项目
+      name:
+        type: string
+        default: "测试接口奥"
+        description: 模拟接口名称
+      path:
+        type: string
+        default: "/api/v1/client/user/login"
+        description: 模拟接口路径
+      body:
+        type: string
+        default: "{\"test\": 123}"
+        description: 要模拟接口的响应
+      createTime:
+        type: string
+        default: "2023-04-09 17:10:07"
+        description: 创建时间
+      updateTime:
+        type: string
+        default: "2023-04-09 17:10:07"
+        description: 更新时间

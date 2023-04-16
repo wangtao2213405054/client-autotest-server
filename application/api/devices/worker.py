@@ -2,7 +2,7 @@
 # _date: 2022/11/28 11:35
 
 
-from application.api import api
+from application.api import api, swagger
 from application import utils, models, db, ws, socketio
 from flask import request
 
@@ -27,6 +27,7 @@ def update_context(master_id, operation=True):
 @api.route('/devices/worker/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('workerEdit.yaml')
 def edit_worker_info():
     """ 编辑执行器信息 """
 
@@ -112,6 +113,7 @@ def edit_worker_info():
 @api.route('/devices/worker/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('workerList.yaml')
 def get_worker_list():
     """ 获取执行设备列表 """
 
@@ -160,6 +162,7 @@ def get_worker_list():
 @api.route('/devices/worker/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('workerDelete.yaml')
 def delete_worker_info():
     """ 删除执行设备信息 """
 
@@ -200,6 +203,7 @@ def delete_worker_info():
 @api.route('/devices/worker/switch', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('workerSwitch.yaml')
 def edit_worker_switch_status():
     """ 开启/关闭执行机任务轮训 """
 
@@ -247,6 +251,7 @@ def edit_worker_switch_status():
 @api.route('/devices/worker/status', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('workerStatus.yaml')
 def edit_worker_status():
     """ 修改工作机的设备状态 """
 

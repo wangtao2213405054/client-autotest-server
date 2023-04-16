@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/12/29 13:55
 
-from application.api import api
+from application.api import api, swagger
 from application import utils, models, db
 from flask import request
 
@@ -11,6 +11,7 @@ import logging
 @api.route('/mock/domain/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('domainEdit.yaml')
 def edit_domain_info():
     """ 编辑/新增域名信息 """
 
@@ -82,6 +83,7 @@ def edit_domain_info():
 @api.route('/mock/domain/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('domainList.yaml')
 def get_domain_list():
     """ 获取域名列表 """
 
@@ -122,6 +124,7 @@ def get_domain_list():
 @api.route('/mock/domain/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('domainDelete.yaml')
 def delete_domain_info():
     """ 删除域名信息 """
 
