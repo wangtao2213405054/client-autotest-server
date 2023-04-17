@@ -3,7 +3,7 @@
 
 from application import db, models, utils
 from flask import request
-from application.api import api
+from application.api import api, swagger
 
 import logging
 
@@ -11,6 +11,7 @@ import logging
 @api.route('/business/folder/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('folderList.yaml')
 def get_folder_list():
     """ 获取文件夹列表 """
 
@@ -47,6 +48,7 @@ def get_folder_list():
 @api.route('/business/folder/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('folderEdit.yaml')
 def edit_folder_info():
     """ 新增/修改文件夹信息 """
 
@@ -121,6 +123,7 @@ def edit_folder_info():
 @api.route('/business/folder/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('folderDelete.yaml')
 def delete_folder_info():
     """ 删除模块信息 """
 

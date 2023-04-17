@@ -1,1 +1,1 @@
-graft server/conf
+graft application/api/swagger

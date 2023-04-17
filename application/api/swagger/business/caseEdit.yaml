@@ -1,0 +1,141 @@
+tags:
+  - 用例相关接口
+description:
+  新增/修改用例
+summary:
+  新增/修改用例
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+        - name
+        - special
+        - action
+        - setInfo
+        - platform
+        - priority
+        - moduleList
+        - caseSteps
+      properties:
+        id:
+          type: integer
+          default:
+          description: 测试用例ID
+        name:
+          type: string
+          default: "自动化测试啊:50"
+          description: 用例名称
+        desc:
+          type: string
+          default:
+          description: 用例描述
+        special:
+          type: boolean
+          default: false
+          description: 是否为特殊用例
+        action:
+          type: boolean
+          default: true
+          description: 是否废弃
+        startVersion:
+          type: integer
+          description: 开始版本
+          default:
+        endVersion:
+          type: integer
+          description: 结束版本
+          default:
+        setInfo:
+          type: array
+          description: 所属集合
+          default: [1, 2]
+          items:
+            type: integer
+            default: 1
+        platform:
+          type: array
+          description: 运行平台(android、ios、web)
+          items:
+            type: string
+            default: "web"
+          default: ['ios', 'android']
+        priority:
+          type: integer
+          description: 优先级
+          default: 2
+        officerList:
+          type: array
+          description: 负责人列表
+          items:
+            type: integer
+          default:
+        moduleList:
+          type: array
+          description: 所属文件夹列表
+          items:
+            type: integer
+          default: [3, 4]
+        prePosition:
+          type: array
+          description: 前置用例, 需要传递文件夹ID
+          default:
+          items:
+            type: integer
+        postPosition:
+          type: array
+          description: 后置用例, 同前置
+          items:
+            type: integer
+          default:
+        projectId:
+          type: integer
+          default:
+          description: 项目ID
+        caseSteps:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 请求名称
+                default: 刷新页面
+              desc:
+                type: string
+                description: 请求描述
+                default: 刷新当前浏览器页面
+              func:
+                type: array
+                description: 功能
+                default: [ ]
+              mapping:
+                type: string
+                description: 映射
+                default: refresh
+              subset:
+                type: boolean
+                description: 子集
+                default: false
+              screenshot:
+                type: boolean
+                description: 截图
+                default: false
+              key:
+                type: number
+                format: float
+                description: 键
+                default: 1678345219878.0535
+              index:
+                type: integer
+                description: 索引
+                default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

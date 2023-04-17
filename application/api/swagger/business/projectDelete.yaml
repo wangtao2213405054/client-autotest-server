@@ -1,0 +1,25 @@
+tags:
+  - 项目相关接口
+description:
+  删除项目信息
+summary:
+  删除项目信息
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: 项目ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

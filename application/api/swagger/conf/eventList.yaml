@@ -1,0 +1,133 @@
+tags:
+  - 操作事件相关接口
+description:
+  获取操作事件列表信息接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取操作事件列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+        - projectId
+        - platform
+      properties:
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 操作事件名称, 可根据名称筛选事件
+          default:
+        platform:
+          type: string
+          description: 当前项目所属平台, 可选值（all、exclusive、selenium、appium）
+          default: selenium
+        projectId:
+          type: integer
+          description: 当前项目ID
+          default: 1
+        mapping:
+          type: string
+          description: 事件映射函数名称
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/eventItem'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  eventItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 事件ID.
+        default: 25
+      name:
+        type: string
+        description: 事件名称.
+        default: "抛出异常"
+      desc:
+        type: string
+        description: 事件描述.
+        default: "主动抛出一个异常"
+      platform:
+        type: string
+        description: 事件所属平台
+        default: "all"
+      projectId:
+        type: integer
+        description: 项目ID
+        default: 2
+      func:
+        type: array
+        description: 时间功能函数信息
+        items:
+          type: string
+        default: [ ]
+      mapping:
+        type: string
+        description: 事件映射函数名称
+        default: "raise_error"
+      subset:
+        type: boolean
+        description: 事件是否允许添加子节点
+        default: false
+      screenshot:
+        type: boolean
+        description: 事件是否截图
+        default: false
+      createTime:
+        type: string
+        description: 创建时间
+        default: "2023-03-10 14:58:01"
+      updateTime:
+        type: string
+        description: 更新时间
+        default: "2023-03-10 14:58:01"

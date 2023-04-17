@@ -36,7 +36,6 @@ SOCKET_URL_PREFIX = ''
 
 # socket 地址
 SOCKET_HOST = None
-SOCKET_PORT = None
 
 # oss 信息
 OSS_DICT = {}
@@ -63,12 +62,11 @@ def create_app(config: str):
     rd = redis.Redis(host=config_class.REDIS_HOST, port=config_class.REDIS_PORT, password=config_class.REDIS_PASSWORD)
 
     # 定义 Token
-    global TOKEN_SIGN_KEY, TOKEN_TIME_LIMIT, accessKey, API_URL_PREFIX, SOCKET_URL_PREFIX, SOCKET_HOST, SOCKET_PORT
-    global OSS_DICT
+    global TOKEN_SIGN_KEY, TOKEN_TIME_LIMIT, accessKey, API_URL_PREFIX, SOCKET_URL_PREFIX, SOCKET_HOST, OSS_DICT
 
     TOKEN_SIGN_KEY, TOKEN_TIME_LIMIT = config_class.TOKEN_SIGN_KEY, config_class.TOKEN_TIME_LIMIT
     API_URL_PREFIX, SOCKET_URL_PREFIX = config_class.API_URL_PREFIX, config_class.SOCKET_URL_PREFIX,
-    SOCKET_HOST, SOCKET_PORT, OSS_DICT = config_class.SOCKET_HOST, config_class.SOCKET_PORT, config_class.OSS_DICT
+    SOCKET_HOST, OSS_DICT = config_class.SOCKET_HOST, config_class.OSS_DICT
 
     # 补充 csrf 防护
     # CSRFProtect(app)

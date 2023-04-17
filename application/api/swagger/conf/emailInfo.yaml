@@ -1,0 +1,87 @@
+tags:
+  - 消息邮件相关接口
+description:
+  获取消息邮件信息
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取消息邮件信息
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+      properties:
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 2
+responses:
+  200:
+    description: 响应成功
+    schema:
+      id: userInfo
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          $ref: '#/definitions/emailInfo'
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  emailInfo:
+    type: object
+    description: 响应体
+    properties:
+      id:
+        type: integer
+        description: 消息邮件ID.
+        default: 1
+      projectId:
+        type: integer
+        description: 项目ID
+        default: 2
+      host:
+        type: string
+        description: 邮箱服务
+        default: "smtp.qq.com"
+      title:
+        type: string
+        description: 邮件标题
+        default: "测试"
+      sender:
+        type: string
+        description: 发送人
+        default: "哈哈"
+      password:
+        type: string
+        description: 邮箱授权码
+        default: "123213"
+      receivers:
+        type: array
+        description: 接收人
+        items:
+          type: string
+        default: [ "123", "333" ]
+      state:
+        type: boolean
+        description: 当前消息邮件状态
+        default: false
+      createTime:
+        type: string
+        description: 创建时间
+        default: "2023-04-17 11:16:21"
+      updateTime:
+        type: string
+        description: 更新时间
+        default: "2023-04-17 11:16:21"

@@ -1,0 +1,228 @@
+tags:
+  - 用例相关接口
+description:
+  获取用例列表接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取用例列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+        - page
+        - pageSize
+      properties:
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 1
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        folderId:
+          type: array
+          description: 用例所属文件夹[0, 1] 当此文件夹没有父文件夹时第一位传递0
+          default:
+          items:
+            type: integer
+        name:
+          type: string
+          description: 用例名称, 通过用例名称进行查询
+          default:
+        special:
+          type: boolean
+          description: 用例特殊类型, 当为普通用例时为false
+          default:
+        action:
+          type: boolean
+          description: 用例状态, 当为废弃时为false
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/caseItem'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  caseItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        default: 1000064
+        description: 测试用例ID
+      name:
+        type: string
+        default: "自动化测试啊:50"
+        description: 用例名称
+      desc:
+        type: string
+        default: "侧啊sad"
+        description: 用例描述
+      special:
+        type: boolean
+        default: false
+        description: 是否为特殊用例
+      action:
+        type: boolean
+        default: true
+        description: 是否废弃
+      startVersion:
+        type: integer
+        description: 开始版本
+        default:
+      endVersion:
+        type: integer
+        description: 结束版本
+        default:
+      setInfo:
+        type: array
+        description: 所属集合
+        default: [1, 2]
+        items:
+          type: integer
+          default: 1
+      platform:
+        type: array
+        description: 运行平台(android、ios、web)
+        items:
+          type: string
+          default: "web"
+        default: ['ios', 'android']
+      priority:
+        type: integer
+        description: 优先级
+        default: 2
+      officerList:
+        type: array
+        description: 负责人列表
+        items:
+          type: integer
+        default: [1]
+      createId:
+        type: integer
+        default: 1
+        description: 创建人ID
+      updateId:
+        type: integer
+        default: 1
+        description: 更新人ID
+      moduleList:
+        type: array
+        description: 所属文件夹列表
+        items:
+          type: integer
+        default: [3, 4]
+      prePosition:
+        type: array
+        description: 前置用例, 需要传递文件夹ID
+        default: [1, 2, 1000000]
+        items:
+          type: integer
+      postPosition:
+        type: array
+        description: 后置用例, 同前置
+        items:
+          type: integer
+        default: [1, 2, 1000000]
+      projectId:
+        type: integer
+        default: 2
+        description: 项目ID
+      caseSteps:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              description: 请求名称
+              default: 刷新页面
+            desc:
+              type: string
+              description: 请求描述
+              default: 刷新当前浏览器页面
+            func:
+              type: array
+              description: 功能
+              default: []
+            mapping:
+              type: string
+              description: 映射
+              default: refresh
+            subset:
+              type: boolean
+              description: 子集
+              default: false
+            screenshot:
+              type: boolean
+              description: 截图
+              default: false
+            key:
+              type: number
+              format: float
+              description: 键
+              default: 1678345219878.0535
+            index:
+              type: integer
+              description: 索引
+              default: 1
+      createTime:
+        type: string
+        description: 创建时间
+        default: "2023-03-09 15:08:56"
+      updateTime:
+        type: string
+        description: 更新时间
+        default: "2023-03-09 15:08:56"
+      createName:
+        type: string
+        default: "admin"
+        description: 创建人
+      updateName:
+        type: string
+        default: "admin"
+        description: 更新人

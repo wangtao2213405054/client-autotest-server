@@ -1,0 +1,65 @@
+tags:
+  - 操作事件相关接口
+description:
+  新增/修改操作事件信息接口
+summary:
+  新增/修改操作事件信息
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+        - name
+        - platform
+        - mapping
+        - desc
+        - subset
+        - screenshot
+      properties:
+        id:
+          type: integer
+          description: 事件ID.
+          default: 25
+        name:
+          type: string
+          description: 事件名称.
+          default: "抛出异常"
+        desc:
+          type: string
+          description: 事件描述.
+          default: "主动抛出一个异常"
+        platform:
+          type: string
+          description: 事件所属平台
+          default: "all"
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 2
+        func:
+          type: array
+          description: 时间功能函数信息
+          items:
+            type: string
+          default: [ ]
+        mapping:
+          type: string
+          description: 事件映射函数名称
+          default: "raise_error"
+        subset:
+          type: boolean
+          description: 事件是否允许添加子节点
+          default: false
+        screenshot:
+          type: boolean
+          description: 事件是否截图
+          default: false
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

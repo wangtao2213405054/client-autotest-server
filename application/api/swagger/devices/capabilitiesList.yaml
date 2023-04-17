@@ -77,15 +77,15 @@ definitions:
     properties:
       id:
         type: integer
-        example: 1
+        default: 1
         description: 能力映射ID
       name:
         type: string
-        example: Chrome
+        default: Chrome
         description: 能力映射名称
       platformName:
         type: string
-        example: web
+        default: web
         description: 能力映射所属平台
       mapping:
         type: array
@@ -95,44 +95,46 @@ definitions:
           properties:
             type:
               type: string
-              example: input
+              default: input
               description: 字段类型(输入框、选择器)
             title:
               type: string
-              example: 浏览器
+              default: 浏览器
               description: 字段标题
             docs:
               type: string
-              example: 浏览器
+              default: 浏览器
               description: 字段描述
             param:
               type: string
-              example: browser
+              default: browser
               description: 映射Key, 参考启动Appium的启动配置
             source:
               type: array
               description: 数据源, 为选择器时填写
               items:
                 type: string
-              example: [ ]
+              default: [ ]
             dataType:
               type: string
-              example: String
+              default: String
               description: 字段数据类型
             key:
               type: integer
-              example: 1678454614006
+              default: 1678454614006
               description: 唯一标识符
             collapse:
               type: string
-              example: items
+              default: items
             default:
               type: string
-              example: Chrome
+              default: Chrome
               description: 默认值
       createTime:
         type: string
-        example: '2023-03-10 21:24:42'
+        default: '2023-03-10 21:24:42'
+        description: 创建时间
       updateTime:
         type: string
-        example: '2023-03-10 21:24:42'
+        default: '2023-03-10 21:24:42'
+        description: 更新时间

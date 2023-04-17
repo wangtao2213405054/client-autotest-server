@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/8/16 15:52
 
-from application.api import api
+from application.api import api, swagger
 from application import utils, db, models
 from flask import request
 from .common import message_switch
@@ -13,6 +13,7 @@ import json
 @api.route('/message/robot/info', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('robotInfo.yaml')
 def get_message_robot_info():
     """
     获取机器人配置
@@ -49,6 +50,7 @@ def get_message_robot_info():
 @api.route('/message/robot/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('robotEdit.yaml')
 def edit_message_robot_info():
     """
     新增/修改机器人配置
@@ -117,6 +119,7 @@ def edit_message_robot_info():
 @api.route('/message/robot/switch', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('robotSwitch.yaml')
 def edit_message_robot_switch():
     """
     修改机器人开关

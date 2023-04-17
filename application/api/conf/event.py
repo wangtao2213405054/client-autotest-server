@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/8/31 10:38
 
-from application.api import api
+from application.api import api, swagger
 from application import models, utils, db
 from flask import request
 from sqlalchemy import or_, and_
@@ -13,6 +13,7 @@ import json
 @api.route('/conf/event/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('eventEdit.yaml')
 def edit_event_info():
     """ 修改事件信息 """
     body = request.get_json()
@@ -82,6 +83,7 @@ def edit_event_info():
 @api.route('/conf/event/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('eventDelete.yaml')
 def delete_event_info():
     """ 删除事件信息 """
 
@@ -91,6 +93,7 @@ def delete_event_info():
 @api.route('conf/event/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('eventList.yaml')
 def get_event_list():
     """ 获取事件列表 """
 

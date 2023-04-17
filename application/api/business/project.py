@@ -2,7 +2,7 @@
 # _date: 2022/5/3 12:51
 
 from flask import request, g
-from application.api import api
+from application.api import api, swagger
 from application import models, db, utils
 
 import logging
@@ -12,6 +12,7 @@ import random
 @api.route('/business/project/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('projectEdit.yaml')
 def edit_project_info():
     """ 新增/编辑项目信息 """
 
@@ -31,7 +32,7 @@ def edit_project_info():
         'https://wpimg.wallstcn.com/fb57f689-e1ab-443c-af12-8d4066e202e2.jpg'
     ]
 
-    if not all([name, describe]):
+    if not all([name, describe, mold]):
         utils.rander(utils.DATA_ERR)
 
     if not avatar:
@@ -77,6 +78,7 @@ def edit_project_info():
 @api.route('/business/project/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('projectList.yaml')
 def get_project_list():
     """ 获取项目列表 """
 
@@ -88,6 +90,9 @@ def get_project_list():
     name = body.get('name')
     page = body.get('page')
     page_size = body.get('pageSize')
+
+    if not all([page, page_size]):
+        return utils.rander(utils.DATA_ERR)
 
     query_list = [
         models.Project.name.like(f'%{name if name else ""}%')
@@ -109,6 +114,7 @@ def get_project_list():
 @api.route('/business/project/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('projectDelete.yaml')
 def delete_project_info():
     """ 删除项目信息 """
 
@@ -118,6 +124,7 @@ def delete_project_info():
 @api.route('/business/project/info', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('projectInfo.yaml')
 def get_project_info():
     """ 获取项目信息 """
 

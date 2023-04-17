@@ -1,0 +1,85 @@
+tags:
+  - 用例文件夹相关接口
+description:
+  获取用例文件夹列表接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取用例文件夹列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+      properties:
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 1
+        id:
+          type: integer
+          description: 文件夹父ID, 可为空
+          default:
+        special:
+          type: string
+          description: 是否为特殊文件夹
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: array
+          items:
+            $ref: '#/definitions/folderItem'
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  folderItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 文件夹ID
+        default: 1
+      name:
+        type: string
+        description: 文件夹名称
+        default: 测试
+      projectId:
+        type: integer
+        description: 项目ID
+        default: 1
+      nodeId:
+        type: integer
+        description: 父节点ID
+        default:
+      createTime:
+        type: string
+        description: 创建时间
+        default: "2023-01-03 10:27:56"
+      updateTime:
+        type: string
+        description: 更新时间
+        default: "2023-01-03 10:27:56"
+      leaf:
+        type: boolean
+        description: 是否有子节点, 为false时有
+        default: false
+      exist:
+        type: boolean
+        description: 是否存在子节点
+        default: true

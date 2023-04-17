@@ -1,0 +1,43 @@
+tags:
+  - 应用版本相关接口
+description:
+  新增/修改应用版本接口
+summary:
+  新增/修改应用版本
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+        - name
+        - identify
+      properties:
+        id:
+          type: integer
+          description: 应用版本ID
+          default: 1
+        name:
+          type: string
+          description: 应用版本名称
+          default: v1.0
+        identify:
+          type: integer
+          description: 应用版本标识
+          default: 1
+        project_id:
+          type: integer
+          description: 项目ID
+          default: 1
+        desc:
+          type: string
+          description: 应用版本描述
+          default: 1.0版本
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

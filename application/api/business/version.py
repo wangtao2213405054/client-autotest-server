@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/12/15 10:44
 
-from application.api import api
+from application.api import api, swagger
 from application import utils, db, models
 from flask import request
 
@@ -11,6 +11,7 @@ import logging
 @api.route('/business/version/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('versionEdit.yaml')
 def edit_version_info():
     """ 新增/编辑版本信息 """
 
@@ -74,6 +75,7 @@ def edit_version_info():
 @api.route('/business/version/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('versionList.yaml')
 def get_version_list():
     """ 获取版本列表 """
 
@@ -108,6 +110,7 @@ def get_version_list():
 @api.route('/business/version/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('versionDelete.yaml')
 def delete_version_info():
     """ 删除版本信息 """
 

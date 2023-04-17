@@ -1,0 +1,61 @@
+tags:
+  - 消息邮件相关接口
+description:
+  新增/修改消息邮件接口
+summary:
+  新增/修改消息邮件信息
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+        - host
+        - title
+        - sender
+        - password
+        - receivers
+        - state
+      properties:
+        id:
+          type: integer
+          description: 消息邮件ID.
+          default: 1
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 2
+        host:
+          type: string
+          description: 邮箱服务
+          default: "smtp.qq.com"
+        title:
+          type: string
+          description: 邮件标题
+          default: "测试"
+        sender:
+          type: string
+          description: 发送人
+          default: "哈哈"
+        password:
+          type: string
+          description: 邮箱授权码
+          default: "123213"
+        receivers:
+          type: array
+          description: 接收人
+          items:
+            type: string
+          default: [ "123", "333" ]
+        state:
+          type: boolean
+          description: 当前消息邮件状态
+          default: false
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

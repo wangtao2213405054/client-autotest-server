@@ -1,0 +1,65 @@
+tags:
+  - 消息机器人相关接口
+description:
+  新增/修改消息机器人接口
+summary:
+  新增/修改消息机器人信息
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+        - at_all
+        - tokens
+        - app
+      properties:
+        id:
+          type: integer
+          description: 消息机器人ID
+          default: 1
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 2
+        app:
+          type: string
+          description: 钉钉或飞书标签 talk or lark
+          default: "talk"
+        tokens:
+          type: array
+          description: 消息机器人Token列表
+          items:
+            type: object
+            properties:
+              token:
+                type: string
+                description: 机器人Token
+                default: "1"
+              sign:
+                type: string
+                description: 机器人签名
+                default: "21"
+          default: [ { "token": "1", "sign": "21" } ]
+        atAll:
+          type: string
+          description: 是否@所有人或指定人
+          default: "no"
+        atMobile:
+          type: array
+          description: 是否@指定手机号的人
+          items:
+            type: string
+          default: [ ]
+        status:
+          type: boolean
+          description: 开启状态
+          default: false
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

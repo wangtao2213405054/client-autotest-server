@@ -1,0 +1,33 @@
+tags:
+  - Socket相关接口
+description:
+  获取Socket域名信息
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取Socket域名
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          description: 响应体
+          properties:
+            domain:
+              type: string
+              description: Socket 域名
+              default: http://127.0.0.1:5000
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145

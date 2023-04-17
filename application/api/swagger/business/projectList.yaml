@@ -1,0 +1,113 @@
+tags:
+  - 项目相关接口
+description:
+  获取项目列表
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取项目列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+      properties:
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 项目名称, 通过名称筛选项目
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/projectItem'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  projectItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        default: 2
+        description: 项目ID
+      name:
+        type: string
+        default: 百度
+        description: 项目名称
+      describe:
+        type: string
+        default: 这是一个基于 Selenium 框架开发的 UI 自动化程序 ...
+        description: 项目描述
+      avatar:
+        type: string
+        default: https://wpimg.wallstcn.com/9e2a5d0a-bd5b-457f-ac8e-86554616c87b.jpg
+        description: 项目头像
+      createUser:
+        type: string
+        default: admin
+        description: 创建人
+      createId:
+        type: integer
+        default: 1
+        description: 创建人ID
+      mold:
+        type: string
+        default: selenium
+        description: 使用的第三方驱动程序(appium、selenium)
+      createTime:
+        type: string
+        default: "2023-01-03 10:27:56"
+        description: 创建时间
+      updateTime:
+        type: string
+        default: "2023-01-03 10:27:56"
+        description: 更新时间
+      label:
+        type: string
+        default: "admin 更新与 2023-01-03 10:27:56"
+        description: 更新标签

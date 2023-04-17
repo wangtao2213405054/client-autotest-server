@@ -1,0 +1,30 @@
+tags:
+  - 消息邮件相关接口
+description:
+  开启/关闭消息邮件
+summary:
+  开启/关闭消息邮件
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+        - switch
+      properties:
+        id:
+          type: integer
+          description: 消息邮件ID
+          default: 1
+        switch:
+          type: boolean
+          description: 开启或关闭
+          default: false
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'
