@@ -27,7 +27,6 @@ responses:
   200:
     description: 响应成功
     schema:
-      id: userInfo
       properties:
         code:
           type: integer
