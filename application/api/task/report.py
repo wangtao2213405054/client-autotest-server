@@ -93,13 +93,15 @@ def new_task_report():
         return utils.rander(utils.DATABASE_ERR)
 
     _run_info = {
-        'id': task_info.id,
-        'pass': task_info.pass_case,
-        'fail': task_info.fail_case,
-        'percentage': round((task_info.pass_case + task_info.fail_case) / len(json.loads(task_info.cases)) * 100, 2)
+        'taskId': task_info.id,
+        'passCase': task_info.pass_case,
+        'failCase': task_info.fail_case,
+        'percentage': round((task_info.pass_case + task_info.fail_case) / len(json.loads(task_info.cases)) * 100, 2),
+        'taskStatus': task_info.status
     }
     socketio.emit('taskRunningStatus', _run_info)
-    socketio.emit('taskReportInfo', report.result, to=f'taskReport{task_id}')
+    _run_info.update(report.result)
+    socketio.emit('taskReportInfo', _run_info, to=f'taskReport{task_id}')
     return utils.rander(utils.OK)
 
 
