@@ -15,9 +15,12 @@ parameters:
         - id
       properties:
         id:
-          type: integer
-          description: 用户ID
-          default: 1
+          type: array
+          description: 要删除的用户列表ID
+          default: [1]
+          items:
+            type: integer
+            description: 用户ID
 responses:
   200:
     description: 响应成功

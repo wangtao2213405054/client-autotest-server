@@ -6,8 +6,8 @@ from application import utils
 
 
 @api.route('/message/notification/new', methods=['GET', 'POST'])
-@utils.login_required
-@utils.permissions_required
+# @utils.login_required
+# @utils.permissions_required
 def send_notification_info():
     """ 发送通知消息 """
 
