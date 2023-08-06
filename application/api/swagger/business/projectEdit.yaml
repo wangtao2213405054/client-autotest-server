@@ -1,0 +1,43 @@
+tags:
+  - 项目相关接口
+description:
+  新增/修改项目接口
+summary:
+  新增/修改项目
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - describe
+        - name
+        - mold
+      properties:
+        id:
+          type: integer
+          default: 2
+          description: 项目ID
+        name:
+          type: string
+          default: 百度
+          description: 项目名称
+        describe:
+          type: string
+          default: 这是一个基于 Selenium 框架开发的 UI 自动化程序 ...
+          description: 项目描述
+        avatar:
+          type: string
+          default:
+          description: 项目头像
+        mold:
+          type: string
+          default: selenium
+          description: 使用的第三方驱动程序(appium、selenium)
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

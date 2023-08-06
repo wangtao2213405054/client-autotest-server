@@ -1,0 +1,106 @@
+tags:
+  - 应用版本相关接口
+description:
+  获取应用版本列表
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取应用版本列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+        - projectId
+      properties:
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 1
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 应用版本名称, 通过名称筛选应用版本
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/versionItem'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  versionItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 应用版本ID
+        default: 1
+      name:
+        type: string
+        description: 应用版本名称
+        default: v1.0
+      identify:
+        type: integer
+        description: 应用版本标识
+        default: 1
+      project_id:
+        type: integer
+        description: 项目ID
+        default: 1
+      desc:
+        type: string
+        description: 应用版本描述
+        default: 1.0版本
+      createTime:
+        type: string
+        default: "2023-04-09 17:10:07"
+        description: 创建时间
+      updateTime:
+        type: string
+        default: "2023-04-09 17:10:07"
+        description: 更新时间

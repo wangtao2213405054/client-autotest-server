@@ -1,0 +1,116 @@
+tags:
+  - 用例集合相关接口
+description:
+  获取用例集合列表
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取用例集合列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+        - projectId
+      properties:
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 1
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 应用版本名称, 通过名称筛选应用版本
+          default:
+        special:
+          type: boolean
+          description: 特殊集合标识
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/setItem'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  setItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 用例集合ID
+        default: 4
+      name:
+        type: string
+        description: 用例集合名称
+        default: 特特是
+      special:
+        type: boolean
+        description: 特殊用例标识
+        default: false
+      project_id:
+        type: integer
+        description: 项目ID
+        default: 1
+      customSet:
+        type: array
+        items:
+          type: integer
+        description: 自定义用例列表
+        default: []
+      desc:
+        type: string
+        description: 用例集合描述
+        default:
+      createTime:
+        type: string
+        description: 创建时间
+        default: "2023-01-31 13:37:48"
+      updateTime:
+        type: string
+        description: 更新时间
+        default: "2023-01-31 13:37:48"

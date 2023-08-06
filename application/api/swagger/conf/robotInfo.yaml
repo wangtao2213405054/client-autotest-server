@@ -1,0 +1,98 @@
+tags:
+  - 消息机器人相关接口
+description:
+  获取消息机器人信息
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取消息机器人信息
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - projectId
+        - app
+      properties:
+        projectId:
+          type: integer
+          description: 项目ID
+          default: 2
+        app:
+          type: string
+          description: 钉钉或飞书标签 talk or lark
+          default: talk
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          $ref: '#/definitions/robotInfo'
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  robotInfo:
+    type: object
+    description: 响应体
+    properties:
+      id:
+        type: integer
+        description: 消息机器人ID
+        default: 1
+      projectId:
+        type: integer
+        description: 项目ID
+        default: 2
+      app:
+        type: string
+        description: 钉钉或飞书标签 talk or lark
+        default: "talk"
+      tokens:
+        type: array
+        description: 消息机器人Token列表
+        items:
+          type: object
+          properties:
+            token:
+              type: string
+              description: 机器人Token
+              default: "1"
+            sign:
+              type: string
+              description: 机器人签名
+              default: "21"
+        default: [ { "token": "1", "sign": "21" } ]
+      atAll:
+        type: string
+        description: 是否@所有人或指定人
+        default: "no"
+      atMobile:
+        type: array
+        description: 是否@指定手机号的人
+        items:
+          type: string
+        default: [ ]
+      status:
+        type: boolean
+        description: 开启状态
+        default: false
+      createTime:
+        type: string
+        description: 创建时间
+        default: "2023-04-17 11:01:18"
+      updateTime:
+        type: string
+        description: 更新时间
+        default: "2023-04-17 11:01:18"

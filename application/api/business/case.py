@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/12/16 22:48
 
-from application.api import api
+from application.api import api, swagger
 from application import utils, db, models
 from flask import request, g
 from sqlalchemy import or_
@@ -13,6 +13,7 @@ import json
 @api.route('/business/case/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('caseEdit.yaml')
 def edit_case_info():
     """ 编辑用例信息 """
 
@@ -145,6 +146,7 @@ def edit_case_info():
 @api.route('/business/case/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('caseList.yaml')
 def get_case_list():
     """ 获取用例列表 """
 
@@ -211,6 +213,7 @@ def query_name(_id):
 @api.route('/business/case/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('caseDelete.yaml')
 def delete_case_info():
     """ 删除用例信息 """
 
@@ -218,8 +221,9 @@ def delete_case_info():
 
 
 @api.route('/business/case/info', methods=['GET', 'POST'])
-# @utils.login_required
-# @utils.permissions_required
+@utils.login_required
+@utils.permissions_required
+@swagger('caseInfo.yaml')
 def get_case_info():
     """ 通过ID获取用例详情(执行机使用) """
 

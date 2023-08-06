@@ -1,0 +1,25 @@
+tags:
+  - 用例集合相关接口
+description:
+  删除用例集合信息
+summary:
+  删除用例集合信息
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: 用例集合ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

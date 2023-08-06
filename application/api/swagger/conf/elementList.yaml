@@ -1,0 +1,111 @@
+tags:
+  - 页面元素相关接口
+description:
+  获取页面元素列表信息接口
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取页面元素列表
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - page
+        - pageSize
+      properties:
+        page:
+          type: integer
+          description: 页码
+          default: 1
+        pageSize:
+          type: integer
+          description: 每页返回数量
+          default: 20
+        name:
+          type: string
+          description: 元素名称
+          default:
+        platform:
+          type: string
+          description: 当前项目所属平台
+          default:
+        label:
+          type: string
+          description: 元素内容
+          default:
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/elementItem'
+            total:
+              type: integer
+              description: 总数据条数
+              default: 20
+            totalPage:
+              type: integer
+              description: 总页码数量
+              default: 1
+            page:
+              type: integer
+              description: 当前页码
+              default: 1
+            pageSize:
+              type: integer
+              description: 当前页的数量
+              default: 20
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145
+definitions:
+  elementItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 元素ID.
+        default: 15
+      name:
+        type: string
+        description: 元素名称.
+        default: "ID"
+      label:
+        type: string
+        description: 元素内容即依赖库的实际字段信息.
+        default: "id"
+      desc:
+        type: string
+        description: 元素描述.
+        default: "通过元素的 id 属性来定位元素"
+      platform:
+        type: array
+        description: 元素所属平台.
+        items:
+          type: string
+        default: [ "appium", "selenium" ]
+      createTime:
+        type: string
+        description: 创建时间.
+        default: "2023-01-03 10:27:56"
+      updateTime:
+        type: string
+        description: 更新时间.
+        default: "2023-01-03 10:27:56"

@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/8/15 13:58
 
-from application.api import api
+from application.api import api, swagger
 from application import utils, db, models
 from flask import request
 from .common import message_switch
@@ -13,6 +13,7 @@ import json
 @api.route('/message/email/info', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('emailInfo.yaml')
 def get_message_email_info():
     """
     获取 email 配置信息
@@ -49,6 +50,7 @@ def get_message_email_info():
 @api.route('/message/email/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('emailEdit.yaml')
 def edit_message_email_info():
     """
     新增/修改 email 信息
@@ -120,6 +122,7 @@ def edit_message_email_info():
 @api.route('/message/email/switch', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('emailSwitch.yaml')
 def update_message_email_switch():
     """
     更新 email 开关状态
@@ -131,7 +134,7 @@ def update_message_email_switch():
     if not body:
         return utils.rander(utils.BODY_ERR)
 
-    state = body.get('state')
+    state = body.get('status')
     email_id = body.get('id')
 
     if not email_id or not isinstance(state, bool):

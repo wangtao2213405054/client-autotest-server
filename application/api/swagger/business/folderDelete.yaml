@@ -1,0 +1,25 @@
+tags:
+  - 用例文件夹相关接口
+description:
+  删除用例文件夹接口
+summary:
+  删除用例文件夹
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: 用例文件夹ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

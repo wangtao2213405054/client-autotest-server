@@ -1,0 +1,45 @@
+tags:
+  - 页面元素相关接口
+description:
+  新增/修改页面元素信息接口
+summary:
+  新增/修改页面元素信息
+security:
+  - APIKeyHeader: ['Token']
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - label
+        - name
+        - platform
+      properties:
+        id:
+          type: integer
+          description: 元素ID.
+          default: 15
+        name:
+          type: string
+          description: 元素名称.
+          default: "ID"
+        label:
+          type: string
+          description: 元素内容即依赖库的实际字段信息.
+          default: "id"
+        desc:
+          type: string
+          description: 元素描述.
+          default: "通过元素的 id 属性来定位元素"
+        platform:
+          type: array
+          description: 元素所属平台.
+          items:
+            type: string
+          default: [ "appium", "selenium" ]
+responses:
+  200:
+    description: 响应成功
+    schema:
+      $ref: '#/definitions/handle'

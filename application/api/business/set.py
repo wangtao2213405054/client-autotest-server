@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/12/15 10:44
 
-from application.api import api
+from application.api import api, swagger
 from application import utils, db, models
 from flask import request
 
@@ -12,6 +12,7 @@ import json
 @api.route('/business/set/edit', methods=['POST', 'PUT'])
 @utils.login_required
 @utils.permissions_required
+@swagger('setEdit.yaml')
 def edit_set_info():
     """ 新增/编辑集合信息 """
 
@@ -85,6 +86,7 @@ def edit_set_info():
 @api.route('/business/set/list', methods=['GET', 'POST'])
 @utils.login_required
 @utils.permissions_required
+@swagger('setList.yaml')
 def get_set_list():
     """ 获取集合列表 """
 
@@ -122,6 +124,7 @@ def get_set_list():
 @api.route('/business/set/delete', methods=['POST', 'DELETE'])
 @utils.login_required
 @utils.permissions_required
+@swagger('selDelete.yaml')
 def delete_set_info():
     """ 删除集合信息 """
 

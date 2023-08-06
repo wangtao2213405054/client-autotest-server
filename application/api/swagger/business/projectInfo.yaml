@@ -1,0 +1,39 @@
+tags:
+  - 项目相关接口
+description:
+  获取项目信息
+security:
+  - APIKeyHeader: ['Token']
+summary:
+  获取项目信息
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: 项目ID
+          default: 1
+responses:
+  200:
+    description: 响应成功
+    schema:
+      properties:
+        code:
+          type: integer
+          description: 状态码
+          default: 1
+        message:
+          type: string
+          description: 状态信息
+          default: 服务接口调用成功
+        data:
+          $ref: '#/definitions/projectItem'
+        ts:
+          type: integer
+          description: 响应时间戳
+          default: 1680854145

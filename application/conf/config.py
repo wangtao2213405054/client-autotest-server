@@ -31,14 +31,13 @@ class Config:
     # 上传文件接口在 api/upload/file 文件中, 如需修改其他服务请自行修改
     OSS_DICT = dict(
         Region='ap-beijing',
-        SecretId='AKIDiHhx2vdAVL0eKziPwFLD5tVxDfzJWiq9',
-        SecretKey='FJKAnFD1g6NWSBi8QZijY9WhfS2RegV9',
+        SecretId='AKIDqSoxrSeSr1g4C4r2rQ7axmTitzufuk5I',
+        SecretKey='42pY1H8l8NXZRBmCLRN9gxynjEVWcscE',
         Bucket='flash-1254275723'
     )
 
     # socket 域名信息
-    SOCKET_HOST = 'http://127.0.0.1'
-    SOCKET_PORT = 5000
+    SOCKET_HOST = 'http://127.0.0.1:5000'
 
     # Log 路径
     OBJ_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), '..'))
@@ -73,6 +72,7 @@ class Config:
         'name': 'Token',
         'in': 'header'
     }))
+    SWAGGER_CONFIG['specs_route'] = '/apidocs/'
     JSON_AS_ASCII = False
 
 
@@ -101,8 +101,7 @@ class DevelopConfig(Config):
     SQLALCHEMY_DATABASE_URI = ''
 
     # socket 域名信息
-    SOCKET_HOST = ''
-    SOCKET_PORT = 80
+    SOCKET_HOST = 'http://gclcoke.online'
 
 
 class ProductConfig(Config):
