@@ -30,7 +30,7 @@ class Domain(BaseModel, db.Model):
     def result(self):
         return dict(
             id=self.id,
-            project_id=self.project_id,
+            projectId=self.project_id,
             name=self.name,
             domain=self.domain,
             protocol=self.protocol,

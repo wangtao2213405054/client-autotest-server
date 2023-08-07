@@ -88,7 +88,7 @@ definitions:
         type: integer
         default: 2
         description: 模拟域名ID
-      project_id:
+      projectId:
         type: integer
         default: 1
         description: 所属项目
