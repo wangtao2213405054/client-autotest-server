@@ -57,14 +57,6 @@ definitions:
         type: string
         description: 权限菜单标识符
         default: role
-      menuType:
-        type: string
-        description: 权限菜单类型(menu、case)
-        default: menu
-      belongType:
-        type: string
-        description: 菜单归属(home、project)
-        default: home
       createTime:
         type: string
         description: 创建时间

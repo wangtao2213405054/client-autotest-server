@@ -7,7 +7,6 @@ from application.api import api, swagger
 
 @api.route('/conf/socket/domain', methods=['GET', 'POST'])
 @utils.login_required
-@utils.permissions_required
 @swagger('socketDomain.yaml')
 def get_socket_domain():
     """ 获取 socket 域名信息 """

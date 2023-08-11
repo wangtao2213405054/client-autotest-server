@@ -24,8 +24,6 @@ def edit_permissions_menu_info():
     node_id = body.get('nodeId')
     name = body.get('name')
     identifier = body.get('identifier')
-    menu_type = body.get('menuType')
-    belong_type = body.get('belongType')
     node_id = node_id if node_id else 0
 
     if not all([name, identifier]):
@@ -49,9 +47,7 @@ def edit_permissions_menu_info():
 
         update_data = {
             'name': name,
-            'identifier': identifier,
-            'menu_type': menu_type,
-            'belong_type': belong_type
+            'identifier': identifier
         }
 
         try:
@@ -73,8 +69,6 @@ def edit_permissions_menu_info():
         menu_new = models.Menu(
             name=name,
             identifier=identifier,
-            menu_type=menu_type,
-            belong_type=belong_type,
             node_id=node_id
         )
         db.session.add(menu_new)

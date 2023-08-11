@@ -3,9 +3,10 @@
 
 from .user import User
 from .project import Project
-
+from .permissions import Permissions
 
 __all__ = [
     'User',
-    'Project'
+    'Project',
+    'Permissions'
 ]

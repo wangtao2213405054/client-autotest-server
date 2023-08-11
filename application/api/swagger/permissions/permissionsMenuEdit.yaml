@@ -31,14 +31,6 @@ parameters:
           type: string
           description: 权限标识符, 需要和前端 route 字段匹配
           default:
-        menuType:
-          type: string
-          description: 菜单类型(menu、case)
-          default: 'menu'
-        belongType:
-          type: string
-          description: 菜单归属(home、project)
-          default: home
 responses:
   200:
     description: 响应成功

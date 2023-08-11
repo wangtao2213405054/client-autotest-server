@@ -31,11 +31,9 @@ def edit_permissions_role_info():
 
     # 处理菜单标识符
     menu_list = []
-    menu_info = models.Menu.query.filter_by(menu_type='menu').all()
-    for items in menu_info:
-        for item in permissions_api:
-            if item == items.identifier:
-                menu_list.append(item)
+    for item in permissions_api:
+        if '/' not in item:
+            menu_list.append(item)
 
     # 标识符去重验证
     identifier_info = models.Role.query.filter_by(identifier=identifier).first()
