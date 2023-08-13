@@ -8,4 +8,4 @@ from flask import request
 @socketio.on('system')
 def get_system_info(data):
     """ 将获取到的系统信息分发到指定的房间之中 """
-    socketio.emit('clientSystemInfo', data, room=f'systemRoom{getattr(request, "sid", None)}')
+    socketio.emit(f'clientSystemInfo{data.get("id")}', data, room=f'systemRoom{getattr(request, "sid", None)}')

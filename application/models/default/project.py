@@ -2,6 +2,7 @@
 # _date: 2022/8/23 17:29
 
 from .user import User, models, db
+from sqlalchemy import text
 
 import time
 
@@ -37,7 +38,8 @@ class Project(User):
 
         self.set_event()
         # 设置用例表从百万开始
-        db.session.execute(f'ALTER TABLE {models.Case.__tablename__} AUTO_INCREMENT = 1000000')
+        alter_sql = text(f'ALTER TABLE {models.Case.__tablename__} AUTO_INCREMENT = :start_value')
+        db.session.execute(alter_sql, {"start_value": 1000000})
 
     @classmethod
     def set_element(cls):
