@@ -121,8 +121,8 @@ def get_master_list():
     query_info = [
         models.Master.name.like(f'%{name if name else ""}%'),
     ]
-    if isinstance(status, int):
-        query_info.append(models.Master.status == bool(status))
+    if isinstance(status, bool):
+        query_info.append(models.Master.status == status)
 
     if project_id:
         query_info.append(models.Master.project_id == project_id)
