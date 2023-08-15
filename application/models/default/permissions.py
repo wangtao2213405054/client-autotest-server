@@ -12,6 +12,7 @@ class Permissions:
         self.accounts()
         self.permissions()
         self.mock()
+        self.devices()
 
     @staticmethod
     def projects():
@@ -103,4 +104,38 @@ class Permissions:
         api_delete = models.Menu('删除接口信息', '/mock/api/delete', api.id)
 
         db.session.add_all([domain_delete, domain_edit, domain_list, api_delete, api_edit, api_list])
+        db.session.commit()
+
+    @staticmethod
+    def devices():
+
+        device = models.Menu('设备管理', 'Devices')
+        db.session.add(device)
+        db.session.commit()
+
+        master = models.Menu('控制设备', 'DevicesMaster', device.id)
+        db.session.add(master)
+        db.session.commit()
+
+        master_list = models.Menu('获取控制设备列表', '/devices/master/list', master.id)
+        master_edit = models.Menu('编辑控制设备信息', '/devices/master/edit', master.id)
+        master_delete = models.Menu('删除控制设备信息', '/devices/master/delete', master.id)
+        master_status = models.Menu('修改控制设备当前状态', '/devices/master/status', master.id)
+        master_info = models.Menu('获取控制设备信息', '/devices/master/info', master.id)
+        master_socket = models.Menu('获取控制设备房间号', '/devices/master/socket', master.id)
+
+        worker = models.Menu('执行设备', 'DevicesWorker', device.id)
+        db.session.add(worker)
+        db.session.commit()
+
+        worker_list = models.Menu('获取工作设备列表', '/devices/worker/list', worker.id)
+        worker_edit = models.Menu('编辑工作设备信息', '/devices/worker/edit', worker.id)
+        worker_delete = models.Menu('删除工作设备信息', '/devices/worker/delete', worker.id)
+        worker_status = models.Menu('修改工作机的设备状态', '/devices/worker/status', worker.id)
+        worker_switch = models.Menu('开启/关闭执行机任务轮训', '/devices/worker/switch', worker.id)
+
+        db.session.add_all([
+            master_status, master_edit, master_delete, master_socket, master_info, master_list,
+            worker_status, worker_switch, worker_delete, worker_edit, worker_list
+        ])
         db.session.commit()
