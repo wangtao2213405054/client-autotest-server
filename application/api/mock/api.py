@@ -127,6 +127,7 @@ def get_api_list():
     page = body.get('page')
     size = body.get('pageSize')
     keyword = body.get('keyword')
+    keyword = keyword if keyword else ""
 
     if not all([project_id, page, size]):
         return utils.rander(utils.DATA_ERR)

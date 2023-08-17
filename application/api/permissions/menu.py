@@ -115,6 +115,7 @@ def get_permissions_menu_list():
         body = {}
 
     keyword = body.get('keyword')
+    keyword = keyword if keyword else ""
     return utils.rander(utils.OK, data=get_menu_tree(0, keyword))
 
 

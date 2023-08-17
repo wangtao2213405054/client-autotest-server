@@ -124,6 +124,7 @@ def get_user_list():
     page = body.get('page')
     page_size = body.get('pageSize')
     keyword = body.get('keyword')
+    keyword = keyword if keyword else ""
     state = body.get('state')
 
     if not all([page, page_size]):

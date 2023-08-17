@@ -97,6 +97,7 @@ def get_domain_list():
     page = body.get('page')
     size = body.get('pageSize')
     keyword = body.get('keyword')
+    keyword = keyword if keyword else ""
     protocol = body.get('protocol')
 
     if not all([project_id, page, size]):

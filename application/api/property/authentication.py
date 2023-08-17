@@ -46,7 +46,7 @@ def get_user_info():
         if role_info.identifier == 'admin':
             roles.append('admin')
         else:
-            roles = json.loads(role_info.permissions_menu)
+            roles = json.loads(role_info.permissions_menu) + json.loads(role_info.permissions_api)
 
     user_info = user_info.result
     user_info['roles'] = roles

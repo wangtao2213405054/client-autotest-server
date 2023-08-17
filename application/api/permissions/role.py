@@ -89,6 +89,7 @@ def get_permissions_role_list():
     page = body.get('page')
     page_size = body.get('pageSize')
     keyword = body.get('keyword')
+    keyword = keyword if keyword else ""
 
     if not all([page, page_size]):
         return utils.rander(utils.DATA_ERR)
