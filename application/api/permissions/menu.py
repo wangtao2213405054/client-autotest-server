@@ -3,6 +3,7 @@
 
 from application.api import api, swagger
 from application import db, models, utils
+from sqlalchemy import or_
 from flask import request
 
 import logging
@@ -81,16 +82,14 @@ def edit_permissions_menu_info():
     return utils.rander(utils.OK)
 
 
-def get_menu_tree(node_id, query_name='', query_identifier=''):
+def get_menu_tree(node_id, keyword=''):
     """ 递归遍历所有子树信息 """
     menu_dict_list = []
 
-    query_dict = []
-    if query_name or query_identifier:
-        query_dict.append(models.Menu.name.like(f'%{query_name}%'))
-        query_dict.append(models.Menu.identifier.like(f'%{query_identifier}%'))
-    else:
-        query_dict.append(models.Menu.node_id == node_id)
+    query_dict = [
+        models.Menu.node_id == node_id,
+        or_(models.Menu.name.like(f'%{keyword}%'), models.Menu.identifier.like(f'%{keyword}%'))
+    ]
 
     menu_list = models.Menu.query.filter(*query_dict).all()
 
@@ -115,9 +114,8 @@ def get_permissions_menu_list():
     if not body:
         body = {}
 
-    name = body.get('name')
-    identifier = body.get('identifier')
-    return utils.rander(utils.OK, data=get_menu_tree(0, name, identifier))
+    keyword = body.get('keyword')
+    return utils.rander(utils.OK, data=get_menu_tree(0, keyword))
 
 
 def delete_menu_tree(node_id):

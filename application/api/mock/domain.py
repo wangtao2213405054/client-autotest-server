@@ -3,6 +3,7 @@
 
 from application.api import api, swagger
 from application import utils, models, db
+from sqlalchemy import or_
 from flask import request
 
 import logging
@@ -95,8 +96,7 @@ def get_domain_list():
     project_id = body.get('projectId')
     page = body.get('page')
     size = body.get('pageSize')
-    domain = body.get('domain')
-    name = body.get('name')
+    keyword = body.get('keyword')
     protocol = body.get('protocol')
 
     if not all([project_id, page, size]):
@@ -104,8 +104,7 @@ def get_domain_list():
 
     _query = [
         models.Domain.project_id == project_id,
-        models.Domain.name.like(f'%{name if name else ""}%'),
-        models.Domain.domain.like(f'%{domain if domain else ""}%')
+        or_(models.Domain.name.like(f'%{keyword}%'), models.Domain.domain.like(f'%{keyword}%'))
     ]
 
     if protocol:

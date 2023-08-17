@@ -3,6 +3,7 @@
 
 from application.api import api, swagger
 from application import db, models, utils
+from sqlalchemy import or_
 from flask import request
 
 import logging
@@ -122,8 +123,7 @@ def get_user_list():
     classification_id = body.get('id')
     page = body.get('page')
     page_size = body.get('pageSize')
-    name = body.get('name')
-    mobile = body.get('mobile')
+    keyword = body.get('keyword')
     state = body.get('state')
 
     if not all([page, page_size]):
@@ -142,8 +142,7 @@ def get_user_list():
     # 数据过滤
     query_info = [
         models.User.node.in_(son_id_list) if classification_id else models.User.id,
-        models.User.name.like(f'%{name if name else ""}%'),
-        models.User.mobile.like(f'%{mobile if mobile else ""}%')
+        or_(models.User.name.like(f'%{keyword}%'), models.User.mobile.like(f'%{keyword}%'))
     ]
 
     if isinstance(state, bool):

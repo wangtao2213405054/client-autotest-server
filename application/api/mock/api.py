@@ -3,6 +3,7 @@
 
 from application.api import api, swagger
 from application import utils, models, db
+from sqlalchemy import or_
 from flask import request
 
 import logging
@@ -25,9 +26,21 @@ def edit_api_edit():
     project_id = body.get('projectId')
     name = body.get('name')
     path = body.get('path')
-    _body = body.get('body')
+    overall = body.get('overall')
+    record_request = body.get('recordRequest')
+    record_response = body.get('recordResponse')
+    breakpoint_request = body.get('breakpointRequest')
+    breakpoint_response = body.get('breakpointResponse')
+    _request = body.get('request')
+    _response = body.get('response')
 
-    if not all([project_id, name, path, _body]):
+    if not all([
+        project_id,
+        name,
+        path,
+        (breakpoint_request and _request) or (not breakpoint_request and not _request),
+        (breakpoint_response and _response) or (not breakpoint_response and not _response),
+    ]):
         return utils.rander(utils.DATA_ERR)
 
     project = models.Project.query.get(project_id)
@@ -35,12 +48,14 @@ def edit_api_edit():
         return utils.rander(utils.DATA_ERR, '项目不存在')
 
     try:
-        _body = json.loads(_body)
+        _request = json.loads(_request) if _request else ""
+        _response = json.loads(_response) if _response else ""
     except Exception as e:
         logging.error(e)
         return utils.rander(utils.DATA_ERR, 'JSON解析错误')
     else:
-        _body = json.dumps(_body, ensure_ascii=False)
+        _request = json.dumps(_request, ensure_ascii=False) if _request else ""
+        _response = json.dumps(_response, ensure_ascii=False) if _response else ""
 
     api_info = models.Api.query.filter_by(path=path, project_id=project_id).first()
     if api_info and api_id != api_info.id:
@@ -55,7 +70,13 @@ def edit_api_edit():
         update = dict(
             name=name,
             path=path,
-            body=_body
+            overall=overall,
+            recordRequest=record_request,
+            recordResponse=record_response,
+            breakpointRequest=breakpoint_request,
+            breakpointResponse=breakpoint_response,
+            request=_request,
+            response=_response,
         )
         try:
             api_info.update(update)
@@ -71,7 +92,13 @@ def edit_api_edit():
         project_id=project_id,
         name=name,
         path=path,
-        body=_body
+        overall=overall,
+        record_request=record_request,
+        record_response=record_response,
+        breakpoint_request=breakpoint_request,
+        breakpoint_response=breakpoint_response,
+        request=_request,
+        response=_response
     )
     try:
         db.session.add(_api)
@@ -99,15 +126,13 @@ def get_api_list():
     project_id = body.get('projectId')
     page = body.get('page')
     size = body.get('pageSize')
-    path = body.get('path')
-    name = body.get('name')
+    keyword = body.get('keyword')
 
     if not all([project_id, page, size]):
         return utils.rander(utils.DATA_ERR)
 
     _query = [
-        models.Api.name.like(f'%{name if name else ""}%'),
-        models.Api.path.like(f'%{path if path else ""}%'),
+        or_(models.Api.name.like(f'%{keyword}%'), models.Api.path.like(f'%{keyword}%')),
         models.Api.project_id == project_id
     ]
 

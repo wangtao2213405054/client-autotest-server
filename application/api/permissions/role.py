@@ -3,6 +3,7 @@
 
 from application import models, db, utils
 from application.api import api, swagger
+from sqlalchemy import or_
 from flask import request
 
 import logging
@@ -87,16 +88,12 @@ def get_permissions_role_list():
 
     page = body.get('page')
     page_size = body.get('pageSize')
-    name = body.get('name')
-    identifier = body.get('identifier')
+    keyword = body.get('keyword')
 
     if not all([page, page_size]):
         return utils.rander(utils.DATA_ERR)
 
-    query_list = [
-        models.Role.name.like(f'%{name if name else ""}%'),
-        models.Role.identifier.like(f'%{identifier if identifier else ""}%')
-    ]
+    query_list = [or_(models.Role.name.like(f'%{keyword}%'), models.Role.identifier.like(f'%{keyword}%'))]
 
     # 当用户非admin角色时列表不再返回admin角色信息
     role_info = utils.get_user_role_info()
