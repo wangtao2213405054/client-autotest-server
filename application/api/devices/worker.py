@@ -1,9 +1,8 @@
 # _author: Coke
 # _date: 2022/11/28 11:35
 
-
-from application.api import api, swagger
 from application import utils, models, db, ws, socketio
+from application.api import api, swagger
 from flask import request
 
 import logging
@@ -39,20 +38,18 @@ def edit_worker_info():
     worker_id = body.get('id')
     name = body.get('name')
     desc = body.get('desc')
-    platform = body.get('platformName')
-    mapping = body.get('mapping')
-    master = body.get('master')
     blocker = body.get('blocker')
     switch = body.get('switch')
     log = body.get('logging')
+    mapping = body.get('mapping')
+    master = body.get('master')
 
-    if not all([name, platform, mapping, master, log, blocker, isinstance(switch, bool), isinstance(mapping, list)]):
+    if not all([name, mapping, master, log, blocker, isinstance(switch, bool)]):
         return utils.rander(utils.DATA_ERR)
 
-    parsing = utils.rule_list_to_dict(mapping, 'param', 'value', 'type')
-    parsing['platformName'] = platform
-
-    if not parsing:
+    try:
+        mapping = json.loads(mapping)
+    except (Exception, ):
         return utils.rander(utils.DATA_ERR, '映射解析错误')
 
     master_info = models.Master.query.filter_by(id=master).first()
@@ -67,9 +64,7 @@ def edit_worker_info():
         update = {
             'name': name,
             'desc': desc,
-            'platform': platform,
             'mapping': json.dumps(mapping, ensure_ascii=False),
-            'parsing': json.dumps(parsing, ensure_ascii=False),
             'master': master,
             'blocker': blocker,
             'switch': switch,
@@ -92,7 +87,7 @@ def edit_worker_info():
             return utils.rander(utils.DATABASE_ERR)
 
     else:
-        worker = models.Worker(name, desc, platform, mapping, parsing, master, blocker, switch, log)
+        worker = models.Worker(name, desc, mapping, master, blocker, switch, log)
 
         try:
             db.session.add(worker)

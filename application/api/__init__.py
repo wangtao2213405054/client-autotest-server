@@ -37,7 +37,7 @@ def blueprint():
     from .business import project, folder, set, version, case
     from .conf import email, robot, element, event, socket
     from .task import allot, center, report
-    from .devices import master, worker, capabilities
+    from .devices import master, worker
     from .message import message
     from .mock import domain, api
     from .upload import file
