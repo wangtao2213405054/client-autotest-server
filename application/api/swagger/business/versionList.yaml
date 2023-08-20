@@ -88,7 +88,7 @@ definitions:
         type: integer
         description: 应用版本标识
         default: 1
-      project_id:
+      projectId:
         type: integer
         description: 项目ID
         default: 1

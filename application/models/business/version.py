@@ -15,7 +15,7 @@ class Version(BaseModel, db.Model):
 
     id = Column(db.Integer, primary_key=True)  # 主键
     name = Column(db.String(32), nullable=False)  # 版本名称
-    identify = Column(db.Integer, nullable=False)  # 版本标识符
+    identify = Column(db.String(324), nullable=False)  # 版本标识符
     project_id = Column(db.Integer, nullable=False)  # 所属项目
     desc = Column(db.Text)  # 版本描述
 

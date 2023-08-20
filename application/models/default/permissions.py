@@ -151,9 +151,9 @@ class Permissions:
         db.session.add(element)
         db.session.commit()
 
-        element_list = models.Menu('获取页面元素列表', '/devices/master/list', element.id)
-        element_edit = models.Menu('编辑页面元素信息', '/devices/master/edit', element.id)
-        element_delete = models.Menu('删除页面元素信息', '/devices/master/delete', element.id)
+        element_list = models.Menu('获取页面元素列表', '/conf/element/list', element.id)
+        element_edit = models.Menu('编辑页面元素信息', '/conf/element/edit', element.id)
+        element_delete = models.Menu('删除页面元素信息', '/conf/element/delete', element.id)
 
         db.session.add_all([element_edit, element_list, element_delete])
         db.session.commit()

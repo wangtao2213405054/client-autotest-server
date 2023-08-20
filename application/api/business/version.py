@@ -6,6 +6,7 @@ from application import utils, db, models
 from flask import request
 
 import logging
+import re
 
 
 @api.route('/business/version/edit', methods=['POST', 'PUT'])
@@ -26,7 +27,11 @@ def edit_version_info():
     identify = body.get('identify')
     desc = body.get('desc')
 
-    if not all([project_id, name, identify, isinstance(identify, int)]):
+    if not all([project_id, name, identify, isinstance(identify, str)]):
+        return utils.rander(utils.DATA_ERR)
+
+    pattern = r'^\d+(?:\.\d+){2}$'
+    if not re.match(pattern, identify):
         return utils.rander(utils.DATA_ERR)
 
     project = models.Project.query.filter_by(id=project_id).first()
