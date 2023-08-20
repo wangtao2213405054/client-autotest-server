@@ -1,9 +1,9 @@
 # _author: Coke
 # _date: 2022/8/23 13:41
 
-
 from application.api import api, swagger
 from application import utils, db, models
+from sqlalchemy import or_
 from flask import request
 
 import logging
@@ -28,16 +28,15 @@ def get_element_list():
     platform = body.get('platform')
     page = body.get('page')
     size = body.get('pageSize')
-    name = body.get('name')
-    label = body.get('label')
+    keyword = body.get('keyword')
+    keyword = keyword if keyword else ""
 
     if not all([page, size]):
         return utils.rander(utils.DATA_ERR)
 
     query_list = [
         models.Element.platform.like(f'%{platform if platform else ""}%'),
-        models.Element.name.like(f'%{name if name else ""}%'),
-        models.Element.label.like(f'%{label if label else ""}%')
+        or_(models.Element.name.like(f'%{keyword}%'), models.Element.label.like(f'%{keyword}%'))
     ]
 
     data, total = utils.paginate(

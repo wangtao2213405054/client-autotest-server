@@ -13,6 +13,7 @@ class Permissions:
         self.permissions()
         self.mock()
         self.devices()
+        self.base()
 
     @staticmethod
     def projects():
@@ -138,4 +139,21 @@ class Permissions:
             master_status, master_edit, master_delete, master_socket, master_info, master_list,
             worker_status, worker_switch, worker_delete, worker_edit, worker_list
         ])
+        db.session.commit()
+
+    @staticmethod
+    def base():
+        base = models.Menu('基础配置', 'Base')
+        db.session.add(base)
+        db.session.commit()
+
+        element = models.Menu('页面元素', 'BaseElement', base.id)
+        db.session.add(element)
+        db.session.commit()
+
+        element_list = models.Menu('获取页面元素列表', '/devices/master/list', element.id)
+        element_edit = models.Menu('编辑页面元素信息', '/devices/master/edit', element.id)
+        element_delete = models.Menu('删除页面元素信息', '/devices/master/delete', element.id)
+
+        db.session.add_all([element_edit, element_list, element_delete])
         db.session.commit()
