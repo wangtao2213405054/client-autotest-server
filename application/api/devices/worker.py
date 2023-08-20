@@ -49,6 +49,10 @@ def edit_worker_info():
 
     try:
         mapping = json.loads(mapping)
+        required = ['platformName', 'mockProxy']
+        for item in required:
+            if item not in mapping:
+                return utils.rander(utils.DATA_ERR, f'映射中必须包含 {item}')
     except (Exception, ):
         return utils.rander(utils.DATA_ERR, '映射解析错误')
 

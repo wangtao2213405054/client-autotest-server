@@ -7,6 +7,7 @@ from flask import request, g
 from sqlalchemy import or_
 
 import logging
+import json
 
 lock = utils.Lock()
 
@@ -53,7 +54,7 @@ def get_task_info():
     for item in worker:
         # 查询条件
         _query = [
-            models.Task.platform == item.platform,
+            models.Task.platform == json.loads(item.mapping).get('platformName'),
             or_(models.Task.devices == {}.get(''), models.Task.devices == item.id),
             models.Task.sign == 0
         ]
@@ -82,7 +83,8 @@ def get_task_info():
     # 查询当前控制机是否还有可执行的任务
     _worker = models.Worker.query.filter_by(master=master.id, switch=True).all()
     _free_query = [
-        or_(*[models.Task.platform == item.platform for item in _worker]),  # 当前控制机的所有平台
+        # 当前控制机的所有平台
+        or_(*[models.Task.platform == json.loads(item.mapping).get('platformName') for item in _worker]),
         models.Task.sign == 0,  # 可执行的任务
         # # 未指定设备或指定当前控制机的执行机
         or_(models.Task.devices == {}.get(''), *[models.Task.devices == item.id for item in _worker])
