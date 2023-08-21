@@ -4,9 +4,11 @@
 from .user import User
 from .project import Project
 from .permissions import Permissions
+from .dictionary import Dictionary
 
 __all__ = [
     'User',
     'Project',
-    'Permissions'
+    'Permissions',
+    'Dictionary'
 ]

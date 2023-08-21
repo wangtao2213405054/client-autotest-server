@@ -53,7 +53,7 @@ def paginate_structure(data, total, page, page_size):
     return {
         'items': data,
         'total': total,
-        'totalPage': total // page_size + 1 if total % page_size else total // page_size,
+        'totalPage': (total // page_size + 1 if total % page_size else total // page_size) if page_size else 1,
         'page': page,
         'pageSize': page_size,
     }

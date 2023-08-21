@@ -24,7 +24,7 @@ def paginate(
     :param size: 每页大小
     :param filter_list: 过滤器 filter
     :param filter_by: 过滤器 filter_by
-    :param order_by: 是否倒序
+    :param order_by: 是否倒序, 如果你需要对其自定义排序, 请传入对应的模型字段
     :return:
     """
 
@@ -36,19 +36,20 @@ def paginate(
     if filter_by is None:
         filter_by = {}
 
-    _models = model.query.filter(*filter_list).filter_by(**filter_by).order_by(
-        model.id.desc() if order_by else None
-    )
+    order = None
+    if isinstance(order_by, bool):
+        order = model.id.desc()
+    elif order_by is not None:
+        order = order_by
+
+    _models = model.query.filter(*filter_list).filter_by(**filter_by).order_by(order)
 
     # 修复 flask-sqlalchemy 3.0.2 版本传参问题
     if page and size:
-        models_list = list(map(
-            lambda x: x.result if source else x,
-            _models.paginate(page=page, per_page=size, error_out=False).items
-        ))
+        models_list = _models.paginate(page=page, per_page=size, error_out=False).items
     else:
         models_list = _models.all()
-
+    models_list = list(map(lambda x: x.result if source else x, models_list))
     total = _models.count()
     return models_list, total
 

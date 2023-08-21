@@ -12,13 +12,13 @@ class Dictionary(BaseModel, db.Model):
     __tablename__ = 'test_client_dictionary'
     __table_args__ = {'extend_existing': True}
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), nullable=False)  # 元素名称
-    code = db.Column(db.String(64), nullable=False, unique=True)  # 编码
-    desc = db.Column(db.Text)  # 详细描述
-    status = db.Column(db.Boolean, nullable=False)  # 状态
+    id: int = db.Column(db.Integer, primary_key=True)
+    name: str = db.Column(db.String(32), nullable=False)  # 元素名称
+    code: str = db.Column(db.String(64), nullable=False, unique=True)  # 编码
+    desc: str = db.Column(db.Text)  # 详细描述
+    status: bool = db.Column(db.Boolean, nullable=False)  # 状态
 
-    def __init__(self, name, code, desc, status):
+    def __init__(self, name: str, code: str, desc: str, status: bool = True):
         self.name = name
         self.code = code
         self.desc = desc
@@ -44,16 +44,16 @@ class Library(BaseModel, db.Model):
     __tablename__ = 'test_client_library'
     __table_args__ = {'extend_existing': True}
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), nullable=False)  # 名称
-    code = db.Column(db.String(64), nullable=False)  # 编码
-    sort = db.Column(db.Integer, nullable=False)  # 排序
-    value = db.Column(db.String(64), nullable=False, unique=True)  # 数据
-    value_type = db.Column(db.String(64), nullable=False)  # 数据类型
-    desc = db.Column(db.Text)  # 详细描述
-    status = db.Column(db.Boolean, nullable=False)  # 状态
+    id: int = db.Column(db.Integer, primary_key=True)
+    name: str = db.Column(db.String(32), nullable=False)  # 名称
+    code: str = db.Column(db.String(64), nullable=False)  # 编码
+    sort: int = db.Column(db.Integer, nullable=False)  # 排序
+    value: str = db.Column(db.String(64), nullable=False, unique=True)  # 数据
+    value_type: str = db.Column(db.String(64), nullable=False)  # 数据类型
+    desc: str = db.Column(db.Text)  # 详细描述
+    status: bool = db.Column(db.Boolean, nullable=False)  # 状态
 
-    def __init__(self, name, code, sort, value, value_type, desc, status):
+    def __init__(self, name: str, code: str, sort: int, value: str, value_type: str, desc: str, status: bool = True):
         self.name = name
         self.code = code
         self.sort = sort
