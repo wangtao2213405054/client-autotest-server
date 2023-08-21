@@ -10,6 +10,7 @@ class Dictionary:
         self.logging()
         self.operation()
         self.data_type()
+        self.boolean()
 
     @staticmethod
     def logging():
@@ -106,4 +107,15 @@ class Dictionary:
             '字典允许你使用一个键来访问与之关联的值，类似于现实生活中的字典，你可以通过单词（键）找到对应的定义（值）'
         )
         db.session.add_all([none, integer, string, boolean, _float, array, _object])
+        db.session.commit()
+
+    @staticmethod
+    def boolean():
+        _boolean = models.Dictionary('布尔', 'boolean', '表示逻辑上的真和假')
+        db.session.add(_boolean)
+        db.session.commit()
+        _type = 'Boolean'
+        true = models.Library('True', _boolean.code, 1, 'True', _type, '逻辑真')
+        false = models.Library('False', _boolean.code, 2, 'False', _type, '逻辑假')
+        db.session.add_all([true, false])
         db.session.commit()

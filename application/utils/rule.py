@@ -2,11 +2,16 @@
 # _date: 2022/12/7 11:38
 
 
+def is_boolean(value: str) -> bool:
+    """ 判断是否为布尔类型 """
+    return False if value.lower() == 'false' else True
+
+
 _type = {
     'None': None,
     'Integer': int,
     'String': str,
-    'Boolean': bool,
+    'Boolean': is_boolean,
     'Array': list,
     'Object': dict,
     'Float': float
@@ -25,6 +30,15 @@ def rule_list_to_dict(data, key, value, types):
             pass
 
     return _dict
+
+
+def value_to_type(value: str, value_type: str):
+    """ 将数据转换成指定类型 """
+    try:
+        target_type = _type[value_type.capitalize()]
+        return target_type(value)
+    except (TypeError, ValueError):
+        return value
 
 
 def resolve(steps):

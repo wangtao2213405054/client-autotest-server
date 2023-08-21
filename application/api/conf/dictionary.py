@@ -139,7 +139,8 @@ def get_library_list():
     query_list = [models.Library.code == code, models.Library.name.like(f'%{name}%')]
 
     data, total = utils.paginate(models.Library, page, size, filter_list=query_list, order_by=models.Library.sort)
-
+    for item in data:
+        item['value'] = utils.value_to_type(item['value'], item['valueType'])
     return utils.rander(utils.OK, data=utils.paginate_structure(data, total, page, size))
 
 
