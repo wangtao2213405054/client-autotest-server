@@ -8,7 +8,15 @@ from sqlalchemy import or_
 import logging
 
 
-def paginate(model, page, size, filter_list: list = None, filter_by: dict = None, order_by=True, **kwargs):
+def paginate(
+        model,
+        page: int = None,
+        size: int = None,
+        filter_list: list = None,
+        filter_by: dict = None,
+        order_by=True,
+        **kwargs
+):
     """
     获取数据分页
     :param model: 数据对象
@@ -33,10 +41,14 @@ def paginate(model, page, size, filter_list: list = None, filter_by: dict = None
     )
 
     # 修复 flask-sqlalchemy 3.0.2 版本传参问题
-    models_list = list(map(
-        lambda x: x.result if source else x,
-        _models.paginate(page=page, per_page=size, error_out=False).items
-    ))
+    if page and size:
+        models_list = list(map(
+            lambda x: x.result if source else x,
+            _models.paginate(page=page, per_page=size, error_out=False).items
+        ))
+    else:
+        models_list = _models.all()
+
     total = _models.count()
     return models_list, total
 

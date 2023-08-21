@@ -14,6 +14,8 @@ class Permissions:
         self.mock()
         self.devices()
         self.base()
+        self.version()
+        self._set()
 
     @staticmethod
     def projects():
@@ -155,5 +157,51 @@ class Permissions:
         element_edit = models.Menu('编辑页面元素信息', '/conf/element/edit', element.id)
         element_delete = models.Menu('删除页面元素信息', '/conf/element/delete', element.id)
 
-        db.session.add_all([element_edit, element_list, element_delete])
+        dictionary = models.Menu('字典管理', 'BaseDict', base.id)
+        db.session.add(dictionary)
+        db.session.commit()
+
+        dictionary_list = models.Menu('获取字典列表', '/conf/dictionary/list', dictionary.id)
+        dictionary_edit = models.Menu('编辑字典信息', '/conf/dictionary/edit', dictionary.id)
+        dictionary_delete = models.Menu('删除字典信息', '/conf/dictionary/delete', dictionary.id)
+        library_list = models.Menu('获取字典数据列表', '/conf/library/list', dictionary.id)
+        library_edit = models.Menu('编辑字典数据信息', '/conf/library/edit', dictionary.id)
+        library_delete = models.Menu('删除字典数据信息', '/conf/library/delete', dictionary.id)
+
+        db.session.add_all([element_edit, element_list, element_delete, dictionary_delete, dictionary_edit,
+                            dictionary_list, library_list, library_delete, library_edit])
+        db.session.commit()
+
+    @staticmethod
+    def version():
+        base = models.Menu('版本管理', 'Version')
+        db.session.add(base)
+        db.session.commit()
+
+        version = models.Menu('版本管理', 'VersionIndex', base.id)
+        db.session.add(version)
+        db.session.commit()
+
+        version_list = models.Menu('获取版本列表', '/business/version/list', version.id)
+        version_edit = models.Menu('编辑版本信息', '/business/version/edit', version.id)
+        version_delete = models.Menu('删除版本信息', '/business/version/delete', version.id)
+
+        db.session.add_all([version_edit, version_list, version_delete])
+        db.session.commit()
+
+    @staticmethod
+    def _set():
+        base = models.Menu('测试集合', 'Set')
+        db.session.add(base)
+        db.session.commit()
+
+        set_index = models.Menu('测试集合', 'SetIndex', base.id)
+        db.session.add(set_index)
+        db.session.commit()
+
+        set_list = models.Menu('获取测试集合列表', '/business/set/list', set_index.id)
+        set_edit = models.Menu('编辑测试集合信息', '/business/set/edit', set_index.id)
+        set_delete = models.Menu('删除测试集合信息', '/business/set/delete', set_index.id)
+
+        db.session.add_all([set_edit, set_list, set_delete])
         db.session.commit()
