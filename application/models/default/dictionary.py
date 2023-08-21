@@ -114,8 +114,8 @@ class Dictionary:
         _boolean = models.Dictionary('布尔', 'boolean', '表示逻辑上的真和假')
         db.session.add(_boolean)
         db.session.commit()
-        _type = 'Boolean'
-        true = models.Library('True', _boolean.code, 1, 'True', _type, '逻辑真')
-        false = models.Library('False', _boolean.code, 2, 'False', _type, '逻辑假')
+        _type = 'Integer'
+        true = models.Library('True', _boolean.code, 1, '1', _type, '逻辑真')
+        false = models.Library('False', _boolean.code, 2, '0', _type, '逻辑假')
         db.session.add_all([true, false])
         db.session.commit()
