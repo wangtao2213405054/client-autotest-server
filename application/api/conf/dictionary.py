@@ -167,7 +167,7 @@ def edit_library_info():
     sort = body.get('sort')
     status = body.get('status')
 
-    if not all([name, code, isinstance(status, bool), value, value_type, sort]):
+    if not all([name, code, isinstance(status, bool), value_type, sort]):
         return utils.rander(utils.DATA_ERR)
 
     if library_id:
