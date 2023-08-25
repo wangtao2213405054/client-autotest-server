@@ -26,6 +26,7 @@ setup(
         'python-socketio >= 5.7.2',
         'sqlalchemy >= 1.4.45',
         'click',
-        'flasgger >=0.9.5'
+        'flasgger >=0.9.5',
+        'faker'
     ]
 )
