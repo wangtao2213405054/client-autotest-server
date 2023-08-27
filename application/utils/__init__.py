@@ -11,6 +11,7 @@ from .rule import *
 from .lock import Lock
 from .delete import delete, delete_or
 from .util import *
+from .mock import *
 
 
 __all__ = [

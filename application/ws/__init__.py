@@ -17,6 +17,7 @@ def blueprint():
     from application.ws import connect
     from .system import system
     from .room import join_rooms, leave_rooms
+    from .mock import mock_data
 
 
 blueprint()

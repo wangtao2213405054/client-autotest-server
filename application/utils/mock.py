@@ -33,30 +33,20 @@ def decouple(data: str):
     return map_var, function_name_var, function_args, function_var
 
 
+class MockFaker:
+    """ 生成测试数据 """
+
+    def __init__(self):
+        self.fake = Faker()
+
+    def cparagraph(self, length=15):
+        self.fake = Faker('zh_CN')
+        text = self.fake.text()  # 生成随机文本
+        while len(text) < length:
+            text += '' + self.fake.text()  # 继续生成随机文本，直到达到指定长度
+        return text[:length]  # 截取指定长度的文本
+
+
 if __name__ == '__main__':
-    datas = "{{ global 'name' ,min:1,max:23,change:'ws' |length|lower }}"
+    datas = "{{ mock 'cparagraph' }}"
     print(decouple(datas))
-    from faker import Faker
-
-    fake = Faker('zh_CN')
-
-    # 生成姓名
-    name = fake.name()
-    print("Name:", name)
-
-    # 生成地址
-    address = fake.address()
-    print("Address:", address)
-
-    # 生成随机文本
-    text = fake.text()
-    print("Text:", text)
-
-    # 生成随机数字
-    number = fake.random_int(min=1, max=100)
-    print("Number:", number)
-
-    # 生成随机日期
-    date = fake.date_of_birth()
-    print("Date of Birth:", date)
-
