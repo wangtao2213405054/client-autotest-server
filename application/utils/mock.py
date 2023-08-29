@@ -87,6 +87,40 @@ class MockFaker:
         return text[:length]  # 截取指定长度的文本
 
 
+mapping_dict = {
+    'mock': MockFaker()
+}
+
+
+function_mapping = {
+    'length': length,
+    'section': section
+}
+
+
+def mock_to_string(expression):
+    classify, mapping, params, function = decouple(expression)
+    result = getattr(mapping_dict[classify], mapping)(**params)
+
+    for item in function:
+        params = dict()
+        if ',' in item:
+            function_params = item.split(',')
+            item = function_params[0]
+            _params = function_params[1:]
+
+            for param in _params:
+                key, value = param.split(":")
+                params[key] = value.replace("'", "") if "'" in value else int(value)
+
+        if item in function_mapping:
+            result = function_mapping[item](result, **params)
+        else:
+            result = apply_string_function(result, item)
+
+    return result
+
+
 if __name__ == '__main__':
     datas = "{{mock 'cparagraph',length:15|section,end:2}}"
     print(decouple(datas))
