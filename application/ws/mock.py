@@ -15,7 +15,7 @@ def mock_data(body: dict):
 
     session_id = getattr(request, 'sid', None)
 
-    socketio.emit('reverseMockData', str(utils.mock_to_string(expression)), to=session_id)
+    socketio.emit('reverseMockData', str(utils.decouple(expression)), to=session_id)
 
 
 @socketio.on('transitionStringData')
@@ -23,7 +23,7 @@ def transition_string_data(data: str):
     """ 将字符串中带有模拟的数据转换 """
 
     for item in re.findall(r"{{.*?}}", data):
-        data = data.replace(item, utils.mock_to_string(item))
+        data = data.replace(item, str(utils.decouple(item)))
 
     session_id = getattr(request, 'sid', None)
     socketio.emit('previewString', data, to=session_id)

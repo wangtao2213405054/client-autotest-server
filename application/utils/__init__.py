@@ -3,6 +3,7 @@
 
 from .token import create_token, analytic_token, login_required
 from .permissions import get_user_role_info, permissions_required
+from .mapping import function_mapping, apply_string_function
 from .response import *
 from .error import *
 from .query import *
