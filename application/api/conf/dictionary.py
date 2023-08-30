@@ -26,10 +26,14 @@ def get_dictionary_list():
     size = size if size else 0
     keyword = body.get('keyword')
     keyword = keyword if keyword else ""
+    status = body.get('status')
 
     query_list = [
         or_(models.Dictionary.name.like(f'%{keyword}%'), models.Dictionary.code.like(f'%{keyword}%'))
     ]
+
+    if isinstance(status, bool):
+        query_list.append(models.Dictionary.status == status)
 
     data, total = utils.paginate(
         models.Dictionary,
@@ -132,11 +136,15 @@ def get_library_list():
     size = size if size else 0
     name = body.get('keyword')
     name = name if name else ""
+    status = body.get('status')
 
     if not code:
         return utils.rander(utils.DATA_ERR)
 
     query_list = [models.Library.code == code, models.Library.name.like(f'%{name}%')]
+
+    if isinstance(status, bool):
+        query_list.append(models.Library.status == status)
 
     data, total = utils.paginate(models.Library, page, size, filter_list=query_list, order_by=models.Library.sort)
     for item in data:

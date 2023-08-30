@@ -6,6 +6,8 @@ from .robot import MessageRobot
 from .element import Element
 from .event import Event
 from .dictionary import Dictionary, Library
+from .magic import MagicMenu
+from .dynamic import DynamicElement
 
 __all__ = [
     'MessageEmail',
@@ -13,5 +15,7 @@ __all__ = [
     'Element',
     'Event',
     'Dictionary',
-    'Library'
+    'Library',
+    'DynamicElement',
+    'MagicMenu'
 ]

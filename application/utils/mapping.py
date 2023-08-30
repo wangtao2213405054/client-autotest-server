@@ -1,8 +1,6 @@
 # _author: Coke
 # _date: 2023/8/30 10:04
 
-import utils
-
 
 def apply_string_function(data: str, mapping: str) -> str:
     """

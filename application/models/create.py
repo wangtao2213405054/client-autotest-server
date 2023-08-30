@@ -22,3 +22,4 @@ if __name__ == '__main__':
         default.Project()
         default.Permissions()
         default.Dictionary()
+        default.Dynamic()

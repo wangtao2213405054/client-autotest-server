@@ -11,6 +11,7 @@ class Dictionary:
         self.operation()
         self.data_type()
         self.boolean()
+        self.element()
 
     @staticmethod
     def logging():
@@ -117,5 +118,16 @@ class Dictionary:
         _type = 'Integer'
         true = models.Library('True', _boolean.code, 1, '1', _type, '逻辑真')
         false = models.Library('False', _boolean.code, 2, '0', _type, '逻辑假')
+        db.session.add_all([true, false])
+        db.session.commit()
+
+    @staticmethod
+    def element():
+        _element = models.Dictionary('组件', 'element', '前端展示的组件信息')
+        db.session.add(_element)
+        db.session.commit()
+        _type = 'String'
+        true = models.Library('输入框', _element.code, 1, 'input', _type, '输入框组件')
+        false = models.Library('选择器', _element.code, 2, 'select', _type, '选择器组件')
         db.session.add_all([true, false])
         db.session.commit()

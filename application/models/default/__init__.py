@@ -5,10 +5,12 @@ from .user import User
 from .project import Project
 from .permissions import Permissions
 from .dictionary import Dictionary
+from .dynamic import Dynamic
 
 __all__ = [
     'User',
     'Project',
     'Permissions',
-    'Dictionary'
+    'Dictionary',
+    'Dynamic'
 ]

@@ -1,11 +1,11 @@
 # _author: Coke
 # _date: 2023/8/25 14:32
 
+from application import utils
 from faker import Faker
 
 import functools
 import datetime
-import utils
 import time
 import re
 
