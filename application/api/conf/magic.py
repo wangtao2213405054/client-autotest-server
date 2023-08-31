@@ -149,34 +149,27 @@ def get_magic_variable():
 
     for item in menu:
         result = item.result
-        menu_children = []
-        for children in models.MagicMenu.query.filter_by(
-            status=1,
-            node_id=item.id,
-            data_type='menu'
-        ).order_by(models.MagicMenu.sort).all():
-            children_result = children.result
-            children_result['params'] = [
-                models.DynamicElement.query.filter_by(id=element_id).first().result
-                for element_id in children_result['params']
-            ]
-            menu_children.append(children_result)
-        result['children'] = menu_children
-
-        function_list = []
-        for children in models.MagicMenu.query.filter_by(
-                status=1,
-                node_id=item.id,
-                data_type='function'
-        ).order_by(models.MagicMenu.sort).all():
-            children_result = children.result
-            children_result['params'] = [
-                models.DynamicElement.query.filter_by(id=element_id).first().result
-                for element_id in children_result['params']
-            ]
-            function_list.append(children_result)
-        result['functionList'] = function_list
+        result['children'] = assemble(item.id, 'menu')
+        result['functionList'] = assemble(item.id, 'function')
 
         magic_variable_list.append(result)
 
     return utils.rander(utils.OK, data=magic_variable_list)
+
+
+def assemble(node_id: int, data_type: str) -> list:
+    """ 将子节点中的元素映射id变为元素映射信息 """
+    children_list = []
+    for children in models.MagicMenu.query.filter_by(
+            status=1,
+            node_id=node_id,
+            data_type=data_type
+    ).order_by(models.MagicMenu.sort).all():
+        children_result = children.result
+        children_result['params'] = [
+            models.DynamicElement.query.filter_by(id=element_id).first().result
+            for element_id in children_result['params']
+        ]
+        children_list.append(children_result)
+
+    return children_list
