@@ -2,7 +2,7 @@
 # _date: 2023/8/30 20:24
 
 from application.api import api
-from application import utils, db, models
+from application import utils, db, models, socketio
 from sqlalchemy import or_
 from flask import request
 
@@ -110,6 +110,8 @@ def edit_magic_info():
             logging.error(e)
             return utils.rander(utils.DATABASE_ERR)
 
+        # 通知前端数据更新, 重新获取数据
+        socketio.emit('updateMagicVariable')
         return utils.rander(utils.OK)
 
     magic = models.MagicMenu(name, keyword, sort, desc, status, node_id, data_type, params)
@@ -121,6 +123,7 @@ def edit_magic_info():
         logging.error(e)
         return utils.rander(utils.DATABASE_ERR)
 
+    socketio.emit('updateMagicVariable')
     return utils.rander(utils.OK)
 
 
@@ -133,6 +136,7 @@ def delete_magic_info():
     :return:
     """
 
+    socketio.emit('updateMagicVariable')
     return utils.delete(models.MagicMenu, dict(id='id'), dict(node_id='id'))
 
 
