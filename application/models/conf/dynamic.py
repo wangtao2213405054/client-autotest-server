@@ -23,7 +23,7 @@ class DynamicElement(BaseModel, db.Model):
     expression = Column(String(64), nullable=False)  # 要绑定的表达式信息
     options = Column(Text)  # 组件额外绑定的参数 List
 
-    def __init__(self, placeholder: str, element: str, data_type: str, name: str, expression: str, options: list):
+    def __init__(self, placeholder: str, element: str, data_type: str, name: str, expression: str, options: list = ()):
         self.placeholder = placeholder
         self.element = element
         self.data_type = data_type

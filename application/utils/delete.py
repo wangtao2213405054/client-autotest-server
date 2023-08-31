@@ -12,7 +12,7 @@ def delete(_models, _request: dict, children: dict = None):
     """
     封装的通用删除
     :param _models: 要删除的数据所在表
-    :param _request: 要从 request 中获取的数据 { 'domain_id': 'id' }, key对于数据库, value 对于request中的值
+    :param _request: 要从 request 中获取的数据 { 'domain_id': 'id' }, key对应数据库, value 对应request中的值
     :param children: 是否包含子节点 如何为真则填写其数据库字段
     :return:
     """

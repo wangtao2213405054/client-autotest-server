@@ -35,7 +35,7 @@ def blueprint():
     from .property import authentication, classification, management
     from .permissions import menu, role
     from .business import project, folder, set, version, case
-    from .conf import email, robot, element, event, socket, dictionary, dynamic
+    from .conf import email, robot, element, event, socket, dictionary, dynamic, magic
     from .task import allot, center, report
     from .devices import master, worker
     from .message import message

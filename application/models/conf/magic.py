@@ -34,7 +34,7 @@ class MagicMenu(BaseModel, db.Model):
             status: bool,
             node_id: int,
             data_type: str,
-            params: list
+            params: list = ()
     ):
         self.name = name
         self.keyword = keyword
@@ -56,7 +56,7 @@ class MagicMenu(BaseModel, db.Model):
             sort=self.sort,
             nodeId=self.node_id,
             type=self.data_type,
-            params=json.dumps(self.params),
+            params=json.loads(self.params),
             createTime=self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             updateTime=self.update_time.strftime("%Y-%m-%d %H:%M:%S")
         )

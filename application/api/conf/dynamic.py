@@ -26,6 +26,8 @@ def get_dynamic_list():
 
     page = body.get('page')
     size = body.get('pageSize')
+    ids = body.get('ids')
+    ids = ids if ids else []
     keyword = body.get('keyword')
     keyword = keyword if keyword else ""
 
@@ -35,6 +37,9 @@ def get_dynamic_list():
     query_list = [
         or_(models.DynamicElement.name.like(f'%{keyword}%'), models.DynamicElement.expression.like(f'%{keyword}%'))
     ]
+
+    if ids:
+        query_list.append(models.DynamicElement.id.in_(ids))
 
     data, total = utils.paginate(
         models.DynamicElement,
