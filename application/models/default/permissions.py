@@ -168,8 +168,27 @@ class Permissions:
         library_edit = models.Menu('编辑字典数据信息', '/conf/library/edit', dictionary.id)
         library_delete = models.Menu('删除字典数据信息', '/conf/library/delete', dictionary.id)
 
-        db.session.add_all([element_edit, element_list, element_delete, dictionary_delete, dictionary_edit,
-                            dictionary_list, library_list, library_delete, library_edit])
+        dynamic = models.Menu('组件管理', 'BaseDynamic', base.id)
+        db.session.add(dynamic)
+        db.session.commit()
+
+        dynamic_list = models.Menu('获取动态组件列表', '/conf/dynamic/list', dynamic.id)
+        dynamic_edit = models.Menu('编辑动态组件信息', '/conf/dynamic/edit', dynamic.id)
+        dynamic_delete = models.Menu('删除动态组件信息', '/conf/dynamic/delete', dynamic.id)
+
+        magic = models.Menu('魔法变量', 'BaseMagic', base.id)
+        db.session.add(magic)
+        db.session.commit()
+
+        magic_list = models.Menu('获取魔法变量列表', '/conf/magic/list', magic.id)
+        magic_edit = models.Menu('编辑魔法变量信息', '/conf/magic/edit', magic.id)
+        magic_delete = models.Menu('删除魔法变量信息', '/conf/magic/delete', magic.id)
+
+        db.session.add_all([
+            element_edit, element_list, element_delete, dictionary_delete, dictionary_edit,
+            dictionary_list, library_list, library_delete, library_edit, dynamic_list, dynamic_edit,
+            dynamic_delete, magic_list, magic_edit, magic_delete
+        ])
         db.session.commit()
 
     @staticmethod

@@ -34,47 +34,101 @@ class MockFaker:
     def __init__(self):
         self.fake = Faker()
 
-    @set_locale('zh_CN')
-    def cparagraph(self, length=50):
+    def paragraph(self, locale='zh_CN', length=50):
         """ 模拟一段文本 """
+        self.fake = Faker(locale)
         text = self.fake.text()  # 生成随机文本
         while len(text) < length:
             text += '' + self.fake.text()  # 继续生成随机文本，直到达到指定长度
         return text[:length]  # 截取指定长度的文本
 
-    @set_locale('zh_CN')
-    def cname(self):
+    def name(self, locale='zh_CN'):
         """ 模拟一个名字 """
+        self.fake = Faker(locale)
         return self.fake.name()
 
-    @set_locale('zh_CN')
-    def cfirst(self):
+    def first(self, locale='zh_CN'):
         """ 模拟一个姓氏 """
-        return self.fake.last_name()
+        self.fake = Faker(locale)
+        if locale == 'zh_CN':
+            return self.fake.last_name()
+        else:
+            return self.fake.first_name()
 
-    @set_locale('zh_CN')
-    def clast(self):
+    def last(self, locale='zh_CN'):
         """ 模拟一个名字 """
-        return self.fake.first_name()
+        self.fake = Faker(locale)
+        if locale == 'zh_CN':
+            return self.fake.first_name()
+        else:
+            return self.fake.last_name()
 
-    @set_locale('zh_CN')
-    def cphone(self):
+    def phone(self, locale='zh_CN'):
         """ 模拟一个手机号 """
+        self.fake = Faker(locale)
         return self.fake.phone_number()
+
+    def company(self, locale='zh_CN'):
+        """ 模拟一个公司 """
+        self.fake = Faker(locale)
+        return self.fake.company()
+
+    def address(self, locale='zh_CN'):
+        """ 模拟一个地址 """
+        self.fake = Faker(locale)
+        return self.fake.address()
+
+    def administrative(self, locale='zh_CN'):
+        """ 模拟一个省份 """
+        self.fake = Faker(locale)
+        return self.fake.administrative_unit()
+
+    def city(self, locale='zh_CN'):
+        """ 模拟一个城市 """
+        self.fake = Faker(locale)
+        return self.fake.city()
+
+    def country(self, locale='zh_CN'):
+        """ 模拟一个国家 """
+        self.fake = Faker(locale)
+        return self.fake.country()
+
+    def district(self, locale='zh_CN'):
+        """ 模拟一个区 """
+        self.fake = Faker(locale)
+        return self.fake.district()
+
+    def postcode(self, locale='zh_CN'):
+        """ 模拟一个邮编 """
+        self.fake = Faker(locale)
+        return self.fake.postcode()
+
+    def job(self, locale='zh_CN'):
+        """ 模拟一个职业 """
+        self.fake = Faker(locale)
+        return self.fake.job()
+
+    def ssn(self, locale='zh_CN', min_age=18, max_age=90):
+        """ 模拟一个身份证 """
+        self.fake = Faker(locale)
+        if locale == 'zh_CN':
+            return self.fake.ssn(min_age=min_age, max_age=max_age)
+        else:
+            return self.fake.ssn()
+
+    def word(self, locale='zh_CN'):
+        """ 模拟一个单词 """
+        self.fake = Faker(locale)
+        return self.fake.word()
+
+    def license(self, locale='zh_CN'):
+        """ 模拟一个汽车牌照 """
+        self.fake = Faker(locale)
+        return self.fake.license_plate()
 
     def email(self):
         """ 模拟一个邮件 """
         return self.fake.email()
-
-    @set_locale('zh_CN')
-    def ccompany(self):
-        """ 模拟一个公司 """
-        return self.fake.company()
-
-    @set_locale('zh_CN')
-    def caddress(self):
-        """ 模拟一个地址 """
-        return self.fake.address()
 
     def datetime(self, formatting='%Y-%m-%d %H:%M:%S'):
         """ 模拟一个日期时间 """
@@ -168,11 +222,11 @@ def decouple(expression: str):
         if item in utils.function_mapping:
             result = utils.function_mapping[item](result, **params)
         else:
-            result = utils.apply_string_function(result, item)
+            result = utils.apply_string_function(result, item, **params)
 
     return result
 
 
 if __name__ == '__main__':
-    datas = "{{mock 'cparagraph',length:15|section,end:2}}"
+    datas = "{{mock 'cn_paragraph',length:15|section,end:2}}"
     print(decouple(datas))
