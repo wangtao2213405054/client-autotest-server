@@ -141,6 +141,7 @@ def delete_magic_info():
 
 
 @api.route('conf/magic/variable', methods=['GET', 'POST'])
+@utils.login_required
 def get_magic_variable():
     """
     获取动态变量
