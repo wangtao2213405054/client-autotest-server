@@ -2,7 +2,7 @@
 # _date: 2022/5/27 20:51
 
 from application.models.base import BaseModel
-from sqlalchemy import Column
+from sqlalchemy import Column, String, Integer
 from application import create_app, db
 
 
@@ -13,14 +13,16 @@ class Folder(BaseModel, db.Model):
     __tablename__ = 'test_client_folder'
     __table_args__ = {'extend_existing': True}
 
-    id = Column(db.Integer, primary_key=True)  # 主键
-    project_id = Column(db.Integer, nullable=False)  # 所属项目
-    name = Column(db.String(32), nullable=False)  # 模块名称
-    node_id = Column(db.Integer)  # 节点ID
+    id = Column(Integer, primary_key=True)  # 主键
+    project_id = Column(Integer, nullable=False)  # 所属项目
+    name = Column(String(32), nullable=False)  # 模块名称
+    node_id = Column(Integer)  # 节点ID
+    data_type = Column(String(32))  # 文件类型
 
-    def __init__(self, project_id=None, name=None, node_id=0):
+    def __init__(self, project_id=None, name=None, data_type='folder', node_id=0):
         self.project_id = project_id,
         self.name = name,
+        self.data_type = data_type
         self.node_id = node_id
 
     @property
@@ -28,6 +30,7 @@ class Folder(BaseModel, db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'type': self.data_type,
             'projectId': self.project_id,
             'nodeId': self.node_id,
             'createTime': self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
