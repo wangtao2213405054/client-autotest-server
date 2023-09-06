@@ -18,12 +18,14 @@ class Folder(BaseModel, db.Model):
     name = Column(String(32), nullable=False)  # 模块名称
     node_id = Column(Integer)  # 节点ID
     data_type = Column(String(32))  # 文件类型
+    sort = Column(Integer)  # 排序
 
-    def __init__(self, project_id=None, name=None, data_type='folder', node_id=0):
+    def __init__(self, project_id=None, name=None, data_type='folder', node_id=0, sort=1):
         self.project_id = project_id,
         self.name = name,
         self.data_type = data_type
         self.node_id = node_id
+        self.sort = sort
 
     @property
     def result(self):

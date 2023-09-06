@@ -11,7 +11,8 @@ import logging
 def get_folder_hierarchy(node_id, project_id):
     """ 递归查询当前项目下的所有文件夹及测试用例 """
 
-    submodules = models.Folder.query.filter_by(project_id=project_id, node_id=node_id).all()
+    query = dict(project_id=project_id, node_id=node_id)
+    submodules = models.Folder.query.filter_by(**query).order_by(models.Folder.sort).all()
     hierarchy = []
     for submodule in submodules:
         folder = submodule.result
@@ -46,8 +47,8 @@ def get_folder_list():
 
 
 @api.route('/business/folder/edit', methods=['POST', 'PUT'])
-# @utils.login_required
-# @utils.permissions_required
+@utils.login_required
+@utils.permissions_required
 @swagger('folderEdit.yaml')
 def edit_folder_info():
     """ 新增/修改文件夹信息 """
@@ -96,12 +97,14 @@ def edit_folder_info():
     if node_id and not module_info:
         return utils.rander(utils.DATA_ERR, '无此父级关系分类')
 
+    sort = models.Folder.query.filter_by(node_id=node_id).count()
     # 数据创建
     new_module = models.Folder(
         project_id=project_id,
         name=name,
         node_id=node_id,
-        data_type=data_type
+        data_type=data_type,
+        sort=sort + 1
     )
 
     # 处理数据库存储异常
@@ -125,3 +128,70 @@ def delete_folder_info():
     """ 删除模块信息 """
 
     return utils.delete(models.Folder, dict(id='id'), dict(node_id='id'))
+
+
+@api.route('/business/folder/move', methods=['POST', 'PUT'])
+@utils.login_required
+def move_folder_info():
+    """ 移动文件夹位置 """
+    body = request.get_json()
+
+    if not body:
+        return utils.rander(utils.BODY_ERR)
+
+    folder_id = body.get('id')
+    node_id = body.get('nodeId')
+    position = body.get('position')  # 'before'、'inner'、'after'
+
+    node = models.Folder.query.filter_by(id=node_id).first()
+    folder = models.Folder.query.filter_by(id=folder_id)
+
+    if not folder.first():
+        return utils.rander(utils.DATA_ERR, '文件不存在')
+
+    # 插入
+    if position == 'inner':
+        try:
+            # 获取节点下的所有数据, 并修改此文件夹的排序信息
+            children = models.Folder.query.filter_by(node_id=node.id)
+            folder.update(dict(node_id=node_id, sort=children.count() + 1))
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.error(e)
+            return utils.rander(utils.DATABASE_ERR)
+
+    elif position == 'before':
+        try:
+            parent = models.Folder.query.filter(
+                models.Folder.node_id == node.node_id,
+                models.Folder.sort > node.sort
+            ).all()
+            print(parent, '11111')
+            folder.update(dict(node_id=node.node_id, sort=node.sort))
+            db.session.flush()
+            for index, child in enumerate(parent):
+                print(child.result, 111)
+                print(node.sort + index + 1, 11111)
+                child.update(dict(sort=node.sort + index + 1))
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.error(e)
+            return utils.rander(utils.DATABASE_ERR)
+    else:
+        try:
+            parent = models.Folder.query.filter(
+                models.Folder.node_id == node_id,
+                models.Folder.sort > node.sort
+            ).all()
+            folder.update(dict(node_id=node.node_id, sort=node.sort + 1))
+            for index, child in enumerate(parent):
+                child.update(dict(sort=node.sort + index + 2))
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.error(e)
+            return utils.rander(utils.DATABASE_ERR)
+
+    return utils.rander(utils.OK)
