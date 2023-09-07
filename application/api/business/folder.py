@@ -149,49 +149,57 @@ def move_folder_info():
     if not folder.first():
         return utils.rander(utils.DATA_ERR, '文件不存在')
 
-    # 插入
-    if position == 'inner':
-        try:
+    try:
+        if position == 'inner':
             # 获取节点下的所有数据, 并修改此文件夹的排序信息
             children = models.Folder.query.filter_by(node_id=node.id)
+            folder_node_id = folder.first().node_id
+            sort = folder.first().sort
             folder.update(dict(node_id=node_id, sort=children.count() + 1))
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            logging.error(e)
-            return utils.rander(utils.DATABASE_ERR)
+            parent = models.Folder.query.filter(
+                models.Folder.node_id == folder_node_id,
+                models.Folder.sort >= sort,
+                models.Folder.id != folder.first().id
+            ).all()
+            for index, child in enumerate(parent):
+                child.sort -= 1
 
-    elif position == 'before':
-        try:
+        elif position == 'before':
+            sort = node.sort
             parent = models.Folder.query.filter(
                 models.Folder.node_id == node.node_id,
-                models.Folder.sort > node.sort
+                models.Folder.sort >= sort,
+                models.Folder.id != folder.first().id
             ).all()
-            print(parent, '11111')
-            folder.update(dict(node_id=node.node_id, sort=node.sort))
-            db.session.flush()
+            pre = models.Folder.query.filter(
+                models.Folder.node_id == node.node_id,
+                models.Folder.sort < sort,
+                models.Folder.id != folder.first().id
+            ).count()
+            folder.update(dict(node_id=node.node_id, sort=pre + 1))
             for index, child in enumerate(parent):
-                print(child.result, 111)
-                print(node.sort + index + 1, 11111)
-                child.update(dict(sort=node.sort + index + 1))
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            logging.error(e)
-            return utils.rander(utils.DATABASE_ERR)
-    else:
-        try:
+                child.sort = sort + index + 1
+
+        else:
+            sort = node.sort
             parent = models.Folder.query.filter(
-                models.Folder.node_id == node_id,
-                models.Folder.sort > node.sort
+                models.Folder.node_id == node.node_id,
+                models.Folder.sort > sort,
+                models.Folder.id != folder.first().id
             ).all()
-            folder.update(dict(node_id=node.node_id, sort=node.sort + 1))
+            pre = models.Folder.query.filter(
+                models.Folder.node_id == node.node_id,
+                models.Folder.sort <= sort,
+                models.Folder.id != folder.first().id
+            ).count()
+            folder.update(dict(node_id=node.node_id, sort=pre + 1))
             for index, child in enumerate(parent):
-                child.update(dict(sort=node.sort + index + 2))
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            logging.error(e)
-            return utils.rander(utils.DATABASE_ERR)
+                child.sort = node.sort + index + 2
+
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logging.error(e)
+        return utils.rander(utils.DATA_ERR, '移动文件失败')
 
     return utils.rander(utils.OK)
